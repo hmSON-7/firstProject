@@ -26,4 +26,7 @@ public class Member {
 
     @Column
     private String description;
+
+    @Column
+    private String email;
 }
