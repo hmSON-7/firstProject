@@ -14,18 +14,9 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name="memberId")
-    private Member member;
-
     @Column
     private String title;
 
     @Column
     private String content;
-
-    public void updateArticle(Article article) {
-        this.title = article.title;
-        this.content = article.content;
-    }
 }
