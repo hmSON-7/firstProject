@@ -29,4 +29,12 @@ public class Member {
 
     @Column
     private String email;
+
+    public Member(String userId, String password, String email) {
+        this.userId = userId;
+        this.nickname = userId;
+        this.password = password;
+        this.description = "";
+        this.email = email;
+    }
 }
