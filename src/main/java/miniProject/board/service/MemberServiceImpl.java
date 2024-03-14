@@ -8,18 +8,24 @@ import miniProject.board.dto.MemberLoginDto;
 import miniProject.board.entity.Member;
 import miniProject.board.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public MemberDto signUp(MemberAddDto memberAddDto) {
-        Member member = convertToDao(memberAddDto);
+        Member member = new Member(memberAddDto.getUserId(),
+                passwordEncoder.encode(memberAddDto.getPassword()),
+                memberAddDto.getEmail()
+        );
 
         memberRepository.save(member);
 
@@ -28,6 +34,13 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public MemberDto login(MemberLoginDto memberLoginDto) {
+        Optional<Member> optionalMember = memberRepository.findByUserId(memberLoginDto.getUserId());
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            if (passwordEncoder.matches(memberLoginDto.getPassword(), member.getPassword())) {
+                return convertToDto(member);
+            }
+        }
         return null;
     }
 
@@ -61,6 +74,7 @@ public class MemberServiceImpl implements MemberService{
     public Member convertToDao(MemberAddDto memberAddDto) {
         return new Member(memberAddDto.getUserId(),
                 memberAddDto.getPassword(),
-                memberAddDto.getPassword());
+                memberAddDto.getEmail()
+        );
     }
 }
