@@ -1,1 +1,0 @@
-INSERT INTO admin(name, password) VALUES('root', '1234');
