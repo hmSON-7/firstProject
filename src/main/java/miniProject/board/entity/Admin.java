@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Admin {
@@ -15,9 +17,9 @@ public class Admin {
     private Long id;
 
     @Column
-    private String adminID;
+    private String name;
 
     @Column
-    private String adminPWD;
+    private String password;
 
 }
