@@ -3,34 +3,40 @@ package miniProject.board.service;
 import miniProject.board.dto.MemberAddDto;
 import miniProject.board.dto.MemberDto;
 import miniProject.board.dto.MemberLoginDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Transactional
 class MemberServiceImplTest {
     @Autowired
     MemberServiceImpl memberService;
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
-    @Test
-    @DisplayName("회원가입 성공 테스트")
-    void checkSignUp() {
-        // given
-        MemberAddDto memberAddDto = new MemberAddDto(
+    MemberAddDto memberAddDto = null;
+    @BeforeEach
+    void init() {
+        memberAddDto = new MemberAddDto(
                 "admin",
                 "123456",
                 "123456",
                 "admin1@gmail.com"
         );
+    }
 
+    @Test
+    @DisplayName("회원가입 성공 테스트")
+    void checkSignUp() {
         // when
         Long saveId = memberService.signUp(memberAddDto).getId();
 
@@ -54,12 +60,6 @@ class MemberServiceImplTest {
     @DisplayName("로그인 성공 테스트")
     void checkLogin() {
         // given
-        MemberAddDto memberAddDto = new MemberAddDto(
-                "admin",
-                "123456",
-                "123456",
-                "admin1@gmail.com"
-        );
         memberService.signUp(memberAddDto);
 
         MemberLoginDto memberLoginDto = new MemberLoginDto(
@@ -82,15 +82,7 @@ class MemberServiceImplTest {
     @DisplayName("특정 유저 찾기 성공 테스트")
     void checkFindMember() {
         // given
-        MemberAddDto memberAddDto = new MemberAddDto(
-                "admin",
-                "123456",
-                "123456",
-                "admin1@gmail.com"
-        );
-        memberService.signUp(memberAddDto);
-
-        Long findId = 1L;
+        Long findId = memberService.signUp(memberAddDto).getId();
 
         // when
         MemberDto memberDto = memberService.findMember(findId);
@@ -103,13 +95,7 @@ class MemberServiceImplTest {
     @DisplayName("유저 리스트 출력하기 성공 테스트")
     void checkFindMembers() {
         // given
-        MemberAddDto memberAddDto1 = new MemberAddDto(
-                "admin",
-                "123456",
-                "123456",
-                "admin1@gmail.com"
-        );
-        memberService.signUp(memberAddDto1);
+        memberService.signUp(memberAddDto);
 
         MemberAddDto memberAddDto2 = new MemberAddDto(
                 "wjsansrk",
@@ -129,7 +115,7 @@ class MemberServiceImplTest {
         assertThat(memberList).hasSize(2);
 
         // 각 멤버의 속성을 하나씩 비교
-        assertThat(memberList.get(0)).extracting(MemberDto::getUserId).isEqualTo(memberAddDto1.getUserId());
+        assertThat(memberList.get(0)).extracting(MemberDto::getUserId).isEqualTo(memberAddDto.getUserId());
         assertThat(memberList.get(1)).extracting(MemberDto::getUserId).isEqualTo(memberAddDto2.getUserId());
     }
 }
