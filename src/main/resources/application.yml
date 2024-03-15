@@ -14,3 +14,8 @@ logging:
   level:
     org.hibernate.SQL: debug
     miniProject: debug
+
+server:
+  servlet:
+    session:
+      tracking-modes: cookie
