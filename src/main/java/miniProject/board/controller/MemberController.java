@@ -1,11 +1,14 @@
 package miniProject.board.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import miniProject.board.controller.constant.SessionConst;
 import miniProject.board.controller.validator.MemberAddDtoValidator;
 import miniProject.board.dto.MemberAddDto;
-import miniProject.board.dto.MemberDto;
 import miniProject.board.dto.MemberLoginDto;
+import miniProject.board.dto.MemberSessionDto;
 import miniProject.board.service.MemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
@@ -24,8 +26,8 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberAddDtoValidator memberAddDtoValidator;
 
-    @InitBinder
-    public void init(WebDataBinder dataBinder) {
+    @InitBinder("memberAddDto")
+    public void initMemberAddDtoBinder(WebDataBinder dataBinder) {
         dataBinder.addValidators(memberAddDtoValidator);
     }
 
@@ -40,6 +42,8 @@ public class MemberController {
     public String signUp(@Validated @ModelAttribute MemberAddDto memberAddDto,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
+
+        log.info("회원 가입 성공");
 
         if (bindingResult.hasErrors()) {
             return "member/signUpForm";
@@ -60,19 +64,30 @@ public class MemberController {
     @PostMapping("/login")
     public String login(@Validated @ModelAttribute MemberLoginDto memberLoginDto,
                         BindingResult bindingResult,
-                        RedirectAttributes redirectAttributes) {
+                        HttpServletRequest request,
+                        @RequestParam(defaultValue = "/") String redirectURL) {
 
         if (bindingResult.hasErrors()) {
             return "member/loginForm";
         }
 
-        MemberDto loggedInMember = memberService.login(memberLoginDto);
-        if (loggedInMember != null) {
-            redirectAttributes.addFlashAttribute("successMessage", "로그인에 성공하였습니다.");
-            return "redirect:/";
-        } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "아이디 또는 비밀번호가 올바르지 않습니다.");
-            return "redirect:/member/login";
+        MemberSessionDto loginMember = memberService.login(memberLoginDto);
+
+        // 로그인 실패
+        if (loginMember == null) {
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 일치하지 않습니다.");
+
+            return "member/loginForm";
         }
+
+        log.debug("로그인에 성공하여 세션을 생성합니다.");
+
+        // 세션 생성
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
+
+        // 만약 유저가 로그인 전용 페이지에 로그인 없이 접근한 경우 이전 요청 페이지로 리다이렉트
+        // 아니면 홈페이지로 리다이렉트
+        return "redirect:" + redirectURL;
     }
 }
