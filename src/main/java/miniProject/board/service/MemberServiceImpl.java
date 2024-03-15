@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import miniProject.board.dto.MemberAddDto;
 import miniProject.board.dto.MemberDto;
 import miniProject.board.dto.MemberLoginDto;
+import miniProject.board.dto.MemberSessionDto;
 import miniProject.board.entity.Member;
 import miniProject.board.repository.MemberRepository;
 import org.springframework.stereotype.Service;
@@ -33,14 +34,16 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public MemberDto login(MemberLoginDto memberLoginDto) {
+    public MemberSessionDto login(MemberLoginDto memberLoginDto) {
         Optional<Member> optionalMember = memberRepository.findByUserId(memberLoginDto.getUserId());
+
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
             if (passwordEncoder.matches(memberLoginDto.getPassword(), member.getPassword())) {
-                return convertToDto(member);
+                return converToSessionDto(member);
             }
         }
+
         return null;
     }
 
@@ -60,8 +63,11 @@ public class MemberServiceImpl implements MemberService{
                 .toList();
     }
 
-    @Override
-    public MemberDto convertToDto(Member member) {
+    private MemberSessionDto converToSessionDto(Member member) {
+        return new MemberSessionDto(member.getId());
+    }
+
+    private MemberDto convertToDto(Member member) {
         return new MemberDto(member.getId(),
                 member.getUserId(),
                 member.getNickname(),
@@ -70,8 +76,7 @@ public class MemberServiceImpl implements MemberService{
                 member.getEmail());
     }
 
-    @Override
-    public Member convertToDao(MemberAddDto memberAddDto) {
+    private Member convertToDao(MemberAddDto memberAddDto) {
         return new Member(memberAddDto.getUserId(),
                 memberAddDto.getPassword(),
                 memberAddDto.getEmail()
