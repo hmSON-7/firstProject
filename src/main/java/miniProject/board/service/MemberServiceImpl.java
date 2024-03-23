@@ -54,6 +54,10 @@ public class MemberServiceImpl implements MemberService{
         return convertToDto(member);
     }
 
+    public Member findMemberDao(Long memberId) {
+        return memberRepository.findById(memberId).orElse(null);
+    }
+
     @Override
     public List<MemberDto> findMembers() {
         List<Member> memberList = memberRepository.findAll();
