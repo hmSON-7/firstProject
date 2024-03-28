@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>알 수 없는 페이지</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com" ></script>
+</head>
+<body>
+
+<!-- Header -->
+<header class="bg-gray-800 text-white py-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <!-- Title -->
+        <a href="/" class="text-2xl font-bold">Home</a>
+        <!-- Navigation Menu -->
+        <nav>
+            <ul class="flex space-x-4">
+                <li><a href="/main/loginHome" class="hover:text-gray-300">loginHome</a></li>
+                <li><a href="/member/login" class="hover:text-gray-300">loginForm</a></li>
+                <li><a href="/member/signUp" class="hover:text-gray-300">signUpForm</a></li>
+                <li><a href="/admin/login" class="hover:text-gray-300">adminLogin</a></li>
+                <li><a href="/admin/main" class="hover:text-gray-300">adminMain</a></li>
+
+            </ul>
+        </nav>
+    </div>
+</header>
+
