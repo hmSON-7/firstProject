@@ -11,9 +11,9 @@ public interface ArticleService {
 
     Article show(Long articleId);
 
-    Article create(ArticleAddDto articleAddDto, Long memberId);
+    Article write(ArticleAddDto articleAddDto, Long memberId);
 
-    Article update(ArticleDto articleDto, Long memberId);
+    Article update(ArticleDto articleDto, Long articleId, Long memberId);
 
-    boolean delete(Long articleId);
+    boolean delete(Long articleId, Long memberId);
 }
