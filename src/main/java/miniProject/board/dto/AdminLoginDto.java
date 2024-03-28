@@ -1,15 +1,18 @@
 package miniProject.board.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import miniProject.board.entity.Admin;
-import miniProject.board.entity.Article;
 
 @Getter @Setter
 @AllArgsConstructor
-public class AdminDto {
-    private Long id;
+@NoArgsConstructor
+public class AdminLoginDto {
+    @NotEmpty
     private String name;
+
+    @NotEmpty
     private String password;
 }
