@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div th:replace="~{layouts/header}"></div>
     <p th:text="${memberSessionDto.id}">사용자 ID</p>
     로그인 성공
-</body>
-</html>
+<div th:replace="~{main/home :: main}"></div>
+<div th:replace="~{layouts/footer}"></div>
