@@ -1,4 +1,4 @@
-package miniProject.board.service.security;
+package miniProject.board.controller.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
