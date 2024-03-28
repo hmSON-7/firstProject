@@ -1,13 +1,23 @@
 <div th:replace="~{layouts/header}"></div>
 <form action="">
-    <div>
-        <a>id</a>
-        <input type="text">
-    </div>
-    <div>
-        <a>password</a>
-        <input type="text">
-    </div>
-    <button type="submit">Submit</button>
+    <form th:action th:object="${adminLoginDto}" method="post">
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">
+                전체 오류 출력
+            </p>
+        </div>
+        <div>
+            <label for="userId">아이디</label>
+            <input type="text" id="userId" th:field="*{name}">
+            <p th:errors="*{name}"></p>
+        </div>
+        <div>
+            <label for="password">비밀 번호</label>
+            <input type="password" id="password" th:field="*{password}">
+            <p th:errors="*{password}"></p>
+        </div>
+
+        <input type="submit" value="로그인">
+        <input type="reset" value="초기화">
 </form>
 <div th:replace="~{layouts/footer}"></div>
