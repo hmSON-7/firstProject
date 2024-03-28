@@ -8,4 +8,8 @@ public abstract class SessionConst {
      * 세션에서 멤버 정보를 가져오거나 저장할 때 사용하는 상수
      */
     public static final String LOGIN_MEMBER = "loginMember";
+    /**
+     * 세션에서 관리자 정보를 가져오거나 저장할 때 사용하는 상수
+     */
+    public static final String LOGIN_ADMIN = "loginadmin";
 }
