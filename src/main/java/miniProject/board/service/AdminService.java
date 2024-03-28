@@ -1,33 +1,32 @@
 package miniProject.board.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import miniProject.board.dto.AdminDto;
+import miniProject.board.dto.AdminLoginDto;
+import miniProject.board.dto.AdminSessionDto;
 import miniProject.board.entity.Admin;
 import miniProject.board.repository.AdminRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-
+@RequiredArgsConstructor
 public class AdminService {
-    @Autowired
-    private AdminRepository adminRepository;
+    private final AdminRepository adminRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
+    public AdminSessionDto login(AdminLoginDto adminLoginDto){
+        Admin admin = adminRepository.findByName(adminLoginDto.getName());
 
-    public AdminDto login(AdminDto adminDto, String name, String password){
-
-        Admin admin = adminDto.toEntity();
-        Admin target = adminRepository.findByName(name);
-        if (target != null) {
-            // 비밀번호 비교
-            if (password.equals(admin.getPassword())) {
-                return null;// 비밀번호 일치
-            }
+        if (admin == null) {
+            return null;
         }
 
-        // 로그인 실패
+        if (passwordEncoder.matches(adminLoginDto.getPassword(), admin.getPassword())) {
+            return new AdminSessionDto(admin.getId());
+        }
+
         return null;
     }
 }
