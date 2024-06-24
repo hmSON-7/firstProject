@@ -24,20 +24,20 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberAddDtoValidator memberAddDtoValidator;
 
-    @InitBinder("memberAddDto")
+    @InitBinder("createMemberDto")
     public void initMemberAddDtoBinder(WebDataBinder dataBinder) {
         dataBinder.addValidators(memberAddDtoValidator);
     }
 
     @GetMapping("/signUp")
     public String signUpForm(Model model) {
-        model.addAttribute("memberAddDto", new MemberDto.Create());
+        model.addAttribute("createMemberDto", new MemberDto.Create());
 
         return "member/signUpForm";
     }
 
     @PostMapping("/signUp")
-    public String signUp(@Validated @ModelAttribute MemberDto.Create createMemberDto,
+    public String signUp(@Validated @ModelAttribute("createMemberDto") MemberDto.Create createMemberDto,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
 
@@ -60,7 +60,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute MemberDto.Login memberLoginDto,
+    public String login(@Validated @ModelAttribute("memberLoginDto") MemberDto.Login memberLoginDto,
                         BindingResult bindingResult,
                         HttpServletRequest request,
                         @RequestParam(defaultValue = "/") String redirectURL) {
