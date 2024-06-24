@@ -1,7 +1,7 @@
 package miniProject.board.controller.validator;
 
 import lombok.extern.slf4j.Slf4j;
-import miniProject.board.dto.MemberAddDto;
+import miniProject.board.dto.MemberDto;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -11,7 +11,7 @@ import org.springframework.validation.Validator;
 public class MemberAddDtoValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {
-        return MemberAddDto.class.isAssignableFrom(clazz);
+        return MemberDto.Create.class.isAssignableFrom(clazz);
     }
 
     @Override
@@ -20,7 +20,7 @@ public class MemberAddDtoValidator implements Validator {
             return;
         }
 
-        MemberAddDto memberAddDto = (MemberAddDto) target;
+        MemberDto.Create memberAddDto = (MemberDto.Create) target;
 
         if (!memberAddDto.getPassword().equals(memberAddDto.getConfirmPassword())) {
             errors.rejectValue("confirmPassword","passwordMismatch",

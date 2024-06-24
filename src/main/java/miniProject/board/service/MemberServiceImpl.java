@@ -2,10 +2,7 @@ package miniProject.board.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import miniProject.board.dto.MemberAddDto;
 import miniProject.board.dto.MemberDto;
-import miniProject.board.dto.MemberLoginDto;
-import miniProject.board.dto.MemberSessionDto;
 import miniProject.board.entity.Member;
 import miniProject.board.repository.MemberRepository;
 import org.springframework.stereotype.Service;
@@ -22,25 +19,26 @@ public class MemberServiceImpl implements MemberService{
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public MemberDto signUp(MemberAddDto memberAddDto) {
-        Member member = Member.createMember(memberAddDto.getUserId(),
-                passwordEncoder.encode(memberAddDto.getPassword()),
-                memberAddDto.getEmail()
+    public MemberDto.Info signUp(MemberDto.Create createMemberDto) {
+        Member member = Member.createMember(createMemberDto.getUsername(),
+                passwordEncoder.encode(createMemberDto.getPassword()),
+                createMemberDto.getEmail()
         );
 
         memberRepository.save(member);
 
-        return convertToDto(member);
+        return MemberDto.Info.fromMember(member);
     }
 
     @Override
-    public MemberSessionDto login(MemberLoginDto memberLoginDto) {
-        Optional<Member> optionalMember = memberRepository.findByUsername(memberLoginDto.getUserId());
+    public MemberDto.Session login(MemberDto.Login loginMemberDto) {
+        Optional<Member> optionalMember = memberRepository.findByUsername(loginMemberDto.getUsername());
 
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
-            if (passwordEncoder.matches(memberLoginDto.getPassword(), member.getPassword())) {
-                return converToSessionDto(member);
+
+            if (passwordEncoder.matches(loginMemberDto.getPassword(), member.getPassword())) {
+                return MemberDto.Session.fromMember(member);
             }
         }
 
@@ -48,10 +46,10 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public MemberDto findMember(Long memberId) {
+    public MemberDto.Info findMember(Long memberId) {
         Member member = memberRepository.findById(memberId).orElse(null);
 
-        return convertToDto(member);
+        return MemberDto.Info.fromMember(member);
     }
 
     public Member findMemberDao(Long memberId) {
@@ -59,31 +57,11 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public List<MemberDto> findMembers() {
+    public List<MemberDto.Info> findMembers() {
         List<Member> memberList = memberRepository.findAll();
 
         return memberList.stream()
-                .map(this::convertToDto)
+                .map(MemberDto.Info::fromMember)
                 .toList();
-    }
-
-    private MemberSessionDto converToSessionDto(Member member) {
-        return new MemberSessionDto(member.getId());
-    }
-
-    private MemberDto convertToDto(Member member) {
-        return new MemberDto(member.getId(),
-                member.getUsername(),
-                member.getNickname(),
-                member.getPassword(),
-                member.getDescription(),
-                member.getEmail());
-    }
-
-    private Member convertToDao(MemberAddDto memberAddDto) {
-        return Member.createMember(memberAddDto.getUserId(),
-                memberAddDto.getPassword(),
-                memberAddDto.getEmail()
-        );
     }
 }

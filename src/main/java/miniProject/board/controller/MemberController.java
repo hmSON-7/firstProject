@@ -6,9 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import miniProject.board.controller.constant.SessionConst;
 import miniProject.board.controller.validator.MemberAddDtoValidator;
-import miniProject.board.dto.MemberAddDto;
-import miniProject.board.dto.MemberLoginDto;
-import miniProject.board.dto.MemberSessionDto;
+import miniProject.board.dto.MemberDto;
 import miniProject.board.service.MemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,13 +31,13 @@ public class MemberController {
 
     @GetMapping("/signUp")
     public String signUpForm(Model model) {
-        model.addAttribute("memberAddDto", new MemberAddDto());
+        model.addAttribute("memberAddDto", new MemberDto.Create());
 
         return "member/signUpForm";
     }
 
     @PostMapping("/signUp")
-    public String signUp(@Validated @ModelAttribute MemberAddDto memberAddDto,
+    public String signUp(@Validated @ModelAttribute MemberDto.Create createMemberDto,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
 
@@ -49,20 +47,20 @@ public class MemberController {
             return "member/signUpForm";
         }
 
-        memberService.signUp(memberAddDto);
+        memberService.signUp(createMemberDto);
 
         return "redirect:/";
     }
 
     @GetMapping("/login")
     public String loginForm(Model model) {
-        model.addAttribute("memberLoginDto", new MemberLoginDto());
+        model.addAttribute("memberLoginDto", new MemberDto.Login());
 
         return "member/loginForm";
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute MemberLoginDto memberLoginDto,
+    public String login(@Validated @ModelAttribute MemberDto.Login memberLoginDto,
                         BindingResult bindingResult,
                         HttpServletRequest request,
                         @RequestParam(defaultValue = "/") String redirectURL) {
@@ -71,7 +69,7 @@ public class MemberController {
             return "member/loginForm";
         }
 
-        MemberSessionDto loginMember = memberService.login(memberLoginDto);
+        MemberDto.Session loginMember = memberService.login(memberLoginDto);
 
         // 로그인 실패
         if (loginMember == null) {
