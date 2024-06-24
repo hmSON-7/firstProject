@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @SpringBootTest
 @Transactional
@@ -55,8 +57,29 @@ class MemberServiceImplTest {
     }
 
     @Test
-    @DisplayName("유저 리스트 출력하기 성공 테스트")
+    @DisplayName("회원 리스트 조회 성공 테스트")
     void checkFindMembers() {
+        // given
+        MemberDto.Create createMemberDto1 = new MemberDto.Create();
+        createMemberDto1.setUsername("admin1");
+        createMemberDto1.setPassword("123456");
+        createMemberDto1.setConfirmPassword("123456");
+        createMemberDto1.setEmail("admin@gmail.com");
 
+        MemberDto.Create createMemberDto2 = new MemberDto.Create();
+        createMemberDto2.setUsername("admin2");
+        createMemberDto2.setPassword("123456");
+        createMemberDto2.setConfirmPassword("123456");
+        createMemberDto2.setEmail("admin@gmail.com");
+
+        memberService.signUp(createMemberDto1);
+        memberService.signUp(createMemberDto2);
+
+        // when
+        List<MemberDto.Info> members = memberService.findMembers();
+
+        // then
+        Assertions.assertNotNull(members);
+        Assertions.assertEquals(2, members.size());
     }
 }
