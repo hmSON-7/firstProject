@@ -1,0 +1,44 @@
+<div th:replace="~{layouts/header}"></div>
+
+<div class="bg-gray-100">
+    <div class="flex justify-center items-center h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-md w-96">
+            <h2 class="text-2xl font-semibold mb-6">Login</h2>
+            <form th:action th:object="${memberLoginDto}" method="post">
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"
+                    class="text-red-500 mb-4">
+                        전체 오류 출력
+                    </p>
+                </div>
+                <div class="mb-4">
+                    <label for="userId" class="block text-gray-700">아이디</label>
+                    <input type="text" id="userId" th:field="*{userId}"
+                           class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500" required>
+                    <p th:errors="*{userId}" class="text-red-500"></p>
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block text-gray-700">비밀 번호</label>
+                    <input type="password" id="password" th:field="*{password}"
+                           class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500" required>
+                    <p th:errors="*{password}" class="text-red-500"></p>
+                </div>
+                <div class="mb-2">
+                    <input type="submit" value="로그인"
+                           class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-700">
+                </div>
+                <div>
+                    <input type="reset" value="초기화"
+                           class="w-full bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-blue-700">
+                </div>
+                <p class="mt-10 text-center text-sm text-gray-500">
+                    Not a member?
+                    <a href="/member/signUp" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign Up HERE</a>
+                </p>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{layouts/footer}"></div>
