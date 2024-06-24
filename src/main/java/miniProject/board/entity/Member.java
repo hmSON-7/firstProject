@@ -16,7 +16,7 @@ public class Member {
     private Long id;
 
     @Column(unique = true)
-    private String userId;
+    private String username;
 
     @Column
     private String nickname;
@@ -30,9 +30,9 @@ public class Member {
     @Column
     private String email;
 
-    public Member(String userId, String password, String email) {
-        this.userId = userId;
-        this.nickname = userId;
+    public Member(String username, String password, String email) {
+        this.username = username;
+        this.nickname = username;
         this.password = password;
         this.description = "";
         this.email = email;

@@ -35,7 +35,7 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public MemberSessionDto login(MemberLoginDto memberLoginDto) {
-        Optional<Member> optionalMember = memberRepository.findByUserId(memberLoginDto.getUserId());
+        Optional<Member> optionalMember = memberRepository.findByUsername(memberLoginDto.getUserId());
 
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
@@ -73,7 +73,7 @@ public class MemberServiceImpl implements MemberService{
 
     private MemberDto convertToDto(Member member) {
         return new MemberDto(member.getId(),
-                member.getUserId(),
+                member.getUsername(),
                 member.getNickname(),
                 member.getPassword(),
                 member.getDescription(),
