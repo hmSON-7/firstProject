@@ -23,7 +23,7 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public MemberDto signUp(MemberAddDto memberAddDto) {
-        Member member = new Member(memberAddDto.getUserId(),
+        Member member = Member.createMember(memberAddDto.getUserId(),
                 passwordEncoder.encode(memberAddDto.getPassword()),
                 memberAddDto.getEmail()
         );
@@ -81,7 +81,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     private Member convertToDao(MemberAddDto memberAddDto) {
-        return new Member(memberAddDto.getUserId(),
+        return Member.createMember(memberAddDto.getUserId(),
                 memberAddDto.getPassword(),
                 memberAddDto.getEmail()
         );
