@@ -53,7 +53,25 @@ class MemberServiceImplTest {
     @Test
     @DisplayName("특정 유저 찾기 성공 테스트")
     void checkFindMember() {
+        // given
+        MemberDto.Create createMemberDto = new MemberDto.Create();
+        createMemberDto.setUsername("admin");
+        createMemberDto.setPassword("123456");
+        createMemberDto.setConfirmPassword("123456");
+        createMemberDto.setEmail("admin@gmail.com");
+        MemberDto.Info memberInfo = memberService.signUp(createMemberDto);
 
+        // when
+        MemberDto.Info findMember = memberService.findMember(memberInfo.getId());
+
+        // then
+        Assertions.assertEquals(memberInfo.getId(), findMember.getId());
+        Assertions.assertTrue(passwordEncoder.matches(createMemberDto.getPassword(), findMember.getPassword()));
+
+        Assertions.assertEquals(memberInfo.getUsername(), findMember.getUsername());
+        Assertions.assertEquals(memberInfo.getNickname(), findMember.getNickname());
+
+        Assertions.assertEquals(memberInfo.getEmail(), findMember.getEmail());
     }
 
     @Test
