@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import miniProject.board.controller.argumentResolver.Login;
 import miniProject.board.controller.constant.LogConst;
-import miniProject.board.dto.MemberSessionDto;
+import miniProject.board.dto.MemberDto;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +28,7 @@ public class HomeController {
      * @return 로그인한 사용자인 경우 loginHome, 로그인 하지 않은 사용자인 경우 home
      */
     @GetMapping("/")
-    public String home(@Login MemberSessionDto memberSessionDto, Model model) {
+    public String home(@Login MemberDto.Session memberSessionDto, Model model) {
         log.debug("[{}] 홈페이지", MDC.get(LogConst.TRACE_ID));
 
         if (memberSessionDto == null) {

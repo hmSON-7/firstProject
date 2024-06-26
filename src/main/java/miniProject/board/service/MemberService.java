@@ -1,18 +1,15 @@
 package miniProject.board.service;
 
-import miniProject.board.dto.MemberAddDto;
 import miniProject.board.dto.MemberDto;
-import miniProject.board.dto.MemberLoginDto;
-import miniProject.board.dto.MemberSessionDto;
 
 import java.util.List;
 
 public interface MemberService {
-    MemberDto signUp(MemberAddDto memberAddDto);
+    MemberDto.Info signUp(MemberDto.Create createMemberDto);
 
-    MemberSessionDto login(MemberLoginDto memberLoginDto);
+    MemberDto.Session login(MemberDto.Login loginMemberDto);
 
-    MemberDto findMember(Long memberId);
+    MemberDto.Info findMember(Long memberId);
 
-    List<MemberDto> findMembers();
+    List<MemberDto.Info> findMembers();
 }

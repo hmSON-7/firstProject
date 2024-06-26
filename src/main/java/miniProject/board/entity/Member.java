@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
     @Id
@@ -16,7 +15,7 @@ public class Member {
     private Long id;
 
     @Column(unique = true)
-    private String userId;
+    private String username;
 
     @Column
     private String nickname;
@@ -30,11 +29,15 @@ public class Member {
     @Column
     private String email;
 
-    public Member(String userId, String password, String email) {
-        this.userId = userId;
-        this.nickname = userId;
+    private Member(String username, String password, String email) {
+        this.username = username;
+        this.nickname = username;
         this.password = password;
         this.description = "";
         this.email = email;
+    }
+
+    public static Member createMember(String username, String password, String email) {
+        return new Member(username, password, email);
     }
 }

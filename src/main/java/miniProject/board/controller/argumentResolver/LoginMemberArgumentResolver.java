@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import miniProject.board.controller.constant.LogConst;
 import miniProject.board.controller.constant.SessionConst;
-import miniProject.board.dto.MemberSessionDto;
+import miniProject.board.dto.MemberDto;
 import org.slf4j.MDC;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -35,7 +35,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         boolean hasLoginAnnotaion = parameter.hasParameterAnnotation(Login.class);
 
         // 파라미터 타입이 MemberSessionDto 인가?
-        boolean hasMemberSessionDtoType = MemberSessionDto
+        boolean hasMemberSessionDtoType = MemberDto.Session
                 .class
                 .isAssignableFrom(parameter.getParameterType());
 
