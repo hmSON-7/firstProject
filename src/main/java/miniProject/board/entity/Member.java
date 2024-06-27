@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import miniProject.board.auth.constants.Role;
 
 @Entity
 @Getter
@@ -29,15 +30,19 @@ public class Member {
     @Column
     private String email;
 
-    private Member(String username, String password, String email) {
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    private Member(String username, String password, String email, Role role) {
         this.username = username;
         this.nickname = username;
         this.password = password;
         this.description = "";
         this.email = email;
+        this.role = role;
     }
 
-    public static Member createMember(String username, String password, String email) {
-        return new Member(username, password, email);
+    public static Member createMember(String username, String password, String email, Role role) {
+        return new Member(username, password, email, role);
     }
 }

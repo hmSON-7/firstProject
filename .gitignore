@@ -38,3 +38,4 @@ out/
 
 src/main/resources/application-db.yml
 /src/main/resources/application-admin.properties
+/src/main/resources/application-jwt.properties
