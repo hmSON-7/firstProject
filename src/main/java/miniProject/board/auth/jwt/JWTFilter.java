@@ -12,7 +12,7 @@ import miniProject.board.auth.constants.Role;
 import miniProject.board.auth.utils.CookieUtil;
 import miniProject.board.dto.CustomMemberDetails;
 import miniProject.board.entity.Member;
-import miniProject.board.service.RefreshService;
+import miniProject.board.service.auth.RefreshService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
