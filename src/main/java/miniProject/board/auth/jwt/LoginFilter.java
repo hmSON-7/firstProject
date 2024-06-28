@@ -70,7 +70,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.addCookie(cookieUtil.createCookie(CookieConstants.ACCESS_TOKEN_COOKIE_NAME, access));
         response.addCookie(cookieUtil.createCookie(CookieConstants.REFRESH_TOKEN_COOKIE_NAME, refresh));
 
-        response.setStatus(HttpServletResponse.SC_OK);
+        if (Role.ROLE_ADMIN == role) {
+            response.sendRedirect("/admin/main");
+
+        } else {
+            response.sendRedirect("/");
+        }
     }
 
     @Override

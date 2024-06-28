@@ -1,7 +1,6 @@
 package miniProject.board.controller.config;
 
 import lombok.RequiredArgsConstructor;
-import miniProject.board.controller.argumentResolver.LoginAdminArgumentResolver;
 import miniProject.board.controller.argumentResolver.LoginMemberArgumentResolver;
 import miniProject.board.controller.interceptor.LogInterceptor;
 import miniProject.board.repository.MemberRepository;
@@ -43,11 +42,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * LoginMemberArgumentResolver를 등록합니다.
-     * LoginAdminArgumentResolver를 등록합니다.
      */
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new LoginMemberArgumentResolver(memberRepository));
-        resolvers.add(new LoginAdminArgumentResolver());
     }
 }

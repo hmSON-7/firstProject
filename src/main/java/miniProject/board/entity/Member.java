@@ -49,4 +49,8 @@ public class Member {
     public static Member createMemberWithoutPasswordAndEmail(String username, Role role) {
         return new Member(username, "", "", role);
     }
+
+    public static Member createMemberWithoutEmail(String username, String password, Role role) {
+        return new Member(username, password, "", role);
+    }
 }
