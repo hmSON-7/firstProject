@@ -48,6 +48,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new LoginMemberArgumentResolver(memberRepository));
-        resolvers.add(new LoginAdminArgumentResolver());
+        resolvers.add(new LoginAdminArgumentResolver(memberRepository));
     }
 }

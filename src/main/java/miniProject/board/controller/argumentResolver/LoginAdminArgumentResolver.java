@@ -1,11 +1,12 @@
 package miniProject.board.controller.argumentResolver;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import miniProject.board.controller.constant.SessionConst;
-import miniProject.board.dto.AdminSessionDto;
+import miniProject.board.dto.MemberDto;
+import miniProject.board.entity.Member;
+import miniProject.board.repository.MemberRepository;
 import org.springframework.core.MethodParameter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -15,7 +16,11 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  * Login Annotation을 가지고 있는 AdminSessionDto 파라미터에 적용 하는 ArgumentResolver
  */
 @Slf4j
+@RequiredArgsConstructor
 public class LoginAdminArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private final MemberRepository memberRepository;
+
     /**
      * <pre>
      * 파라미터에 Login Annotation가 있는지 확인
@@ -29,7 +34,7 @@ public class LoginAdminArgumentResolver implements HandlerMethodArgumentResolver
     public boolean supportsParameter(MethodParameter parameter) {
         boolean hasLoginAnnotation = parameter.hasParameterAnnotation(Login.class);
 
-        boolean hasAdminSessionDtoType = AdminSessionDto.class.isAssignableFrom(parameter.getParameterType());
+        boolean hasAdminSessionDtoType = MemberDto.Session.class.isAssignableFrom(parameter.getParameterType());
 
         return hasLoginAnnotation && hasAdminSessionDtoType;
     }
@@ -43,15 +48,14 @@ public class LoginAdminArgumentResolver implements HandlerMethodArgumentResolver
      */
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        HttpSession session = request.getSession(false);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // 세션에 값이 없음
-        // 로그인 한 관리자의 요청이 아님
-        if (session == null) {
+        Member member = memberRepository.findByUsername(username).orElse(null);
+
+        if (member == null) {
             return null;
         }
 
-        return session.getAttribute(SessionConst.LOGIN_ADMIN);
+        return MemberDto.Session.fromMember(member);
     }
 }

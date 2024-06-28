@@ -8,6 +8,7 @@ import miniProject.board.controller.argumentResolver.Login;
 import miniProject.board.controller.constant.SessionConst;
 import miniProject.board.dto.AdminLoginDto;
 import miniProject.board.dto.AdminSessionDto;
+import miniProject.board.dto.MemberDto;
 import miniProject.board.service.AdminService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,12 +57,12 @@ public class AdminController {
     }
 
     @GetMapping("/admin/main")
-    public String adminMain(@Login AdminSessionDto adminSessionDto, Model model){
-        if (adminSessionDto == null) {
+    public String adminMain(@Login MemberDto.Session memberSessionDto, Model model){
+        if (memberSessionDto == null) {
             return "redirect:/admin/login";
         }
 
-        model.addAttribute("adminSessionDto", adminSessionDto);
+        model.addAttribute("adminSessionDto", memberSessionDto);
 
         return "admin/main";
     }
