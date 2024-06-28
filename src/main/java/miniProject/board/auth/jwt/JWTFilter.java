@@ -1,5 +1,6 @@
 package miniProject.board.auth.jwt;
 
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +32,20 @@ public class JWTFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        if (request.getDispatcherType() == DispatcherType.ERROR) {
+            filterChain.doFilter(request, response);
+
+            return;
+        }
+
+
+        // 로그 아웃 쿠키가 존재하면 accessToken 무시
+        if (cookieUtil.findLogoutCookie(request, response)) {
+            filterChain.doFilter(request, response);
+
+            return;
+        }
+
         String accessToken = cookieUtil.getAccessToken(request);
 
         // accessToken 없는 경우
@@ -51,7 +66,9 @@ public class JWTFilter extends OncePerRequestFilter {
                 return;
 
             } catch (IllegalArgumentException ex) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                cookieUtil.clearAllCookie(request, response);
+
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 
                 return;
             }
