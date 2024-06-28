@@ -8,7 +8,7 @@ import miniProject.board.auth.jwt.JWTUtil;
 import miniProject.board.auth.jwt.LoginFilter;
 import miniProject.board.auth.utils.CookieUtil;
 import miniProject.board.repository.RefreshRepository;
-import miniProject.board.service.RefreshService;
+import miniProject.board.service.auth.RefreshService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -52,7 +52,7 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/member/signUp", "/error").permitAll()
+                        .requestMatchers("/login", "/", "/signUp", "/error").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
 
