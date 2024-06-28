@@ -1,6 +1,7 @@
 package miniProject.board.service;
 
 import miniProject.board.dto.MemberDto;
+import miniProject.board.service.member.MemberServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
