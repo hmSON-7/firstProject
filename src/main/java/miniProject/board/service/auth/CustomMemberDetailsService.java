@@ -1,4 +1,4 @@
-package miniProject.board.service;
+package miniProject.board.service.auth;
 
 import lombok.RequiredArgsConstructor;
 import miniProject.board.dto.CustomMemberDetails;

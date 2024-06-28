@@ -1,4 +1,4 @@
-package miniProject.board.service;
+package miniProject.board.service.auth;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
