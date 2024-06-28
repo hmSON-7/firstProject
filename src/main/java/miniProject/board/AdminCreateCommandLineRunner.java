@@ -2,9 +2,7 @@ package miniProject.board;
 
 import lombok.RequiredArgsConstructor;
 import miniProject.board.auth.constants.Role;
-import miniProject.board.entity.Admin;
 import miniProject.board.entity.Member;
-import miniProject.board.repository.AdminRepository;
 import miniProject.board.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
