@@ -2,6 +2,7 @@ package miniProject.board.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import miniProject.board.auth.constants.Role;
 import miniProject.board.dto.MemberDto;
 import miniProject.board.entity.Member;
 import miniProject.board.repository.MemberRepository;
@@ -22,7 +23,8 @@ public class MemberServiceImpl implements MemberService{
     public MemberDto.Info signUp(MemberDto.Create createMemberDto) {
         Member member = Member.createMember(createMemberDto.getUsername(),
                 passwordEncoder.encode(createMemberDto.getPassword()),
-                createMemberDto.getEmail()
+                createMemberDto.getEmail(),
+                Role.ROLE_USER
         );
 
         memberRepository.save(member);
