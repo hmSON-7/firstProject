@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AdminController {
     private final AdminService adminService;
 
-    @GetMapping("/admin/login")
-    public String loginForm (Model model){
-        model.addAttribute("adminLoginDto", new AdminLoginDto());
-        return "admin/login";
-    }
+//    @GetMapping("/admin/login")
+//    public String loginForm (Model model){
+//        model.addAttribute("adminLoginDto", new AdminLoginDto());
+//        return "admin/login";
+//    }
 
     @PostMapping("/admin/login")
     public String login(@Validated @ModelAttribute AdminLoginDto adminLoginDto,

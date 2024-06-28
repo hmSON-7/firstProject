@@ -7,6 +7,7 @@ import miniProject.board.dto.ArticleDto;
 import miniProject.board.entity.Article;
 import miniProject.board.entity.Member;
 import miniProject.board.repository.ArticleRepository;
+import miniProject.board.service.member.MemberServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
