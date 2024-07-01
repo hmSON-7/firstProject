@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,6 +30,13 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    /*OneToMany
+    * 하나의 글이 여러 댓글을 가지도록 함
+    * 글이 삭제되면 댓글도 삭제
+    */
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
 
     /*
     * 게시글 작성 시간
