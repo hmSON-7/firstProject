@@ -32,7 +32,7 @@ public class CustomLogoutHandler implements LogoutHandler {
         // 로그 아웃 쿠키 설정
         Cookie logoutFlag = new Cookie(CookieConstants.LOGOUT_COOKIE_NAME, "true");
         logoutFlag.setHttpOnly(true);
-        logoutFlag.setPath("/");
+        logoutFlag.setPath(CookieConstants.COOKIE_PATH);
         logoutFlag.setMaxAge(600);
         response.addCookie(logoutFlag);
 

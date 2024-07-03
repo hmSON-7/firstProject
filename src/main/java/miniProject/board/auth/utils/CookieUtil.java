@@ -39,6 +39,8 @@ public class CookieUtil {
 
     public Cookie createCookie(String key, String value) {
         Cookie cookie = new Cookie(key, value);
+
+        cookie.setPath(CookieConstants.COOKIE_PATH);
         cookie.setHttpOnly(true);
 
         return cookie;
@@ -49,7 +51,7 @@ public class CookieUtil {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 cookie.setValue("");
-                cookie.setPath("/");
+                cookie.setPath(CookieConstants.COOKIE_PATH);
                 cookie.setHttpOnly(true);
                 cookie.setMaxAge(0);
                 response.addCookie(cookie);
@@ -67,7 +69,7 @@ public class CookieUtil {
                     isLoggedOut = true;
 
                     cookie.setValue("");
-                    cookie.setPath("/");
+                    cookie.setPath(CookieConstants.COOKIE_PATH);
                     cookie.setHttpOnly(true);
                     cookie.setMaxAge(0);
                     response.addCookie(cookie);
