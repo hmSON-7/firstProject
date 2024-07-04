@@ -79,13 +79,13 @@ public class CommentService {
     *
     * */
     @Transactional
-    public void update(Long articleId, Long commentId, Long userId,
+    public void update(Long articleId, Long commentId, String userName,
                        CommentDto.CommentRequest commentRequest) {
         Comment comment = commentRepository.findByArticleIdAndCommentId(articleId, commentId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("댓글이 존재하지 않습니다."));
 
-        if (!comment.getMember().getId().equals(userId)) {
+        if (!comment.getMember().getUsername().equals(userName)) {
             throw new IllegalArgumentException("작성자만 댓글을 수정할 수 있습니다.");
         }
 
