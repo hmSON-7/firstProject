@@ -28,7 +28,7 @@ public class CommentService {
         멤버 확인 후 아티클 여부 확인
     * */
     @Transactional
-    public Long commentSave(String username, Long id, CommentDto.CommentRequest commentRequest) {
+    public Long save(String username, Long articleId, CommentDto.CommentRequest commentRequest) {
         Optional<Member> __member = memberRepository.findByUsername(username);
         Member member;
         if (__member.isPresent()) { // Optional이 값으로 채워져 있는지 확인
@@ -38,7 +38,7 @@ public class CommentService {
             return null;
         }
 
-        Article article = articleRepository.findById(id)
+        Article article = articleRepository.findById(articleId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
@@ -55,8 +55,8 @@ public class CommentService {
     *  아티클 id 기준
     * */
     @Transactional(readOnly = true)
-    public List<Comment> findAll(Long id) {
-        Article article = articleRepository.findById(id)
+    public List<Comment> read(Long articleId) {
+        Article article = articleRepository.findById(articleId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("게시글이 존재하지 않습니다."));
         List<Comment> comments = article.getComments();
@@ -79,13 +79,13 @@ public class CommentService {
     *
     * */
     @Transactional
-    public void update(Long articleId, Long commentId, String username,
+    public void update(Long articleId, Long commentId, Long userId,
                        CommentDto.CommentRequest commentRequest) {
         Comment comment = commentRepository.findByArticleIdAndCommentId(articleId, commentId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("댓글이 존재하지 않습니다."));
 
-        if (!comment.getMember().getUsername().equals(username)) {
+        if (!comment.getMember().getId().equals(userId)) {
             throw new IllegalArgumentException("작성자만 댓글을 수정할 수 있습니다.");
         }
 
