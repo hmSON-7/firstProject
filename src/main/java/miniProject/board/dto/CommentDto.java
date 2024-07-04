@@ -11,11 +11,11 @@ import java.util.Optional;
 
 public class CommentDto {
 
-    @Data
+    @Data //getter, setter, requiredargs 등등 포함된 종합 어노테이션
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public class CommentRequest {
+    public static class CommentRequest {
         private Article article;
         private Member member;
 
@@ -38,7 +38,7 @@ public class CommentDto {
     }
 
     @Getter
-    public class CommentResponse {
+    public static class CommentResponse {
         private Long commentId;
         private Long articleId;
         private String username;

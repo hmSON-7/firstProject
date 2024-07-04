@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -36,5 +37,10 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void update(String content, LocalDateTime updatedAt){
+        this.content = content;
+        this.updatedAt = updatedAt;
+    }
 
 }
