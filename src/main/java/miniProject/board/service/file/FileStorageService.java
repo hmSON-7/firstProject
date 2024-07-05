@@ -36,9 +36,9 @@ public class FileStorageService {
             return filePath.toString();
 
         } catch (NoSuchFileException e) {
-            System.out.println("디렉토리를 찾을 수 없습니다.");
+            log.error("디렉토리를 찾을 수 없습니다: {}", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("파일 생성 중 오류가 발생했습니다.", e);
         }
 
         return null;
@@ -57,9 +57,9 @@ public class FileStorageService {
             // 파일 내용 읽기
             return new String(Files.readAllBytes(path));
         } catch (NoSuchFileException e) {
-            System.out.println("파일을 찾을 수 없습니다: " + e.getMessage());
+            log.error("파일을 찾을 수 없습니다: {}", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("파일 읽기 중 오류가 발생했습니다.", e);
         }
 
         return null;
@@ -81,9 +81,9 @@ public class FileStorageService {
             // 3. 파일 내용 업데이트
             Files.write(filePath, content.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
         } catch (NoSuchFileException e) {
-            System.out.println("파일을 찾을 수 없습니다: " + e.getMessage());
+            log.error("파일을 찾을 수 없습니다: {}", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("파일 업데이트 중 오류가 발생했습니다.", e);
         }
     }
 
@@ -102,9 +102,9 @@ public class FileStorageService {
             // 3. 파일 삭제
             Files.delete(filePath);
         } catch (NoSuchFileException e) {
-            System.out.println("파일을 찾을 수 없습니다: " + e.getMessage());
+            log.error("파일을 찾을 수 없습니다: {}", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("파일 삭제 중 오류가 발생했습니다.", e);
         }
     }
 

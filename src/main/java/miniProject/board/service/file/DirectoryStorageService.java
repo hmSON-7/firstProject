@@ -1,5 +1,6 @@
 package miniProject.board.service.file;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.*;
 
 @Service
+@Slf4j
 public class DirectoryStorageService {
 
     public Path findPath(String username) {
@@ -26,14 +28,14 @@ public class DirectoryStorageService {
         try {
             // Directory 생성
             Files.createDirectory(directoryPath);
-            System.out.println(directoryPath + " 디렉토리가 생성되었습니다.");
+            log.info("{} 디렉토리가 생성되었습니다.", directoryPath);
 
-        } catch(FileAlreadyExistsException e) {
-            System.out.println("디렉토리가 이미 존재합니다.");
-        } catch(NoSuchFileException e) {
-            System.out.println("디렉토리 경로가 존재하지 않습니다.");
-        } catch(IOException e) {
-            e.printStackTrace();
+        } catch (FileAlreadyExistsException e) {
+            log.warn("디렉토리가 이미 존재합니다: {}", directoryPath);
+        } catch (NoSuchFileException e) {
+            log.error("디렉토리 경로가 존재하지 않습니다: {}", directoryPath);
+        } catch (IOException e) {
+            log.error("디렉토리를 생성하는 중 오류가 발생했습니다.", e);
         }
     }
 
@@ -51,12 +53,13 @@ public class DirectoryStorageService {
                 FileUtils.cleanDirectory(directory);
                 // 디렉토리 자체 삭제
                 FileUtils.deleteDirectory(directory);
-                System.out.println(directoryPath + " 디렉토리가 삭제되었습니다.");
+                log.info("{} 디렉토리가 삭제되었습니다.", directoryPath);
+
             } else {
-                System.out.println("디렉토리를 찾을 수 없습니다: " + directoryPath);
+                log.warn("디렉토리를 찾을 수 없습니다: {}", directoryPath);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("디렉토리를 삭제하는 중 오류가 발생했습니다.", e);
         }
     }
 
