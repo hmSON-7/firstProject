@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import miniProject.board.auth.constants.Role;
 import miniProject.board.dto.MemberDto;
 import miniProject.board.entity.Member;
+import miniProject.board.service.file.DirectoryStorageService;
 import miniProject.board.repository.MemberRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ public class SignUpService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final DirectoryStorageService directoryStorageService;
 
     public MemberDto.Info signUp(MemberDto.Create createMemberDto) {
         Member member = Member.createMember(createMemberDto.getUsername(),
@@ -25,6 +27,8 @@ public class SignUpService {
         );
 
         memberRepository.save(member);
+
+        directoryStorageService.createDir(member.getUsername());
 
         return MemberDto.Info.fromMember(member);
     }

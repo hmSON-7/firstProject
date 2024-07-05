@@ -3,7 +3,7 @@ package miniProject.board.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import miniProject.board.controller.argumentResolver.Login;
-import miniProject.board.dto.ArticleAddDto;
+import miniProject.board.dto.ArticleDto;
 import miniProject.board.dto.MemberDto;
 import miniProject.board.entity.Article;
 import miniProject.board.service.ArticleService;
@@ -20,23 +20,25 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleController {
     private final ArticleService articleService;
 
+    // 필요한 메서드 : Article 리스트 제공, 수정 페이지로 이동, 수정 내용 저장
+
     // 게시글 단일 조회
     @GetMapping("/{articleId}")
     public Article show(@PathVariable Long articleId) {
-        return articleService.show(articleId);
+        return articleService.read(articleId);
     }
 
     // 게시글 작성 페이지로 이동
-    @GetMapping("/write")
+    @GetMapping
     public String writeForm(Model model) {
-        model.addAttribute("ArticleAddDto", new ArticleAddDto());
+        model.addAttribute("ArticleRequest", new ArticleDto.Create());
 
-        return "article/writeForm";
+        return "/article/writeForm";
     }
 
     // 게시글 작성
-    @PostMapping("/write")
-    public String write(@Validated @ModelAttribute ArticleAddDto articleAddDto,
+    @PostMapping
+    public String write(@Validated @ModelAttribute ArticleDto.Create articleCreateDto,
                          @Login MemberDto.Session memberSessionDto,
                          BindingResult bindingResult,
                          @RequestParam(defaultValue = "/") String redirectURL) {
@@ -44,10 +46,10 @@ public class ArticleController {
             return "/article/writeForm";
         }
 
-        Article writed = articleService.write(articleAddDto, memberSessionDto.getId());
+        Article written = articleService.create(articleCreateDto, memberSessionDto.getId());
 
         // 작성된 글을 바로 볼 수 있도록 해당 게시글 페이지로 이동
-        return "redirect:/article/" + writed.getArticleId();
+        return "redirect:/article/" + written.getArticleId();
     }
 
     // 게시글 삭제
