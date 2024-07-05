@@ -2,13 +2,15 @@ package miniProject.board.service;
 
 import miniProject.board.dto.ArticleDto;
 import miniProject.board.entity.Article;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ArticleService {
-    List<Article> index();
+    Page<ArticleDto.ArticlesList> index(Pageable pageable);
 
-    Article read(Long articleId);
+    ArticleDto.Info read(Long articleId);
 
     Article create(ArticleDto.Create articleAddDto, Long memberId);
 

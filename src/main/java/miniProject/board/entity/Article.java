@@ -38,6 +38,9 @@ public class Article {
     private LocalDateTime updatedAt;
 
     @Column
+    private int hits;
+
+    @Column
     private int likes;
 
     public Article(String title, String filePath, UUID uuid, Member member) {
@@ -47,6 +50,7 @@ public class Article {
         this.member = member;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.hits = 0;
         this.likes = 0;
     }
 
@@ -54,6 +58,10 @@ public class Article {
     public void update(String title) {
         this.title = title;
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void checkHits() {
+        this.hits++;
     }
 
     // 조회수 증가 메서드. 누르면 조회수 1씩 증가

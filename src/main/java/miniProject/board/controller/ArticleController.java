@@ -7,11 +7,16 @@ import miniProject.board.dto.ArticleDto;
 import miniProject.board.dto.MemberDto;
 import miniProject.board.entity.Article;
 import miniProject.board.service.ArticleService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -20,15 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleController {
     private final ArticleService articleService;
 
-    // 필요한 메서드 : Article 리스트 제공, 수정 페이지로 이동, 수정 내용 저장
-
-    // 게시글 단일 조회
-    @GetMapping("/{articleId}")
-    public Article show(@PathVariable Long articleId) {
-        return articleService.read(articleId);
-    }
-
-    // 게시글 작성 페이지로 이동
+    // 1. 게시글 작성 페이지로 이동
     @GetMapping
     public String writeForm(Model model) {
         model.addAttribute("ArticleRequest", new ArticleDto.Create());
@@ -36,12 +33,11 @@ public class ArticleController {
         return "/article/writeForm";
     }
 
-    // 게시글 작성
+    // 2. 게시글 작성
     @PostMapping
     public String write(@Validated @ModelAttribute ArticleDto.Create articleCreateDto,
                          @Login MemberDto.Session memberSessionDto,
-                         BindingResult bindingResult,
-                         @RequestParam(defaultValue = "/") String redirectURL) {
+                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "/article/writeForm";
         }
@@ -52,8 +48,31 @@ public class ArticleController {
         return "redirect:/article/" + written.getArticleId();
     }
 
-    // 게시글 삭제
-    @PostMapping("/{articleId}/delete")
+    // 3. 게시글 단일 조회
+    @GetMapping("/{articleId}")
+    public ArticleDto.Info show(@PathVariable Long articleId) {
+        return articleService.read(articleId);
+    }
+
+    // 4. 게시글 리스트 조회
+    @GetMapping("/articles")
+    public String index(@RequestParam(defaultValue = "1") int page, Model model) {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<ArticleDto.ArticlesList> articles = articleService.index(pageable);
+
+        model.addAttribute("articles", articles.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", articles.getTotalPages());
+
+        return "article/list";
+    }
+
+    // 5. 게시글 수정 페이지로 이동
+
+    // 6. 게시글 수정
+
+    // 7. 게시글 삭제
+    @DeleteMapping("/{articleId}")
     public String delete(@Login MemberDto.Session memberSessionDto,
                        @PathVariable Long articleId) {
         if(memberSessionDto == null) {

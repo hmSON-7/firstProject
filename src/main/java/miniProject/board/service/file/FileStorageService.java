@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.UUID;
 
 @Slf4j
@@ -30,7 +27,7 @@ public class FileStorageService {
             // 1. username으로 디렉토리 경로 찾기
             Path directoryPath = directoryStorageService.findDir(username);
             // 2. 파일 경로 설정
-            Path filePath = directoryPath.resolve(uuid.toString() + ".txt");
+            Path filePath = directoryPath.resolve(username + "_" + uuid.toString() + ".txt");
 
             // 3. 파일 생성 및 내용 쓰기
             Files.write(filePath, content.getBytes(), StandardOpenOption.CREATE_NEW);
@@ -47,15 +44,18 @@ public class FileStorageService {
         return null;
     }
 
-    public String readFile(String username, UUID uuid) {
+    /**
+     * 2. 파일 조회 메서드
+     * @param filePath 파일 탐색에 사용할 경로
+     * @return 파일을 찾으면 내용을 문자열로 바꿔서 반환
+     */
+    public String readFile(String filePath) {
         try {
-            // 1. username으로 디렉토리 경로 찾기
-            Path directoryPath = directoryStorageService.findDir(username);
-            // 2. 파일 경로 설정
-            Path filePath = directoryPath.resolve(uuid.toString() + ".txt");
+            // String 형태의 filePath를 Path 객체로 변환
+            Path path = Paths.get(filePath);
 
-            // 3. 파일 내용 읽기
-            return new String(Files.readAllBytes(filePath));
+            // 파일 내용 읽기
+            return new String(Files.readAllBytes(path));
         } catch (NoSuchFileException e) {
             System.out.println("파일을 찾을 수 없습니다: " + e.getMessage());
         } catch (IOException e) {

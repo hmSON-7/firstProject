@@ -3,16 +3,13 @@ package miniProject.board.dto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import miniProject.board.entity.Article;
-import miniProject.board.entity.Member;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class ArticleDto {
 
     @Getter @Setter
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Info {
 
@@ -23,13 +20,10 @@ public class ArticleDto {
         private String title;
 
         @NotEmpty
-        private String filePath;
+        private String content;
 
         @NotEmpty
-        private UUID uuid;
-
-        @NotEmpty
-        private Member member;
+        private String nickname;
 
         @NotEmpty
         private LocalDateTime createdAt;
@@ -38,20 +32,10 @@ public class ArticleDto {
         private LocalDateTime updatedAt;
 
         @NotEmpty
-        private int likes;
+        private int hits;
 
-        public static ArticleDto.Info fromArticle(Article article) {
-            return new ArticleDto.Info(
-                    article.getArticleId(),
-                    article.getTitle(),
-                    article.getFilePath(),
-                    article.getUuid(),
-                    article.getMember(),
-                    article.getCreatedAt(),
-                    article.getUpdatedAt(),
-                    article.getLikes()
-            );
-        }
+        @NotEmpty
+        private int likes;
     }
 
     @Getter @Setter
@@ -64,5 +48,25 @@ public class ArticleDto {
         @NotEmpty
         @Size(min = 5)
         private String content;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class ArticlesList {
+        private Long articleId;
+        private String title;
+        private String nickname;
+        private LocalDateTime updatedAt;
+        private int likes;
+        private boolean checkUpdate;
+
+        public ArticlesList(Long articleId, String title, String nickname, LocalDateTime updatedAt, int likes, LocalDateTime createdAt) {
+            this.articleId = articleId;
+            this.title = title;
+            this.nickname = nickname;
+            this.updatedAt = updatedAt;
+            this.likes = likes;
+            this.checkUpdate = !createdAt.equals(updatedAt);
+        }
     }
 }
