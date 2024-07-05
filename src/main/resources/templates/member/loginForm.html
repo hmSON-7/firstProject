@@ -1,44 +1,90 @@
-<div th:replace="~{layouts/header}"></div>
-
-<div class="bg-gray-100">
-    <div class="flex justify-center items-center h-screen">
-        <div class="bg-white p-8 rounded-lg shadow-md w-96">
-            <h2 class="text-2xl font-semibold mb-6">Login</h2>
-            <form th:action th:object="${memberLoginDto}" method="post">
-                <div th:if="${#fields.hasGlobalErrors()}">
-                    <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"
-                    class="text-red-500 mb-4">
-                        전체 오류 출력
-                    </p>
-                </div>
-                <div class="mb-4">
-                    <label for="userId" class="block text-gray-700">아이디</label>
-                    <input type="text" id="userId" th:field="*{username}"
-                           class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500" required>
-                    <p th:errors="*{username}" class="text-red-500"></p>
-                </div>
-                <div class="mb-4">
-                    <label for="password" class="block text-gray-700">비밀 번호</label>
-                    <input type="password" id="password" th:field="*{password}"
-                           class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500" required>
-                    <p th:errors="*{password}" class="text-red-500"></p>
-                </div>
-                <div class="mb-2">
-                    <input type="submit" value="로그인"
-                           class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-700">
-                </div>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+<!-- Navbar -->
+<nav class="bg-white shadow-lg">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="flex justify-between">
+            <div class="flex space-x-4">
+                <!-- Logo -->
                 <div>
-                    <input type="reset" value="초기화"
-                           class="w-full bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-blue-700">
+                    <a href="#" class="flex items-center py-5 px-2 text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-blue-600">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+                        </svg>
+                    </a>
                 </div>
-                <p class="mt-10 text-center text-sm text-gray-500">
-                    Not a member?
-                    <a href="/member/signUp" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign Up HERE</a>
-                </p>
 
-            </form>
+                <!-- Primary Nav -->
+                <div class="flex items-center space-x-1">
+                    <a href="#" class="py-5 px-3 text-gray-700 hover:text-blue-600">전체 게시글</a>
+                    <a href="#" class="py-5 px-3 text-gray-700 hover:text-blue-600">공지사항</a>
+                </div>
+            </div>
+            <!-- Secondary Nav -->
+            <div class="flex items-center space-x-1">
+                <a href="/login" class="py-2 px-3 bg-blue-600 text-white rounded hover:bg-blue-700">로그인</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="flex-grow flex items-center justify-center px-4">
+    <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
+        <div class="flex justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-blue-600">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+            </svg>
+        </div>
+        <h2 class="text-center text-3xl font-extrabold text-gray-900 mb-6">로그인</h2>
+
+        <form class="space-y-6" th:action th:object="${memberLoginDto}" method="post">
+            <div th:if="${#fields.hasGlobalErrors()}">
+                <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"
+                   class="text-red-500 mb-4">
+                    전체 오류 출력
+                </p>
+            </div>
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700">아이디</label>
+                <input th:field="*{username}" id="username" name="username" required class="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-600 focus:border-blue-600 block w-full">
+                <p th:errors="*{username}" class="text-red-500"></p>
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">비밀번호</label>
+                <input th:field="*{password}" id="password" name="password" type="password" required class="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-600 focus:border-blue-600 block w-full">
+                <p th:errors="*{password}" class="text-red-500"></p>
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="text-sm">
+                    <a href="#" class="font-medium text-blue-600 hover:text-blue-500">비밀번호를 잊으셨나요?</a>
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600">
+                    로그인
+                </button>
+            </div>
+        </form>
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-600">
+                회원이 아닌가요?
+                <a href="/signUp" class="font-medium text-blue-600 hover:text-blue-500">회원 가입</a>
+            </p>
         </div>
     </div>
 </div>
 
-<div th:replace="~{layouts/footer}"></div>
+<!-- Footer -->
+<footer class="bg-white text-center py-4 mt-8 shadow-lg">
+    <p class="text-gray-500">&copy; 2024 Your Company. All rights reserved.</p>
+</footer>
+</body>
+</html>
