@@ -40,6 +40,10 @@ public class ArticleController {
             return "/article/writeForm";
         }
 
+        if(memberSessionDto == null) {
+            return "redirect:/member/login";
+        }
+
         Article written = articleService.create(articleCreateDto, memberSessionDto.getId());
 
         // 작성된 글을 바로 볼 수 있도록 해당 게시글 페이지로 이동
@@ -66,22 +70,53 @@ public class ArticleController {
     }
 
     // 5. 게시글 수정 페이지로 이동
+    @GetMapping("/{articleId}/edit")
+    public String editForm(@PathVariable Long articleId, Model model) {
+        ArticleDto.Info article = articleService.read(articleId);
+
+        model.addAttribute("ArticleRequest", new ArticleDto.Create(
+                article.getTitle(),
+                article.getContent()
+        ));
+        model.addAttribute("articleId", article.getArticleId());
+
+        return "article/editForm";
+    }
 
     // 6. 게시글 수정
+    @PatchMapping("/{articleId}/edit")
+    public String edit(@Validated @ModelAttribute ArticleDto.Create articleEditDto,
+                       @PathVariable Long articleId,
+                       @Login MemberDto.Session memberSessionDto,
+                       BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "/article/editForm";
+        }
 
-    // 7. 게시글 삭제
-    @DeleteMapping("/{articleId}")
-    public String delete(@Login MemberDto.Session memberSessionDto,
-                       @PathVariable Long articleId) {
         if(memberSessionDto == null) {
             return "redirect:/member/login";
         }
 
-        boolean delete = articleService.delete(articleId, memberSessionDto.getId());
+        Article article = articleService.update(articleEditDto, articleId, memberSessionDto.getId());
 
-        if(!delete) {
-            return "/member/login";
+        // 수정된 글을 바로 볼 수 있도록 해당 게시글 페이지로 이동
+        return "redirect:/article/" + article.getArticleId();
+    }
+
+    // 7. 게시글 삭제
+    @DeleteMapping("/{articleId}")
+    public String delete(@Login MemberDto.Session memberSessionDto,
+                         @PathVariable Long articleId,
+                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "/article/" + articleId;
         }
+
+        if(memberSessionDto == null) {
+            return "redirect:/member/login";
+        }
+
+        articleService.delete(articleId, memberSessionDto.getId());
 
         return "/article";
     }

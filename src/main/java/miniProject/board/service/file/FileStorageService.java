@@ -51,10 +51,10 @@ public class FileStorageService {
      */
     public String readFile(String filePath) {
         try {
-            // String 형태의 filePath를 Path 객체로 변환
+            // 1. String 형태의 filePath를 Path 객체로 변환
             Path path = Paths.get(filePath);
 
-            // 파일 내용 읽기
+            // 2. 파일 내용 읽기
             return new String(Files.readAllBytes(path));
         } catch (NoSuchFileException e) {
             log.error("파일을 찾을 수 없습니다: {}", e.getMessage());
@@ -65,21 +65,13 @@ public class FileStorageService {
         return null;
     }
 
-    /**
-     * 파일 업데이트 메서드
-     * @param username 디렉토리 이름과 동일
-     * @param uuid 파일 이름으로 사용
-     * @param content 새 파일 내용
-     */
-    public void updateFile(String username, UUID uuid, String content) {
+    public void updateFile(String filePath, String content) {
         try {
-            // 1. username으로 디렉토리 경로 찾기
-            Path directoryPath = directoryStorageService.findDir(username);
-            // 2. 파일 경로 설정
-            Path filePath = directoryPath.resolve(uuid.toString() + ".txt");
+            // 1. String 형태의 filePath를 Path 객체로 변환
+            Path path = Paths.get(filePath);
 
-            // 3. 파일 내용 업데이트
-            Files.write(filePath, content.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+            // 2. 파일 내용 업데이트
+            Files.write(path, content.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
         } catch (NoSuchFileException e) {
             log.error("파일을 찾을 수 없습니다: {}", e.getMessage());
         } catch (IOException e) {
@@ -87,20 +79,13 @@ public class FileStorageService {
         }
     }
 
-    /**
-     * 파일 삭제 메서드
-     * @param username 디렉토리 이름과 동일
-     * @param uuid 파일 이름으로 사용
-     */
-    public void deleteFile(String username, UUID uuid) {
+    public void deleteFile(String filePath) {
         try {
-            // 1. username으로 디렉토리 경로 찾기
-            Path directoryPath = directoryStorageService.findDir(username);
-            // 2. 파일 경로 설정
-            Path filePath = directoryPath.resolve(uuid.toString() + ".txt");
+            // 1. String 형태의 filePath를 Path 객체로 변환
+            Path path = Paths.get(filePath);
 
-            // 3. 파일 삭제
-            Files.delete(filePath);
+            // 2. 파일 삭제
+            Files.delete(path);
         } catch (NoSuchFileException e) {
             log.error("파일을 찾을 수 없습니다: {}", e.getMessage());
         } catch (IOException e) {

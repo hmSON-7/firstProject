@@ -12,7 +12,7 @@ public interface ArticleService {
 
     Article create(ArticleDto.Create articleAddDto, Long memberId);
 
-    Article update(ArticleDto.Info articleDto, Long articleId, Long memberId);
+    Article update(ArticleDto.Create articleEditDto, Long articleId, Long memberId);
 
-    boolean delete(Long articleId, Long memberId);
+    void delete(Long articleId, Long memberId);
 }

@@ -39,7 +39,7 @@ public class ArticleDto {
     }
 
     @Getter @Setter
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor
     @NoArgsConstructor
     public static class Create {
         @NotEmpty
