@@ -1,5 +1,6 @@
 package miniProject.board.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import miniProject.board.entity.Article;
 import miniProject.board.entity.Comment;
@@ -16,10 +17,11 @@ public class CommentDto {
     @AllArgsConstructor
     @Builder
     public static class CommentRequest {
-
+        @NotEmpty
         private Long articleId;
-
+        @NotEmpty
         private String username;
+        @NotEmpty
         private String content;
 
         public Comment toEntity(Member member, Article article){
@@ -33,11 +35,15 @@ public class CommentDto {
 
     @Getter
     public static class CommentResponse {
+        @NotEmpty
         private Long commentId;
+        @NotEmpty
         private String username;
+        @NotEmpty
         private String content;
-
+        @NotEmpty
         private LocalDateTime createdAt;
+        @NotEmpty
         private LocalDateTime updatedAt;
 
         // entitu -> dto
