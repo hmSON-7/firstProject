@@ -8,6 +8,7 @@ import miniProject.board.entity.Comment;
 import miniProject.board.service.CommentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,9 +32,12 @@ public class CommentController {
 
     // 모든 댓글 조회
     @GetMapping("/comments")
-    public String read(@PathVariable long articleId) {
-        commentService.get(articleId);
-        return "redirect:/article/" + articleId;
+    public String read(@PathVariable long articleId, Model model) {
+
+        List<CommentDto.CommentResponse> comments = commentService.get(articleId);
+        model.addAttribute("comments", comments);
+
+        return "redirect:/article/" + articleId + "/comments";
     }
 
     //댓글 삭제
