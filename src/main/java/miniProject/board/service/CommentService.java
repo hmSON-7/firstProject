@@ -28,15 +28,15 @@ public class CommentService {
         멤버 확인 후 아티클 여부 확인
     * */
     @Transactional
-    public void save(String username, Long articleId, CommentDto.CommentRequest commentRequest) {
+    public void save(Long userId, Long articleId, CommentDto.CommentRequest commentRequest) {
 
-        Optional<Member> __member = memberRepository.findByUsername(username);
+        Optional<Member> __member = memberRepository.findById(userId);
         Member member = null;
 
         if (__member.isPresent()) { // Optional이 값으로 채워져 있는지 확인
             member = __member.get(); // User 객체 추출
         } else {
-            System.out.println("사용자가 존재하지 않습니다: " + username);
+            System.out.println("사용자가 존재하지 않습니다: " + userId);
         }
 
         Article article = articleRepository.findById(articleId)

@@ -31,13 +31,6 @@ public class Member {
     @Column
     private String email;
 
-    /*OneToMany
-     * 하나의 멤버가 여러 댓글을 가지도록 함
-     * 멤버가 삭제되면 댓글도 삭제
-     */
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Comment> comments;
-
     private Member(String username, String password, String email) {
         this.username = username;
         this.nickname = username;
