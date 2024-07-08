@@ -21,24 +21,25 @@ public class CommentController {
     // 댓글 저장
     @PostMapping("/comments")
     public String save(@PathVariable Long articleId,
-                               @RequestBody CommentDto.CommentRequest request,
-                               @Login MemberDto.Info memberSessionDto){
+                       CommentDto.CommentRequest request,
+                       @Login MemberDto.Info memberSessionDto){
 
-        Long commentId = commentService.save(memberSessionDto.getUsername(), articleId, request);
+        commentService.save(memberSessionDto.getUsername(), articleId, request);
 
-        return "redirect:/article/" + articleId + "/comments";
+        return "redirect:/article/" + articleId + "/comments/";
     }
 
     // 모든 댓글 조회
     @GetMapping("/comments")
     public String read(@PathVariable long articleId) {
-        commentService.read(articleId);
+        commentService.get(articleId);
         return "redirect:/article/" + articleId;
     }
 
     //댓글 삭제
     @DeleteMapping("/comments/{commentId}")
     public String delete(@PathVariable long articleId, @PathVariable Long commentId) {
+
         commentService.delete(articleId, commentId);
         return "redirect:/article/" + articleId + "/comments";
     }
@@ -46,9 +47,10 @@ public class CommentController {
     //댓글 수정
     @PutMapping({"/comments/{commentId}"})
     public String update(@PathVariable long articleId, @PathVariable Long commentId,
-                                       @Login MemberDto.Info memberSessionDto,
-                                       @RequestBody CommentDto.CommentRequest commentRequest) {
-        commentService.update(articleId, commentId, memberSessionDto.getUsername(), commentRequest);
+                         @Login MemberDto.Session memberSessionDto,
+                         CommentDto.CommentRequest commentRequest) {
+
+        commentService.update(articleId, commentId, memberSessionDto.getId(), commentRequest);
         return "redirect:/article/" + articleId + "/comments/" + commentId;
     }
 

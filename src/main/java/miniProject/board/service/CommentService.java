@@ -28,49 +28,56 @@ public class CommentService {
         멤버 확인 후 아티클 여부 확인
     * */
     @Transactional
-    public Long save(String username, Long articleId, CommentDto.CommentRequest commentRequest) {
+    public void save(String username, Long articleId, CommentDto.CommentRequest commentRequest) {
+
         Optional<Member> __member = memberRepository.findByUsername(username);
-        Member member;
+        Member member = null;
+
         if (__member.isPresent()) { // Optional이 값으로 채워져 있는지 확인
             member = __member.get(); // User 객체 추출
         } else {
             System.out.println("사용자가 존재하지 않습니다: " + username);
-            return null;
         }
 
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("게시글이 존재하지 않습니다."));
+                        new IllegalArgumentException("게시글이 존재하지 않습니다.: "+ articleId));
 
-        commentRequest.setMember(member);
-        commentRequest.setArticle(article);
 
-        Comment comment = commentRequest.toEntity();
+        Comment comment = commentRequest.toEntity(member, article);
         commentRepository.save(comment);
-
-        return commentRequest.getCommentId();
     }
 
     /* 댓글 조회
     *  아티클 id 기준
     * */
     @Transactional(readOnly = true)
-    public List<Comment> read(Long articleId) {
+    public List<CommentDto.CommentResponse> get(Long articleId) {
+
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("게시글이 존재하지 않습니다."));
-        List<Comment> comments = article.getComments();
-        return comments;
+
+        List <Comment> comments = article.getComments();
+
+        return comments.stream()
+                .map(CommentDto.CommentResponse::new) // CommentResponse 객체로 변환
+                .collect(Collectors.toList());
     }
 
     /*댓글 삭제
     * 아티클 id와 댓글 id로 삭제
     * */
     @Transactional
-    public void delete(Long articleId, Long commentId) {
-        Comment comment = commentRepository.findByArticleIdAndCommentId(articleId, commentId)
+    public void delete(Long commentId, Long userId) {
+
+        Comment comment = commentRepository.findByCommentId(commentId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("댓글이 존재하지 않습니다."));
+
+        if (!comment.getMember().getId().equals(userId)) {
+            throw new IllegalArgumentException("작성자만 댓글을 삭제할 수 있습니다.");
+        }
 
         commentRepository.delete(comment);
     }
@@ -79,17 +86,21 @@ public class CommentService {
     *
     * */
     @Transactional
-    public void update(Long articleId, Long commentId, String userName,
+    public void update(Long articleId,Long commentId, Long userId,
                        CommentDto.CommentRequest commentRequest) {
-        Comment comment = commentRepository.findByArticleIdAndCommentId(articleId, commentId)
+
+        articleRepository.findById(articleId).orElseThrow(() ->
+                new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        Comment comment = commentRepository.findByCommentId(commentId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("댓글이 존재하지 않습니다."));
 
-        if (!comment.getMember().getUsername().equals(userName)) {
+        if (!comment.getMember().getId().equals(userId)) {
             throw new IllegalArgumentException("작성자만 댓글을 수정할 수 있습니다.");
         }
 
-        comment.update(commentRequest.getContent(), commentRequest.getUpdatedAt());
+        comment.update(commentRequest.getContent());
     }
 
 }

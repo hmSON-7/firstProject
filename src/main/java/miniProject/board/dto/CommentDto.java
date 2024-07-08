@@ -16,23 +16,17 @@ public class CommentDto {
     @AllArgsConstructor
     @Builder
     public static class CommentRequest {
-        private Article article;
-        private Member member;
 
-        private Long commentId;
+        private Long articleId;
+
+        private String username;
         private String content;
 
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-
-        public Comment toEntity(){
+        public Comment toEntity(Member member, Article article){
             return Comment.builder()
-                    .article(article)
                     .member(member)
-                    .commentId(commentId)
+                    .article(article)
                     .content(content)
-                    .createdAt(createdAt)
-                    .updatedAt(updatedAt)
                     .build();
         }
     }
@@ -40,7 +34,6 @@ public class CommentDto {
     @Getter
     public static class CommentResponse {
         private Long commentId;
-        private Long articleId;
         private String username;
         private String content;
 
@@ -50,7 +43,6 @@ public class CommentDto {
         // entitu -> dto
         public CommentResponse(Comment comment){
             this.commentId = comment.getCommentId();
-            this.articleId = comment.getArticle().getArticleId();
             this.username = comment.getMember().getUsername();
             this.content = comment.getContent();
             this.createdAt = comment.getCreatedAt();
