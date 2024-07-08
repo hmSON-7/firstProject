@@ -25,7 +25,7 @@ public class FileStorageService {
     public String createFile(String username, String content, UUID uuid) {
         try {
             // 1. username으로 디렉토리 경로 찾기
-            Path directoryPath = directoryStorageService.findDir(username);
+            Path directoryPath = directoryStorageService.findPath(username);
             // 2. 파일 경로 설정
             Path filePath = directoryPath.resolve(username + "_" + uuid.toString() + ".txt");
 
@@ -45,16 +45,19 @@ public class FileStorageService {
     }
 
     /**
-     * 2. 파일 조회 메서드
+     * 파일 조회 메서드
      * @param filePath 파일 탐색에 사용할 경로
      * @return 파일을 찾으면 내용을 문자열로 바꿔서 반환
      */
     public String readFile(String filePath) {
+        if (filePath == null) {
+            log.error("파일 경로가 null입니다.");
+            return null;
+        }
         try {
-            // 1. String 형태의 filePath를 Path 객체로 변환
             Path path = Paths.get(filePath);
 
-            // 2. 파일 내용 읽기
+            // 파일 내용 읽기
             return new String(Files.readAllBytes(path));
         } catch (NoSuchFileException e) {
             log.error("파일을 찾을 수 없습니다: {}", e.getMessage());
@@ -65,12 +68,19 @@ public class FileStorageService {
         return null;
     }
 
+    /**
+     * 파일 업데이트 메서드
+     * @param filePath 파일 경로
+     * @param content 새 파일 내용
+     */
     public void updateFile(String filePath, String content) {
+        if (filePath == null) {
+            log.error("파일 경로가 null입니다.");
+            return;
+        }
         try {
-            // 1. String 형태의 filePath를 Path 객체로 변환
             Path path = Paths.get(filePath);
 
-            // 2. 파일 내용 업데이트
             Files.write(path, content.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
         } catch (NoSuchFileException e) {
             log.error("파일을 찾을 수 없습니다: {}", e.getMessage());
@@ -79,12 +89,18 @@ public class FileStorageService {
         }
     }
 
+    /**
+     * 파일 삭제 메서드
+     * @param filePath 파일 경로
+     */
     public void deleteFile(String filePath) {
+        if (filePath == null) {
+            log.error("파일 경로가 null입니다.");
+            return;
+        }
         try {
-            // 1. String 형태의 filePath를 Path 객체로 변환
             Path path = Paths.get(filePath);
 
-            // 2. 파일 삭제
             Files.delete(path);
         } catch (NoSuchFileException e) {
             log.error("파일을 찾을 수 없습니다: {}", e.getMessage());

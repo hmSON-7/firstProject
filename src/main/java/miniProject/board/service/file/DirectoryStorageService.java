@@ -13,9 +13,11 @@ import java.nio.file.*;
 public class DirectoryStorageService {
 
     public Path findPath(String username) {
-        String projectRoot = System.getProperty("user.dir");
-        return Paths.get(projectRoot, "src", "main", "resources", "content", username);
-        // 최종 경로 : {projectRootDir}/src/main/resources/content/{username}
+        String projectRoot = System.getProperty("user.dir"); // 프로젝트 루드 디렉토리 반환
+        Path path = Paths.get(projectRoot, "src", "main", "resources", "content", username);
+        // root_directory/src/main/resources/content/{username}
+        log.info("Computed directory path: {}", path.toString());
+        return path;
     }
 
     /**
@@ -27,7 +29,7 @@ public class DirectoryStorageService {
 
         try {
             // Directory 생성
-            Files.createDirectory(directoryPath);
+            Files.createDirectories(directoryPath);
             log.info("{} 디렉토리가 생성되었습니다.", directoryPath);
 
         } catch (FileAlreadyExistsException e) {
@@ -60,22 +62,6 @@ public class DirectoryStorageService {
             }
         } catch (IOException e) {
             log.error("디렉토리를 삭제하는 중 오류가 발생했습니다.", e);
-        }
-    }
-
-    /**
-     * 디렉토리 찾기 메서드. 파일 저장 시 디렉토리를 찾기 위해 사용
-     * @param username 디렉토리의 이름은 username과 동일
-     * @return 디렉토리 경로를 나타내는 Path 객체
-     * @throws NoSuchFileException 디렉토리를 찾을 수 없는 경우 예외 발생
-     */
-    public Path findDir(String username) throws NoSuchFileException {
-        Path directoryPath = findPath(username);
-
-        if (Files.exists(directoryPath) && Files.isDirectory(directoryPath)) {
-            return directoryPath;
-        } else {
-            throw new NoSuchFileException("디렉토리를 찾을 수 없습니다: " + directoryPath);
         }
     }
 
