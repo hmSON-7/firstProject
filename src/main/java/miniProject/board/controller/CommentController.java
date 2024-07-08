@@ -23,9 +23,9 @@ public class CommentController {
     @PostMapping("/comments")
     public String save(@PathVariable Long articleId,
                        CommentDto.CommentRequest request,
-                       @Login MemberDto.Info memberSessionDto){
+                       @Login MemberDto.Session memberSessionDto){
 
-        commentService.save(memberSessionDto.getUsername(), articleId, request);
+        commentService.save(memberSessionDto.getId(), articleId, request);
 
         return "redirect:/article/" + articleId + "/comments/";
     }
@@ -49,7 +49,7 @@ public class CommentController {
     }
 
     //댓글 수정
-    @PutMapping({"/comments/{commentId}"})
+    @PutMapping("/comments/{commentId}")
     public String update(@PathVariable long articleId, @PathVariable Long commentId,
                          @Login MemberDto.Session memberSessionDto,
                          CommentDto.CommentRequest commentRequest) {
