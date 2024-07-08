@@ -1,4 +1,4 @@
-package miniProject.board.service;
+package miniProject.board.service.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -17,33 +16,6 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-
-    @Override
-    public MemberDto.Info signUp(MemberDto.Create createMemberDto) {
-        Member member = Member.createMember(createMemberDto.getUsername(),
-                passwordEncoder.encode(createMemberDto.getPassword()),
-                createMemberDto.getEmail()
-        );
-
-        memberRepository.save(member);
-
-        return MemberDto.Info.fromMember(member);
-    }
-
-    @Override
-    public MemberDto.Session login(MemberDto.Login loginMemberDto) {
-        Optional<Member> optionalMember = memberRepository.findByUsername(loginMemberDto.getUsername());
-
-        if (optionalMember.isPresent()) {
-            Member member = optionalMember.get();
-
-            if (passwordEncoder.matches(loginMemberDto.getPassword(), member.getPassword())) {
-                return MemberDto.Session.fromMember(member);
-            }
-        }
-
-        return null;
-    }
 
     @Override
     public MemberDto.Info findMember(Long memberId) {

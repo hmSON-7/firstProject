@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
+
 
 @Entity
 @Getter
@@ -22,11 +24,11 @@ public class Article {
     private String title;
 
     @Column
-    private String content;
+    private String filePath;
 
-    /*ManyToOne
-    * 게시글 작성자의 정보를 Member 엔티티에서 가져옴
-    */
+    @Column
+    private UUID uuid;
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
@@ -45,23 +47,38 @@ public class Article {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    /*
-    * 게시글 업데이트 시간
-    * 게시글 수정시 갱신되는 속성*/
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public Article(String title, String content, Member member) {
+    @Column
+    private int hits;
+
+    @Column
+    private int likes;
+
+    public Article(String title, String filePath, UUID uuid, Member member) {
         this.title = title;
-        this.content = content;
+        this.filePath = filePath;
+        this.uuid = uuid;
         this.member = member;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.hits = 0;
+        this.likes = 0;
     }
 
-    public void update(String title, String content) {
+    // Article 업데이트 메서드, 내용은 파일에 저장하므로 filePath를 따로 변경하지 않음
+    public void update(String title) {
         this.title = title;
-        this.content = content;
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void checkHits() {
+        this.hits++;
+    }
+
+    // 조회수 증가 메서드. 누르면 조회수 1씩 증가
+    public void checkLikes() {
+        this.likes++;
     }
 }

@@ -1,6 +1,8 @@
 package miniProject.board.service;
 
 import miniProject.board.dto.MemberDto;
+import miniProject.board.service.member.MemberServiceImpl;
+import miniProject.board.service.member.SignUpService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,18 +23,21 @@ class MemberServiceImplTest {
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    SignUpService signUpService;
+
     @Test
     @DisplayName("회원가입 성공 테스트")
     void checkSignUp() {
         // given
         MemberDto.Create createMemberDto = new MemberDto.Create();
-        createMemberDto.setUsername("admin");
+        createMemberDto.setUsername("test");
         createMemberDto.setPassword("123456");
         createMemberDto.setConfirmPassword("123456");
-        createMemberDto.setEmail("admin@gmail.com");
+        createMemberDto.setEmail("test@gmail.com");
 
         // when
-        MemberDto.Info member = memberService.signUp(createMemberDto);
+        MemberDto.Info member = signUpService.signUp(createMemberDto);
 
         // then
         Assertions.assertEquals("", member.getDescription());
@@ -55,11 +60,11 @@ class MemberServiceImplTest {
     void checkFindMember() {
         // given
         MemberDto.Create createMemberDto = new MemberDto.Create();
-        createMemberDto.setUsername("admin");
+        createMemberDto.setUsername("test");
         createMemberDto.setPassword("123456");
         createMemberDto.setConfirmPassword("123456");
-        createMemberDto.setEmail("admin@gmail.com");
-        MemberDto.Info memberInfo = memberService.signUp(createMemberDto);
+        createMemberDto.setEmail("test@gmail.com");
+        MemberDto.Info memberInfo = signUpService.signUp(createMemberDto);
 
         // when
         MemberDto.Info findMember = memberService.findMember(memberInfo.getId());
@@ -79,25 +84,25 @@ class MemberServiceImplTest {
     void checkFindMembers() {
         // given
         MemberDto.Create createMemberDto1 = new MemberDto.Create();
-        createMemberDto1.setUsername("admin1");
+        createMemberDto1.setUsername("test1");
         createMemberDto1.setPassword("123456");
         createMemberDto1.setConfirmPassword("123456");
-        createMemberDto1.setEmail("admin@gmail.com");
+        createMemberDto1.setEmail("test@gmail.com");
 
         MemberDto.Create createMemberDto2 = new MemberDto.Create();
-        createMemberDto2.setUsername("admin2");
+        createMemberDto2.setUsername("test2");
         createMemberDto2.setPassword("123456");
         createMemberDto2.setConfirmPassword("123456");
-        createMemberDto2.setEmail("admin@gmail.com");
+        createMemberDto2.setEmail("test@gmail.com");
 
-        memberService.signUp(createMemberDto1);
-        memberService.signUp(createMemberDto2);
+        signUpService.signUp(createMemberDto1);
+        signUpService.signUp(createMemberDto2);
 
         // when
         List<MemberDto.Info> members = memberService.findMembers();
 
         // then
         Assertions.assertNotNull(members);
-        Assertions.assertEquals(2, members.size());
+        Assertions.assertEquals(3, members.size());
     }
 }

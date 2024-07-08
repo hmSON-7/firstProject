@@ -1,8 +1,9 @@
 package miniProject.board;
 
 import lombok.RequiredArgsConstructor;
-import miniProject.board.entity.Admin;
-import miniProject.board.repository.AdminRepository;
+import miniProject.board.auth.constants.Role;
+import miniProject.board.entity.Member;
+import miniProject.board.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.PropertySource;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @PropertySource("classpath:application-admin.properties")
 public class AdminCreateCommandLineRunner implements CommandLineRunner {
-    private final AdminRepository adminRepository;
+    private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     // 관리자 이름
@@ -39,10 +40,13 @@ public class AdminCreateCommandLineRunner implements CommandLineRunner {
      */
     @Override
     public void run(String... args) throws Exception {
-        long count = adminRepository.count();
+        long count = memberRepository.count();
 
         if (count == 0) { // 관리자 계정이 없는 경우
-            adminRepository.save(new Admin(name, passwordEncoder.encode(password)));
+
+            memberRepository.save(Member.createMemberWithoutEmail(name,
+                    passwordEncoder.encode(password),
+                    Role.ROLE_ADMIN));
         }
     }
 }
