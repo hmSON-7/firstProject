@@ -50,6 +50,13 @@ public class ReportDto {
         }
     }
 
+    @Data
+    @AllArgsConstructor
+    public static class ProcessReport{
+        private Long reportId;
+        private ReportStatus reportStatus;
+    }
+
 
 
 }
