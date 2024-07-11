@@ -28,7 +28,10 @@ public class SignUpService {
 
         memberRepository.save(member);
 
-        directoryStorageService.createDir(member.getUsername());
+        boolean created = directoryStorageService.createDir(member.getUsername());
+        if(!created) {
+            throw new RuntimeException("디렉토리 생성 중 오류가 발생했습니다");
+        }
 
         return MemberDto.Info.fromMember(member);
     }

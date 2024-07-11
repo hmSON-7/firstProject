@@ -26,17 +26,24 @@ public class FileStorageService {
         try {
             // 1. username으로 디렉토리 경로 찾기
             Path directoryPath = directoryStorageService.findPath(username);
-            // 2. 파일 경로 설정
+
+            // 2. 디렉토리가 존재하지 않으면 오류 발생
+            if (directoryPath == null) {
+                log.error("디렉토리가 존재하지 않습니다");
+                return null;
+            }
+
+            // 3. 파일 경로 설정
             Path filePath = directoryPath.resolve(username + "_" + uuid.toString() + ".txt");
 
-            // 3. 파일 생성 및 내용 쓰기
+            // 4. 파일 생성 및 내용 쓰기
             Files.write(filePath, content.getBytes(), StandardOpenOption.CREATE_NEW);
 
-            // 4. 파일 경로 반환
+            // 5. 파일 경로 반환
             return filePath.toString();
 
-        } catch (NoSuchFileException e) {
-            log.error("디렉토리를 찾을 수 없습니다: {}", e.getMessage());
+        } catch (FileAlreadyExistsException e) {
+            log.error("파일이 이미 존재합니다: {}", e.getMessage());
         } catch (IOException e) {
             log.error("파일 생성 중 오류가 발생했습니다.", e);
         }

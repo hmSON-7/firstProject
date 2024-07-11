@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
-@RequestMapping("/article")
+@RequestMapping("/articles")
 @RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
@@ -28,7 +28,7 @@ public class ArticleController {
     public String writeForm(Model model) {
         model.addAttribute("ArticleRequest", new ArticleDto.Create());
 
-        return "/article/writeForm";
+        return "/articles/writeForm";
     }
 
     // 2. 게시글 작성
@@ -37,17 +37,17 @@ public class ArticleController {
                          @Login MemberDto.Session memberSessionDto,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/article/writeForm";
+            return "/articles/writeForm";
         }
 
         if(memberSessionDto == null) {
-            return "redirect:/member/login";
+            return "redirect:/login";
         }
 
         Article written = articleService.create(articleCreateDto, memberSessionDto.getId());
 
         // 작성된 글을 바로 볼 수 있도록 해당 게시글 페이지로 이동
-        return "redirect:/article/" + written.getArticleId();
+        return "redirect:/articles/" + written.getArticleId();
     }
 
     // 3. 게시글 단일 조회
@@ -66,7 +66,7 @@ public class ArticleController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", articles.getTotalPages());
 
-        return "article/list";
+        return "articles/list";
     }
 
     // 5. 게시글 수정 페이지로 이동
@@ -80,7 +80,7 @@ public class ArticleController {
         ));
         model.addAttribute("articleId", article.getArticleId());
 
-        return "article/editForm";
+        return "articles/editForm";
     }
 
     // 6. 게시글 수정
@@ -90,7 +90,7 @@ public class ArticleController {
                        @Login MemberDto.Session memberSessionDto,
                        BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/article/editForm";
+            return "/articles/editForm";
         }
 
         if(memberSessionDto == null) {
@@ -100,7 +100,7 @@ public class ArticleController {
         Article article = articleService.update(articleEditDto, articleId, memberSessionDto.getId());
 
         // 수정된 글을 바로 볼 수 있도록 해당 게시글 페이지로 이동
-        return "redirect:/article/" + article.getArticleId();
+        return "redirect:/articles/" + article.getArticleId();
     }
 
     // 7. 게시글 삭제
@@ -109,15 +109,15 @@ public class ArticleController {
                          @PathVariable Long articleId,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/article/" + articleId;
+            return "/articles/" + articleId;
         }
 
         if(memberSessionDto == null) {
-            return "redirect:/member/login";
+            return "redirect:/login";
         }
 
         articleService.delete(articleId, memberSessionDto.getId());
 
-        return "/article";
+        return "/articles";
     }
 }

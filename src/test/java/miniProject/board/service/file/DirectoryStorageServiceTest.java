@@ -5,8 +5,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Transactional
 class DirectoryStorageServiceTest {
 
+    @Autowired
     private DirectoryStorageService directoryStorageService;
     private static final String TEST_USERNAME = "testUser";
 
@@ -32,7 +33,7 @@ class DirectoryStorageServiceTest {
     void cleanUp() throws IOException {
         // 테스트 후 디렉토리 정리
         Path testDirPath = directoryStorageService.findPath(TEST_USERNAME);
-        if (Files.exists(testDirPath)) {
+        if (testDirPath != null) {
             FileUtils.deleteDirectory(testDirPath.toFile());
         }
     }
@@ -46,7 +47,7 @@ class DirectoryStorageServiceTest {
         directoryStorageService.createDir(TEST_USERNAME);
 
         // then
-        Path dirPath = directoryStorageService.findPath(TEST_USERNAME);
+        Path dirPath = directoryStorageService.createPath(TEST_USERNAME);
         assertTrue(Files.exists(dirPath) && Files.isDirectory(dirPath));
     }
 
@@ -54,14 +55,14 @@ class DirectoryStorageServiceTest {
     @DisplayName("디렉토리 중복 생성 테스트")
     void createExistingDir() {
         // given
-        directoryStorageService.createDir(TEST_USERNAME);
+        boolean firstAttempt = directoryStorageService.createDir(TEST_USERNAME);
 
         // when
-        directoryStorageService.createDir(TEST_USERNAME);
+        boolean secondAttempt = directoryStorageService.createDir(TEST_USERNAME);
 
         // then
-        Path dirPath = directoryStorageService.findPath(TEST_USERNAME);
-        assertTrue(Files.exists(dirPath) && Files.isDirectory(dirPath));
+        assertTrue(firstAttempt);
+        assertFalse(secondAttempt);
     }
 
     @Test
@@ -71,11 +72,10 @@ class DirectoryStorageServiceTest {
         directoryStorageService.createDir(TEST_USERNAME);
 
         // when
-        directoryStorageService.deleteDir(TEST_USERNAME);
+        boolean attempt = directoryStorageService.deleteDir(TEST_USERNAME);
 
         // then
-        Path dirPath = directoryStorageService.findPath(TEST_USERNAME);
-        assertFalse(Files.exists(dirPath));
+        assertTrue(attempt);
     }
 
     @Test
@@ -84,11 +84,10 @@ class DirectoryStorageServiceTest {
         // given
 
         // when
-        directoryStorageService.deleteDir(TEST_USERNAME);
+        boolean attempt = directoryStorageService.deleteDir(TEST_USERNAME);
 
         // then
-        Path dirPath = directoryStorageService.findPath(TEST_USERNAME);
-        assertFalse(Files.exists(dirPath));
+        assertFalse(attempt);
     }
 
     @Test
@@ -102,5 +101,17 @@ class DirectoryStorageServiceTest {
 
         // then
         assertTrue(Files.exists(dirPath) && Files.isDirectory(dirPath));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 디렉토리 찾기 실패 테스트")
+    void findNonExistentDir() {
+        // given
+
+        // when
+        Path dirPath = directoryStorageService.createPath(TEST_USERNAME);
+
+        // then
+        assertFalse(Files.exists(dirPath));
     }
 }
