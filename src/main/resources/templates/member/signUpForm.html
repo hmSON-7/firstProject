@@ -1,84 +1,49 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head th:replace="~{layouts/header/common-header :: head (~{::title})}">
     <title>회원가입</title>
-    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex flex-col min-h-screen">
-<!-- Navbar -->
-<nav class="bg-white shadow-lg">
-    <div class="max-w-6xl mx-auto px-4">
-        <div class="flex justify-between">
-            <div class="flex space-x-4">
-                <!-- Logo -->
-                <div>
-                    <a href="#" class="flex items-center py-5 px-2 text-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-blue-600">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
-                        </svg>
-                    </a>
-                </div>
+<body class="bg-light d-flex flex-column min-vh-100">
 
-                <!-- Primary Nav -->
-                <div class="flex items-center space-x-1">
-                    <a href="#" class="py-5 px-3 text-gray-700 hover:text-blue-600">전체 게시글</a>
-                    <a href="#" class="py-5 px-3 text-gray-700 hover:text-blue-600">공지사항</a>
-                </div>
-            </div>
-            <!-- Secondary Nav -->
-            <div class="flex items-center space-x-1">
-                <a href="/login" class="py-2 px-3 bg-blue-600 text-white rounded hover:bg-blue-700">로그인</a>
+<nav th:replace="~{layouts/navbar :: nav}"></nav>
+
+<!-- 메인 콘텐츠 -->
+<main class="container my-5 flex-grow-1">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="bg-white p-4 rounded shadow-sm">
+                <form th:action th:object="${createMemberDto}" method="post">
+                    <div class="text-center mb-4">
+                        <h1 class="h3 mb-3 fw-normal">회원가입</h1>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input th:field="*{username}" type="text" class="form-control" id="username" placeholder="아이디">
+                        <label for="username">아이디</label>
+                        <p th:errors="*{username}" class="text-danger"></p>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input th:field="*{password}" type="password" class="form-control" id="password" placeholder="비밀번호">
+                        <label for="password">비밀번호</label>
+                        <p th:errors="*{password}" class="text-danger"></p>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input th:field="*{confirmPassword}" type="password" class="form-control" id="confirmPassword" placeholder="비밀번호 확인">
+                        <label for="confirmPassword">비밀번호 확인</label>
+                        <p th:errors="*{confirmPassword}" class="text-danger"></p>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input th:field="*{email}" type="email" class="form-control" id="email" placeholder="이메일">
+                        <label for="email">이메일</label>
+                        <p th:errors="*{email}" class="text-danger"></p>
+                    </div>
+                    <button class="w-100 btn btn-lg btn-primary" type="submit">회원가입</button>
+                </form>
             </div>
         </div>
     </div>
-</nav>
-
-<!-- Main Content -->
-<div class="flex-grow flex items-center justify-center px-4 py-12">
-    <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
-        <div class="flex justify-center mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-blue-600">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
-            </svg>
-        </div>
-        <h2 class="text-center text-3xl font-extrabold text-gray-900 mb-6">회원가입</h2>
-
-        <form class="space-y-6" th:action th:object="${createMemberDto}" method="post">
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">아이디</label>
-                <input th:field="*{username}" id="username" name="username" required class="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-600 focus:border-blue-600 block w-full">
-                <p th:errors="*{username}" class="text-red-500"></p>
-            </div>
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">비밀번호</label>
-                <input th:field="*{password}" id="password" name="password" type="password" required class="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-600 focus:border-blue-600 block w-full">
-                <p th:errors="*{password}" class="text-red-500"></p>
-            </div>
-            <div>
-                <label for="confirmPassword" class="block text-sm font-medium text-gray-700">비밀번호 확인</label>
-                <input th:field="*{confirmPassword}" id="confirmPassword" name="confirmPassword" type="password" required class="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-600 focus:border-blue-600 block w-full">
-                <p th:errors="*{confirmPassword}" class="text-red-500"></p>
-            </div>
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">이메일</label>
-                <input th:field="*{email}" id="email" name="email" type="email" required class="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-600 focus:border-blue-600 block w-full">
-                <p th:errors="*{email}" class="text-red-500"></p>
-            </div>
-            <div>
-                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600">
-                    회원가입
-                </button>
-            </div>
-        </form>
-
-    </div>
-</div>
+</main>
 
 <!-- Footer -->
-<footer class="bg-white text-center py-4 mt-8 shadow-lg">
-    <p class="text-gray-500">&copy; 2024 Your Company. All rights reserved.</p>
-</footer>
+<footer th:replace="~{layouts/footer :: footer}"></footer>
 </body>
 </html>

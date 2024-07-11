@@ -1,5 +1,11 @@
-<div th:replace="~{layouts/header}"></div>
-    <p th:text="${memberSessionDto.id}">사용자 ID</p>
-    로그인 성공
-<div th:replace="~{main/home :: main}"></div>
-<div th:replace="~{layouts/footer}"></div>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/header/common-header :: head(~{::title})}">
+    <title>메인 페이지</title>
+</head>
+
+<body>
+<nav th:replace="~{layouts/navbar :: nav}"></nav>
+<footer th:replace="~{layouts/footer :: footer}"></footer>
+</body>
+</html>
