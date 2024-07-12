@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
-@RequestMapping("/article")
+@RequestMapping("/articles")
 @RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
@@ -28,32 +28,42 @@ public class ArticleController {
     public String writeForm(Model model) {
         model.addAttribute("ArticleRequest", new ArticleDto.Create());
 
-        return "/article/writeForm";
+        return "/articles/writeForm";
     }
 
     // 2. 게시글 작성
     @PostMapping
     public String write(@Validated @ModelAttribute ArticleDto.Create articleCreateDto,
-                         @Login MemberDto.Session memberSessionDto,
-                         BindingResult bindingResult) {
+                        @Login MemberDto.Session memberSessionDto,
+                        BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/article/writeForm";
+            return "/articles/writeForm";
         }
 
         if(memberSessionDto == null) {
-            return "redirect:/member/login";
+            return "redirect:/login";
         }
 
-        Article written = articleService.create(articleCreateDto, memberSessionDto.getId());
-
-        // 작성된 글을 바로 볼 수 있도록 해당 게시글 페이지로 이동
-        return "redirect:/article/" + written.getArticleId();
+        try {
+            Article written = articleService.create(articleCreateDto, memberSessionDto.getId());
+            log.info("게시글 작성 완료: {}", written);
+            log.info("작성된 게시글 ID: {}", written.getArticleId());
+            return "redirect:/articles/" + written.getArticleId();
+        } catch (Exception e) {
+            log.error("게시글 작성 중 오류 발생", e);
+            return "redirect:/error"; // 또는 오류 페이지로 리디렉션
+        }
     }
 
     // 3. 게시글 단일 조회
     @GetMapping("/{articleId}")
-    public ArticleDto.Info show(@PathVariable Long articleId) {
-        return articleService.read(articleId);
+    public String show(@PathVariable("articleId") Long articleId, Model model) {
+        ArticleDto.Info article = articleService.read(articleId);
+        log.debug("DB 조회 확인");
+        model.addAttribute("ArticleInfo", article);
+        log.debug("모델 확인");
+
+        return "articles/articleView";
     }
 
     // 4. 게시글 리스트 조회
@@ -66,7 +76,7 @@ public class ArticleController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", articles.getTotalPages());
 
-        return "article/list";
+        return "articles/list";
     }
 
     // 5. 게시글 수정 페이지로 이동
@@ -80,7 +90,7 @@ public class ArticleController {
         ));
         model.addAttribute("articleId", article.getArticleId());
 
-        return "article/editForm";
+        return "articles/editForm";
     }
 
     // 6. 게시글 수정
@@ -90,17 +100,17 @@ public class ArticleController {
                        @Login MemberDto.Session memberSessionDto,
                        BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/article/editForm";
+            return "/articles/editForm";
         }
 
         if(memberSessionDto == null) {
-            return "redirect:/member/login";
+            return "redirect:/login";
         }
 
         Article article = articleService.update(articleEditDto, articleId, memberSessionDto.getId());
 
         // 수정된 글을 바로 볼 수 있도록 해당 게시글 페이지로 이동
-        return "redirect:/article/" + article.getArticleId();
+        return "redirect:/articles/" + article.getArticleId();
     }
 
     // 7. 게시글 삭제
@@ -109,15 +119,15 @@ public class ArticleController {
                          @PathVariable Long articleId,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/article/" + articleId;
+            return "/articles/" + articleId;
         }
 
         if(memberSessionDto == null) {
-            return "redirect:/member/login";
+            return "redirect:/login";
         }
 
         articleService.delete(articleId, memberSessionDto.getId());
 
-        return "/article";
+        return "/articles";
     }
 }

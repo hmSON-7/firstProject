@@ -1,6 +1,5 @@
 package miniProject.board.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import miniProject.board.dto.ArticleDto;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -87,6 +85,8 @@ public class ArticleServiceImpl implements ArticleService {
 
         article.checkHits();
         articleRepository.save(article);
+        log.debug("접근 확인");
+        log.debug("article.getCreatedAt(): " + article.getCreatedAt()); // 디버깅 로그 추가
 
         return new ArticleDto.Info(
                 articleId,

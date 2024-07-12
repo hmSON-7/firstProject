@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/article/{articleId}")
+@RequestMapping("/articles/{articleId}")
 @Controller
 public class CommentController {
     private final CommentService commentService;
@@ -27,7 +27,7 @@ public class CommentController {
 
         commentService.save(memberSessionDto.getId(), articleId, request);
 
-        return "redirect:/article/" + articleId + "/comments/";
+        return "redirect:/articles/" + articleId + "/comments/";
     }
 
     // 모든 댓글 조회
@@ -37,7 +37,7 @@ public class CommentController {
         List<CommentDto.CommentResponse> comments = commentService.get(articleId);
         model.addAttribute("comments", comments);
 
-        return "redirect:/article/" + articleId + "/comments";
+        return "redirect:/articles/" + articleId + "/comments";
     }
 
     //댓글 삭제
@@ -45,7 +45,7 @@ public class CommentController {
     public String delete(@PathVariable long articleId, @PathVariable Long commentId) {
 
         commentService.delete(articleId, commentId);
-        return "redirect:/article/" + articleId + "/comments";
+        return "redirect:/articles/" + articleId + "/comments";
     }
 
     //댓글 수정
@@ -55,7 +55,7 @@ public class CommentController {
                          CommentDto.CommentRequest commentRequest) {
 
         commentService.update(articleId, commentId, memberSessionDto.getId(), commentRequest);
-        return "redirect:/article/" + articleId + "/comments/" + commentId;
+        return "redirect:/articles/" + articleId + "/comments/" + commentId;
     }
 
 }
