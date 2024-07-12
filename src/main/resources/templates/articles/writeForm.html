@@ -10,14 +10,15 @@
 <!-- Content -->
 <main class="container mt-5 flex-grow-1">
     <h2>글 작성</h2>
-    <form>
+    <form th:object="${ArticleRequest}" th:action th:method="POST">
         <div class="mb-3">
             <label for="title" class="form-label">제목</label>
-            <input type="text" class="form-control" id="title" placeholder="제목을 입력하세요">
+            <input type="text" class="form-control" th:field="*{title}" placeholder="제목을 입력하세요">
         </div>
         <div class="mb-3">
             <label for="content" class="form-label">내용</label>
             <div id="summernote"></div>
+            <input type="hidden" th:field="*{content}">
         </div>
         <div class="d-flex justify-content-end mb-5">
             <a th:href="@{/}" class="btn btn-danger me-2">되돌리기</a>
@@ -40,7 +41,17 @@
                 ['table', ['table']],
                 ['insert', ['link', 'picture', 'video']],
                 ['view', ['fullscreen', 'codeview', 'help']]
-            ]
+            ],
+            callbacks: {
+                onChange: function(contents, $editable) {
+                    $('#content').val(contents);
+                }
+            }
+        });
+
+        $('form').on('submit', function() {
+            var content = $('#summernote').summernote('code');
+            $('#content').val(content);
         });
     });
 </script>
