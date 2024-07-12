@@ -76,7 +76,7 @@ public class ArticleController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", articles.getTotalPages());
 
-        return "articles/list";
+        return "articles/article-list";
     }
 
     // 5. 게시글 수정 페이지로 이동
