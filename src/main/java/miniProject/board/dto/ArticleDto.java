@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ArticleDto {
 
@@ -26,16 +27,28 @@ public class ArticleDto {
         private String nickname;
 
         @NotEmpty
-        private LocalDateTime createdAt;
+        private String createdAt;
 
         @NotEmpty
-        private LocalDateTime updatedAt;
+        private String updatedAt;
 
         @NotEmpty
         private int hits;
 
         @NotEmpty
         private int likes;
+
+        public Info(Long articleId, String title, String content, String nickname, LocalDateTime createdAt, LocalDateTime updatedAt, int hits, int likes) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            this.articleId = articleId;
+            this.title = title;
+            this.content = content;
+            this.nickname = nickname;
+            this.createdAt = createdAt.format(formatter);
+            this.updatedAt = updatedAt.format(formatter);
+            this.hits = hits;
+            this.likes = likes;
+        }
     }
 
     @Getter @Setter
@@ -56,15 +69,16 @@ public class ArticleDto {
         private Long articleId;
         private String title;
         private String nickname;
-        private LocalDateTime updatedAt;
+        private String updatedAt;
         private int likes;
         private boolean checkUpdate;
 
         public ArticlesList(Long articleId, String title, String nickname, LocalDateTime updatedAt, int likes, LocalDateTime createdAt) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             this.articleId = articleId;
             this.title = title;
             this.nickname = nickname;
-            this.updatedAt = updatedAt;
+            this.updatedAt = updatedAt.format(formatter);
             this.likes = likes;
             this.checkUpdate = !createdAt.equals(updatedAt);
         }

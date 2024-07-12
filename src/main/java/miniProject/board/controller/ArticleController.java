@@ -34,8 +34,8 @@ public class ArticleController {
     // 2. 게시글 작성
     @PostMapping
     public String write(@Validated @ModelAttribute ArticleDto.Create articleCreateDto,
-                         @Login MemberDto.Session memberSessionDto,
-                         BindingResult bindingResult) {
+                        @Login MemberDto.Session memberSessionDto,
+                        BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "/articles/writeForm";
         }
@@ -44,16 +44,26 @@ public class ArticleController {
             return "redirect:/login";
         }
 
-        Article written = articleService.create(articleCreateDto, memberSessionDto.getId());
-
-        // 작성된 글을 바로 볼 수 있도록 해당 게시글 페이지로 이동
-        return "redirect:/articles/" + written.getArticleId();
+        try {
+            Article written = articleService.create(articleCreateDto, memberSessionDto.getId());
+            log.info("게시글 작성 완료: {}", written);
+            log.info("작성된 게시글 ID: {}", written.getArticleId());
+            return "redirect:/articles/" + written.getArticleId();
+        } catch (Exception e) {
+            log.error("게시글 작성 중 오류 발생", e);
+            return "redirect:/error"; // 또는 오류 페이지로 리디렉션
+        }
     }
 
     // 3. 게시글 단일 조회
     @GetMapping("/{articleId}")
-    public ArticleDto.Info show(@PathVariable Long articleId) {
-        return articleService.read(articleId);
+    public String show(@PathVariable("articleId") Long articleId, Model model) {
+        ArticleDto.Info article = articleService.read(articleId);
+        log.debug("DB 조회 확인");
+        model.addAttribute("ArticleInfo", article);
+        log.debug("모델 확인");
+
+        return "articles/articleView";
     }
 
     // 4. 게시글 리스트 조회
@@ -94,7 +104,7 @@ public class ArticleController {
         }
 
         if(memberSessionDto == null) {
-            return "redirect:/member/login";
+            return "redirect:/login";
         }
 
         Article article = articleService.update(articleEditDto, articleId, memberSessionDto.getId());
