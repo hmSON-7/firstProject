@@ -13,6 +13,7 @@ import miniProject.board.auth.utils.CookieUtil;
 import miniProject.board.dto.CustomMemberDetails;
 import miniProject.board.entity.Member;
 import miniProject.board.service.auth.RefreshService;
+import miniProject.board.service.member.MemberSuspensionService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -22,6 +23,7 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
+    private final MemberSuspensionService memberSuspensionService;
     private final RefreshService refreshService;
     private final CookieUtil cookieUtil;
     private final JWTUtil jwtUtil;
@@ -86,7 +88,7 @@ public class JWTFilter extends OncePerRequestFilter {
         Role role = Role.fromString(jwtUtil.getRole(accessToken));
 
         Member member = Member.createMemberWithoutPasswordAndEmail(username, role);
-        CustomMemberDetails customMemberDetails = new CustomMemberDetails(member);
+        CustomMemberDetails customMemberDetails = new CustomMemberDetails(memberSuspensionService, member);
 
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(customMemberDetails,
