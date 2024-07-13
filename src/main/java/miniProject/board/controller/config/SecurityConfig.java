@@ -9,6 +9,7 @@ import miniProject.board.auth.jwt.LoginFilter;
 import miniProject.board.auth.utils.CookieUtil;
 import miniProject.board.repository.RefreshRepository;
 import miniProject.board.service.auth.RefreshService;
+import miniProject.board.service.member.MemberSuspensionService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -26,6 +27,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final CustomLogoutHandler customLogoutHandler;
     private final RefreshRepository refreshRepository;
+    private final MemberSuspensionService memberSuspensionService;
     private final RefreshService refreshService;
     private final CookieUtil cookieUtil;
     private final JWTUtil jwtUtil;
@@ -67,7 +69,7 @@ public class SecurityConfig {
 
         // add filter
         http
-                .addFilterBefore(new JWTFilter(refreshService, cookieUtil, jwtUtil), LoginFilter.class);
+                .addFilterBefore(new JWTFilter(memberSuspensionService, refreshService, cookieUtil, jwtUtil), LoginFilter.class);
 
         http
                 .addFilterAt(new LoginFilter(authenticationConfiguration.getAuthenticationManager(),

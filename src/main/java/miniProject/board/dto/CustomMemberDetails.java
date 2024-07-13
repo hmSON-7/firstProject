@@ -1,16 +1,20 @@
 package miniProject.board.dto;
 
 import lombok.RequiredArgsConstructor;
+import miniProject.board.auth.constants.Status;
 import miniProject.board.entity.Member;
+import miniProject.board.service.member.MemberSuspensionService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @RequiredArgsConstructor
 public class CustomMemberDetails implements UserDetails {
 
+    private final MemberSuspensionService memberSuspensionService;
     private final Member member;
 
     @Override
@@ -44,6 +48,23 @@ public class CustomMemberDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (member.getStatus() == Status.PERMANENT_SUSPENDED) {
+            return false;
+        }
+
+        if (member.getStatus() == Status.TEMPORARY_SUSPENDED) {
+
+            if (now.isAfter(member.getLockExpirationTime())) {
+                memberSuspensionService.activeMember(member.getId());
+
+                return true;
+            }
+
+            return false;
+        }
+
         return true;
     }
 

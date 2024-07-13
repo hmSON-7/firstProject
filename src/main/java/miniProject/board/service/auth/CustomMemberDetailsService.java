@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import miniProject.board.dto.CustomMemberDetails;
 import miniProject.board.entity.Member;
 import miniProject.board.repository.MemberRepository;
+import miniProject.board.service.member.MemberSuspensionService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class CustomMemberDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final MemberSuspensionService memberSuspensionService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -23,7 +25,7 @@ public class CustomMemberDetailsService implements UserDetailsService {
 
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
-            return new CustomMemberDetails(member);
+            return new CustomMemberDetails(memberSuspensionService, member);
         }
 
         return null;
