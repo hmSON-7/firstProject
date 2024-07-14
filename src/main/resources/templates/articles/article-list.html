@@ -13,7 +13,7 @@
 <main class="container mt-5 flex-grow-1">
     <section class="d-flex justify-content-between align-items-center mb-3">
         <h2>게시글 목록</h2>
-        <button class="btn btn-primary">글쓰기</button>
+        <button class="btn btn-primary" onclick="location.href='/articles'">글쓰기</button>
     </section>
 
     <section class="table-responsive">
@@ -29,30 +29,31 @@
             </tr>
             </thead>
             <tbody>
-            <!-- Sample Row -->
-            <tr>
-                <td>2887</td>
-                <td><a class="text-decoration-none" href="#">Test Article</a></td>
-                <td>운영자</td>
-                <td>24/07/08</td>
-                <td>107</td>
-                <td>0</td>
+            <tr th:each="article, iterStat : ${articles}">
+                <td th:text="${article.articleId}"></td>
+                <td>
+                    <a th:href="@{'/articles/' + ${article.articleId}}" class="text-decoration-none" th:text="${article.title}"></a>
+                </td>
+                <td th:text="${article.nickname}"></td>
+                <td th:text="${article.updatedAt}"></td>
+                <td th:text="${article.hits}"></td>
+                <td th:text="${article.likes}"></td>
             </tr>
-
-
-            <!-- Add more rows as needed -->
             </tbody>
         </table>
     </section>
 
     <nav aria-label="Page navigation" class="page-navigation">
         <ul class="pagination justify-content-center">
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">4</a></li>
-            <li class="page-item"><a class="page-link" href="#">5</a></li>
-            <!-- Add more page items as needed -->
+            <li class="page-item" th:if="${currentPage > 1}">
+                <a class="page-link" th:href="@{'/articles/list?page=' + (${currentPage} - 1)}">이전</a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+                <a class="page-link" th:href="@{'/articles/list?page=' + ${pageNum}}" th:text="${pageNum}" th:classappend="${pageNum == currentPage} ? 'active'"></a>
+            </li>
+            <li class="page-item" th:if="${currentPage < totalPages}">
+                <a class="page-link" th:href="@{'/articles/list?page=' + (${currentPage + 1})}">다음</a>
+            </li>
         </ul>
     </nav>
 </main>

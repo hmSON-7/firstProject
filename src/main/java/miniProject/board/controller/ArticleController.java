@@ -67,8 +67,8 @@ public class ArticleController {
     }
 
     // 4. 게시글 리스트 조회
-    @GetMapping("/articles")
-    public String index(@RequestParam(defaultValue = "1") int page, Model model) {
+    @GetMapping("/list")
+    public String index(@RequestParam(defaultValue = "1", name="page") int page, Model model) {
         Pageable pageable = PageRequest.of(page - 1, 10);
         Page<ArticleDto.ArticlesList> articles = articleService.index(pageable);
 
@@ -81,53 +81,58 @@ public class ArticleController {
 
     // 5. 게시글 수정 페이지로 이동
     @GetMapping("/{articleId}/edit")
-    public String editForm(@PathVariable Long articleId, Model model) {
+    public String editForm(@PathVariable("articleId") Long articleId, Model model) {
         ArticleDto.Info article = articleService.read(articleId);
+        log.debug("article 읽기 성공");
 
         model.addAttribute("ArticleRequest", new ArticleDto.Create(
                 article.getTitle(),
                 article.getContent()
         ));
         model.addAttribute("articleId", article.getArticleId());
+        log.debug("데이터 전송중...");
 
         return "articles/editForm";
     }
 
     // 6. 게시글 수정
-    @PatchMapping("/{articleId}/edit")
+    @PostMapping("/{articleId}/edit")
     public String edit(@Validated @ModelAttribute ArticleDto.Create articleEditDto,
-                       @PathVariable Long articleId,
+                       @PathVariable("articleId") Long articleId,
                        @Login MemberDto.Session memberSessionDto,
                        BindingResult bindingResult) {
+        log.debug("접근");
         if (bindingResult.hasErrors()) {
             return "/articles/editForm";
         }
 
+        log.debug("오류 없음");
         if(memberSessionDto == null) {
             return "redirect:/login";
         }
 
+        log.debug("로그인 문제 없음");
         Article article = articleService.update(articleEditDto, articleId, memberSessionDto.getId());
 
+        log.debug("로직 문제 없음");
         // 수정된 글을 바로 볼 수 있도록 해당 게시글 페이지로 이동
         return "redirect:/articles/" + article.getArticleId();
     }
 
     // 7. 게시글 삭제
-    @DeleteMapping("/{articleId}")
-    public String delete(@Login MemberDto.Session memberSessionDto,
-                         @PathVariable Long articleId,
-                         BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "/articles/" + articleId;
-        }
+    @PostMapping("/{articleId}/delete")
+    public String delete(@PathVariable("articleId") Long articleId,
+                         @Login MemberDto.Session memberSessionDto) {
+        log.debug("접근");
 
         if(memberSessionDto == null) {
             return "redirect:/login";
         }
+        log.debug("로그인 문제 없음");
 
         articleService.delete(articleId, memberSessionDto.getId());
+        log.debug("로직 문제 없음");
 
-        return "/articles";
+        return "redirect:/articles/list";
     }
 }

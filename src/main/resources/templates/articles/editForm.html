@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layouts/header/summernote-header :: head-with-summernote}"></head>
+
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<!-- navbar -->
+<nav th:replace="~{layouts/navbar :: nav}"></nav>
+<!-- Content -->
+<main class="container mt-5 flex-grow-1">
+    <h2>글 수정</h2>
+    <form th:object="${ArticleRequest}" th:action="@{'/articles/' + ${articleId} + '/edit'}" th:method="post">
+        <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" class="form-control" th:field="*{title}" th:value="*{title}" placeholder="제목을 입력하세요">
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <div id="summernote" th:text="*{content}"></div>
+            <input type="hidden" th:field="*{content}">
+        </div>
+        <div class="d-flex justify-content-end mb-5">
+            <a th:href="@{'/articles/' + ${articleId}}" class="btn btn-danger me-2">되돌리기</a>
+            <button type="submit" class="btn btn-primary">수정하기</button>
+        </div>
+    </form>
+</main>
+
+<script>
+    $(document).ready(function() {
+        $('#summernote').summernote({
+            placeholder: '내용을 입력해 주세요.',
+            tabsize: 2,
+            height: 300,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ],
+            callbacks: {
+                onChange: function(contents, $editable) {
+                    $('#content').val(contents);
+                },
+                onInit: function() {
+                    var content = /*[[${ArticleRequest.content}]]*/ '';
+                    $('#summernote').summernote('code', content);
+                }
+            }
+        });
+
+        $('form').on('submit', function() {
+            var content = $('#summernote').summernote('code');
+            $('#content').val(content);
+        });
+    });
+</script>
+
+<!-- Footer -->
+<footer th:replace="~{layouts/footer :: footer}"></footer>
+</body>
+</html>
