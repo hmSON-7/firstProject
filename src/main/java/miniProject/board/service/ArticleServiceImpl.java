@@ -66,6 +66,7 @@ public class ArticleServiceImpl implements ArticleService {
                 article.getMember().getNickname(),
                 article.getUpdatedAt(),
                 article.getLikes(),
+                article.getHits(),
                 article.getCreatedAt() // 수정 여부 확인을 위한 매개변수
         )).toList();
 
@@ -108,17 +109,22 @@ public class ArticleServiceImpl implements ArticleService {
         * 수정을 요청한 Member의 세션으로부터 MemberId를 받아온다. 로그아웃 상태인 유저가 게시글을 수정하는 것을 방지
         * 게시글의 작성자 id와 수정을 요청한 Member의 id를 비교. 같은 경우에만 게시글 수정 허용
         */
+        log.debug("서비스 계층 접근");
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
+        log.debug("article 조회");
         Member member = memberService.findMemberDao(memberId);
         if(member == null || !member.getId().equals(article.getMember().getId())) {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
+        log.debug("member 조회");
 
         fileStorageService.updateFile(article.getFilePath(), articleEditDto.getContent());
+        log.debug("파일 업데이트 완료");
 
         article.update(articleEditDto.getTitle());
+        log.debug("DB 업데이트 완료");
         return articleRepository.save(article);
     }
 

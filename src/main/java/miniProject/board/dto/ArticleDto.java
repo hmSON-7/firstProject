@@ -71,15 +71,18 @@ public class ArticleDto {
         private String nickname;
         private String updatedAt;
         private int likes;
+        private int hits;
         private boolean checkUpdate;
 
-        public ArticlesList(Long articleId, String title, String nickname, LocalDateTime updatedAt, int likes, LocalDateTime createdAt) {
+        public ArticlesList(Long articleId, String title, String nickname, LocalDateTime updatedAt,
+                            int likes, int hits, LocalDateTime createdAt) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             this.articleId = articleId;
             this.title = title;
             this.nickname = nickname;
             this.updatedAt = updatedAt.format(formatter);
             this.likes = likes;
+            this.hits = hits;
             this.checkUpdate = !createdAt.equals(updatedAt);
         }
     }
