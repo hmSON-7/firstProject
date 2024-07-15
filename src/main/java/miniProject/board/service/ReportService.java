@@ -10,6 +10,8 @@ import miniProject.board.repository.ReportRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class ReportService {
@@ -82,6 +84,21 @@ public class ReportService {
         }
 
         reportRepository.delete(report);
+    }
+
+    public List<Report> getAllReports() {
+        return reportRepository.findAll();
+    }
+
+    public Report getReportById(Long reportId) {
+        return reportRepository.findById(reportId)
+                .orElseThrow(() -> new IllegalArgumentException("신고가 존재하지 않습니다."));
+    }
+
+    public List<Report> getReportsByMemberId(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        return reportRepository.findByMember(member);
     }
 
 
