@@ -53,7 +53,7 @@ public class ReportService {
                 .orElseThrow(() ->
                         new IllegalArgumentException("신고가 존재하지 않습니다."));
 
-        ReportStatus newStatus = report.getStatus();
+        ReportStatus newStatus = processReport.getReportStatus();
         report.updateStatus(newStatus);
         reportRepository.save(report);
 
