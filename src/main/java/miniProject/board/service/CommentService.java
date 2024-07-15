@@ -28,7 +28,7 @@ public class CommentService {
         멤버 확인 후 아티클 여부 확인
     * */
     @Transactional
-    public void save(Long userId, Long articleId, CommentDto.CommentRequest commentRequest) {
+    public Comment save(Long userId, Long articleId, CommentDto.CommentRequest commentRequest) {
 
         Optional<Member> __member = memberRepository.findById(userId);
         Member member = null;
@@ -45,7 +45,7 @@ public class CommentService {
 
 
         Comment comment = commentRequest.toEntity(member, article);
-        commentRepository.save(comment);
+        return commentRepository.save(comment);
     }
 
     /* 댓글 조회

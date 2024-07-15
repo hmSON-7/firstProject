@@ -29,6 +29,8 @@ public class CommentDto {
                     .member(member)
                     .article(article)
                     .content(content)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
                     .build();
         }
     }

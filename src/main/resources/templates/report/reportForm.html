@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>신고 폼</title>
+    <!-- 부트스트랩 CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>신고 폼</h2>
+
+    <!-- 게시글 신고 폼 -->
+    <form th:action="@{/report/article}" method="post">
+        <input type="hidden" name="articleId" th:value="${reportArticle.articleId}">
+        <input type="hidden" name="memberId" th:value="${reportArticle.memberId}">
+        <div class="form-group">
+            <label for="articleDescription">신고 내용:</label>
+            <textarea class="form-control" id="articleDescription" name="description" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">게시글 신고</button>
+    </form>
+
+    <hr>
+
+    <!-- 댓글 신고 폼 -->
+    <form th:action="@{/report/comment}" method="post">
+        <input type="hidden" name="commentId" th:value="${reportComment.commentId}">
+        <input type="hidden" name="memberId" th:value="${reportComment.memberId}">
+        <div class="form-group">
+            <label for="commentDescription">신고 내용:</label>
+            <textarea class="form-control" id="commentDescription" name="description" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">댓글 신고</button>
+    </form>
+</div>
+
+</body>
+</html>
