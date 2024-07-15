@@ -10,8 +10,6 @@ import miniProject.board.repository.ReportRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @Service
 public class ReportService {
@@ -20,7 +18,7 @@ public class ReportService {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
 
-    public void reportArticle(ReportDto.ReportArticle reportArticle) {
+    public Report reportArticle(ReportDto.ReportArticle reportArticle) {
         Member member = memberRepository.findById(reportArticle.getMemberId())
                 .orElseThrow(() ->
                         new IllegalArgumentException("유저가 존재하지 않습니다."));
@@ -31,10 +29,10 @@ public class ReportService {
 
         Report report = Report.reportArticle(reportArticle.getDescription(), article, member,ReportStatus.PENDING);
 
-        reportRepository.save(report);
+        return reportRepository.save(report);
     }
 
-    public void reportComment(ReportDto.ReportComment reportComment ) {
+    public Report reportComment(ReportDto.ReportComment reportComment ) {
         Member member = memberRepository.findById(reportComment.getMemberId())
                 .orElseThrow(() ->
                         new IllegalArgumentException("유저가 존재하지 않습니다."));
@@ -45,7 +43,7 @@ public class ReportService {
 
         Report report = Report.reportComment(reportComment.getDescription(), comment, member, ReportStatus.PENDING);
 
-        reportRepository.save(report);
+        return reportRepository.save(report);
     }
 
 
