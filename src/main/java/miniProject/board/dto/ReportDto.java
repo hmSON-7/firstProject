@@ -3,6 +3,7 @@ package miniProject.board.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import miniProject.board.entity.Report;
 import miniProject.board.entity.ReportStatus;
 
@@ -24,6 +25,7 @@ public class ReportDto {
 
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class ReportArticle{
         private String description;
         private Long articleId;
@@ -38,6 +40,7 @@ public class ReportDto {
 
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class ReportComment{
         private String description;
         private Long commentId;
