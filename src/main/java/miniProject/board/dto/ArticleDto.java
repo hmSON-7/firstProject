@@ -24,6 +24,9 @@ public class ArticleDto {
         private String content;
 
         @NotEmpty
+        private Long authorId;
+
+        @NotEmpty
         private String nickname;
 
         @NotEmpty
@@ -38,11 +41,13 @@ public class ArticleDto {
         @NotEmpty
         private int likes;
 
-        public Info(Long articleId, String title, String content, String nickname, LocalDateTime createdAt, LocalDateTime updatedAt, int hits, int likes) {
+        public Info(Long articleId, String title, String content, Long authorId, String nickname,
+                    LocalDateTime createdAt, LocalDateTime updatedAt, int hits, int likes) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             this.articleId = articleId;
             this.title = title;
             this.content = content;
+            this.authorId = authorId;
             this.nickname = nickname;
             this.createdAt = createdAt.format(formatter);
             this.updatedAt = updatedAt.format(formatter);

@@ -57,11 +57,17 @@ public class ArticleController {
 
     // 3. 게시글 단일 조회
     @GetMapping("/{articleId}")
-    public String show(@PathVariable("articleId") Long articleId, Model model) {
+    public String show(@PathVariable("articleId") Long articleId,
+                       @Login MemberDto.Session memberSessionDto,
+                       Model model) {
         ArticleDto.Info article = articleService.read(articleId);
         log.debug("DB 조회 확인");
         model.addAttribute("ArticleInfo", article);
         log.debug("모델 확인");
+
+        // 해당 게시글의 작성자가 조회하려는 것인지 확인
+        boolean isAuthor = article.getAuthorId().equals(memberSessionDto.getId());
+        model.addAttribute("isAuthor", isAuthor);
 
         return "articles/articleView";
     }
@@ -96,7 +102,7 @@ public class ArticleController {
     }
 
     // 6. 게시글 수정
-    @PostMapping("/{articleId}/edit")
+    @PatchMapping("/{articleId}/edit")
     public String edit(@Validated @ModelAttribute ArticleDto.Create articleEditDto,
                        @PathVariable("articleId") Long articleId,
                        @Login MemberDto.Session memberSessionDto,
@@ -120,7 +126,7 @@ public class ArticleController {
     }
 
     // 7. 게시글 삭제
-    @PostMapping("/{articleId}/delete")
+    @DeleteMapping("/{articleId}/delete")
     public String delete(@PathVariable("articleId") Long articleId,
                          @Login MemberDto.Session memberSessionDto) {
         log.debug("접근");

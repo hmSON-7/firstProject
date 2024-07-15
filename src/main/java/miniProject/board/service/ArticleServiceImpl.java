@@ -73,6 +73,7 @@ public class ArticleServiceImpl implements ArticleService {
         return new PageImpl<>(articlesList, pageable, articlesPage.getTotalElements());
     }
 
+
     @Override
     @Transactional
     public ArticleDto.Info read(Long articleId) {
@@ -93,6 +94,7 @@ public class ArticleServiceImpl implements ArticleService {
                 articleId,
                 article.getTitle(),
                 content,
+                article.getMember().getId(),
                 article.getMember().getNickname(),
                 article.getCreatedAt(),
                 article.getUpdatedAt(),

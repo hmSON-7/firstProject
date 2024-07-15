@@ -10,14 +10,14 @@
 <!-- Content -->
 <main class="container mt-5 flex-grow-1">
     <h2>글 수정</h2>
-    <form th:object="${ArticleRequest}" th:action="@{'/articles/' + ${articleId} + '/edit'}" th:method="post">
+    <form th:object="${ArticleRequest}" th:action="@{'/articles/' + ${articleId} + '/edit'}" th:method="patch">
         <div class="mb-3">
             <label for="title" class="form-label">제목</label>
             <input type="text" class="form-control" th:field="*{title}" th:value="*{title}" placeholder="제목을 입력하세요">
         </div>
         <div class="mb-3">
             <label for="content" class="form-label">내용</label>
-            <div id="summernote" th:text="*{content}"></div>
+            <div id="summernote"></div>
             <input type="hidden" th:field="*{content}">
         </div>
         <div class="d-flex justify-content-end mb-5">
