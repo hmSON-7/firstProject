@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
@@ -27,7 +28,6 @@ public class CommentServiceImpl implements CommentService {
     private final ArticleRepository articleRepository;
 
 
-    @Transactional
     public Long createComment(Long memberId, Long articleId, CommentDto.CreateRequest createCommentRequest) {
         Member member = getMemberByIdOrThrow(memberId);
 
@@ -54,7 +54,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
-    @Transactional
     public Long deleteComment(Long commentId, Long memberId, String deleteFrom) {
         Comment comment = getCommentByIdAndMemberIdOrThrow(commentId, memberId);
 
@@ -73,7 +72,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
-    @Transactional
     public Long updateComment(Long commentId,
                               Long memberId,
                               String updateFrom,
