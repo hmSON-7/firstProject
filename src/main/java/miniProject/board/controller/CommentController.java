@@ -68,7 +68,7 @@ public class CommentController {
     }
 
     // 댓글 수정
-    @PutMapping("/comments/{commentId}")
+    @PatchMapping("/comments/{commentId}")
     public String editComment(@PathVariable Long commentId,
                               @RequestParam(value = "updateFrom", required = false) String updateFrom,
                               @Login MemberDto.Session memberSessionDto,
