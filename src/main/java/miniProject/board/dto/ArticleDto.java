@@ -3,6 +3,7 @@ package miniProject.board.dto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -60,11 +61,18 @@ public class ArticleDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Create {
+        private String title;
+        private MultipartFile content;
+    }
+
+    @Getter @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Load {
         @NotEmpty
         private String title;
 
         @NotEmpty
-        @Size(min = 5)
         private String content;
     }
 

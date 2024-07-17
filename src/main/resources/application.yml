@@ -14,6 +14,12 @@ spring:
       filter:
         enabled: true
 
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
+      enabled: true
+
 logging:
   level:
     org.hibernate.SQL: debug
