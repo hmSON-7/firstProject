@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import miniProject.board.controller.argumentResolver.Login;
 import miniProject.board.dto.ArticleDto;
+import miniProject.board.dto.CommentDto;
 import miniProject.board.dto.MemberDto;
 import miniProject.board.entity.Article;
 import miniProject.board.service.ArticleService;
+import miniProject.board.service.comment.CommentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
+    private final CommentService commentService;
 
     // 1. 게시글 작성 페이지로 이동
     @GetMapping
@@ -63,6 +66,7 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     public String show(@PathVariable("articleId") Long articleId,
                        @Login MemberDto.Session memberSessionDto,
+                       @RequestParam(defaultValue = "1", name = "commentPage") int commentPage,
                        Model model) {
         ArticleDto.Info article = articleService.read(articleId);
         log.debug("DB 조회 확인");
@@ -72,6 +76,15 @@ public class ArticleController {
         // 해당 게시글의 작성자가 조회하려는 것인지 확인
         boolean isAuthor = article.getAuthorId().equals(memberSessionDto.getId());
         model.addAttribute("isAuthor", isAuthor);
+
+        // 댓글 리스트 추가
+        Pageable pageable = PageRequest.of(commentPage - 1, 10);
+        Page<CommentDto.Response> comments = commentService.findCommentsByArticleId(articleId, pageable);
+        model.addAttribute("comments", comments.getContent());
+        model.addAttribute("commentPage", commentPage);
+        model.addAttribute("commentTotalPages", comments.getTotalPages());
+
+        model.addAttribute("newComment", new CommentDto.CreateRequest());
 
         return "articles/articleView";
     }

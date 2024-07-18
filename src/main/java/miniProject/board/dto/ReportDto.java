@@ -48,7 +48,7 @@ public class ReportDto {
 
         public static ReportComment create(Report report) {
             return new ReportComment(report.getDescription(),
-                    report.getComment().getCommentId(),
+                    report.getComment().getId(),
                     report.getMember().getId());
         }
     }

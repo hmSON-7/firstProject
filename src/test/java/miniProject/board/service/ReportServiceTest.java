@@ -9,6 +9,7 @@ import miniProject.board.repository.ArticleRepository;
 import miniProject.board.repository.CommentRepository;
 import miniProject.board.repository.MemberRepository;
 import miniProject.board.repository.ReportRepository;
+import miniProject.board.service.comment.CommentService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
