@@ -100,7 +100,7 @@ public class ArticleController {
                 article.getContent() // 수정 시 기존의 내용을 불러오기 위해 문자열로 설정합니다.
         ));
         model.addAttribute("articleId", article.getArticleId());
-        log.debug("데이터 전송중...");
+        log.debug("데이터 전송중");
 
         return "articles/editForm";
     }
