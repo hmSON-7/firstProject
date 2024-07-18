@@ -9,6 +9,16 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
+      enabled: true
 
 logging:
   level:

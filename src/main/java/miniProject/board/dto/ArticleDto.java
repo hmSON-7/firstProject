@@ -3,6 +3,7 @@ package miniProject.board.dto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +25,9 @@ public class ArticleDto {
         private String content;
 
         @NotEmpty
+        private Long authorId;
+
+        @NotEmpty
         private String nickname;
 
         @NotEmpty
@@ -38,11 +42,13 @@ public class ArticleDto {
         @NotEmpty
         private int likes;
 
-        public Info(Long articleId, String title, String content, String nickname, LocalDateTime createdAt, LocalDateTime updatedAt, int hits, int likes) {
+        public Info(Long articleId, String title, String content, Long authorId, String nickname,
+                    LocalDateTime createdAt, LocalDateTime updatedAt, int hits, int likes) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             this.articleId = articleId;
             this.title = title;
             this.content = content;
+            this.authorId = authorId;
             this.nickname = nickname;
             this.createdAt = createdAt.format(formatter);
             this.updatedAt = updatedAt.format(formatter);
@@ -55,11 +61,18 @@ public class ArticleDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Create {
+        private String title;
+        private MultipartFile content;
+    }
+
+    @Getter @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Load {
         @NotEmpty
         private String title;
 
         @NotEmpty
-        @Size(min = 5)
         private String content;
     }
 

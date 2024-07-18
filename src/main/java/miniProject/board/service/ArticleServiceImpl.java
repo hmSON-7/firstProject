@@ -13,7 +13,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +29,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final FileStorageService fileStorageService;
 
     @Override
-    public Article create(ArticleDto.Create articleAddDto, Long memberId) {
+    public Article create(ArticleDto.Create articleAddDto, Long memberId) throws IOException {
         /*
          * Article 엔티티에 정보를 반환하기 위해 매개변수로 member 객체를 요구하므로
          * 세션으로 memberId를 받아온 후 해당 Member 객체를 찾아 매개변수로 넘김
@@ -36,13 +39,15 @@ public class ArticleServiceImpl implements ArticleService {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
 
+        String contentHtml = new String(articleAddDto.getContent().getBytes(), StandardCharsets.UTF_8);
+
         // 난수 생성
         UUID uuid = UUID.randomUUID();
 
         // 파일 저장 및 경로 반환
         String filePath = fileStorageService.createFile(
                 member.getUsername(),
-                articleAddDto.getContent(),
+                contentHtml,
                 uuid
         );
 
@@ -93,6 +98,7 @@ public class ArticleServiceImpl implements ArticleService {
                 articleId,
                 article.getTitle(),
                 content,
+                article.getMember().getId(),
                 article.getMember().getNickname(),
                 article.getCreatedAt(),
                 article.getUpdatedAt(),
@@ -103,12 +109,12 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public Article update(ArticleDto.Create articleEditDto, Long articleId, Long memberId) {
+    public Article update(ArticleDto.Create articleEditDto, Long articleId, Long memberId) throws IOException {
         /*
-        * 수정 요청을 받은 Article의 id를 받아온다. 존재하지 않는 id이면 수정 불가
-        * 수정을 요청한 Member의 세션으로부터 MemberId를 받아온다. 로그아웃 상태인 유저가 게시글을 수정하는 것을 방지
-        * 게시글의 작성자 id와 수정을 요청한 Member의 id를 비교. 같은 경우에만 게시글 수정 허용
-        */
+         * 수정 요청을 받은 Article의 id를 받아온다. 존재하지 않는 id이면 수정 불가
+         * 수정을 요청한 Member의 세션으로부터 MemberId를 받아온다. 로그아웃 상태인 유저가 게시글을 수정하는 것을 방지
+         * 게시글의 작성자 id와 수정을 요청한 Member의 id를 비교. 같은 경우에만 게시글 수정 허용
+         */
         log.debug("서비스 계층 접근");
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
@@ -120,7 +126,8 @@ public class ArticleServiceImpl implements ArticleService {
         }
         log.debug("member 조회");
 
-        fileStorageService.updateFile(article.getFilePath(), articleEditDto.getContent());
+        String contentHtml = new String(articleEditDto.getContent().getBytes(), StandardCharsets.UTF_8);
+        fileStorageService.updateFile(article.getFilePath(), contentHtml);
         log.debug("파일 업데이트 완료");
 
         article.update(articleEditDto.getTitle());

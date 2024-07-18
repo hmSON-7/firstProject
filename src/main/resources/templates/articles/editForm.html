@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{layouts/header/summernote-header :: head-with-summernote}"></head>
 
@@ -10,15 +10,15 @@
 <!-- Content -->
 <main class="container mt-5 flex-grow-1">
     <h2>글 수정</h2>
-    <form th:object="${ArticleRequest}" th:action="@{'/articles/' + ${articleId} + '/edit'}" th:method="post">
+    <form th:object="${ArticleRequest}" th:action="@{'/articles/' + ${articleId} + '/edit'}" th:method="patch" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="title" class="form-label">제목</label>
-            <input type="text" class="form-control" th:field="*{title}" th:value="*{title}" placeholder="제목을 입력하세요">
+            <input type="text" class="form-control" th:field="*{title}" placeholder="제목을 입력하세요">
         </div>
         <div class="mb-3">
             <label for="content" class="form-label">내용</label>
-            <div id="summernote" th:text="*{content}"></div>
-            <input type="hidden" th:field="*{content}">
+            <div id="summernote" th:data-content="${ArticleRequest.content}"></div>
+            <input type="file" id="contentFile" th:field="*{content}" style="display:none">
         </div>
         <div class="d-flex justify-content-end mb-5">
             <a th:href="@{'/articles/' + ${articleId}}" class="btn btn-danger me-2">되돌리기</a>
@@ -29,6 +29,11 @@
 
 <script>
     $(document).ready(function() {
+        // JavaScript 변수에 ArticleRequest.content 값 할당
+        var content = $('#summernote').data('content');
+        console.log("Loaded content:", content); // 로그 추가
+
+        // SummerNote 초기화
         $('#summernote').summernote({
             placeholder: '내용을 입력해 주세요.',
             tabsize: 2,
@@ -43,19 +48,35 @@
                 ['view', ['fullscreen', 'codeview', 'help']]
             ],
             callbacks: {
-                onChange: function(contents, $editable) {
-                    $('#content').val(contents);
-                },
                 onInit: function() {
-                    var content = /*[[${ArticleRequest.content}]]*/ '';
+                    console.log("SummerNote initialized"); // 로그 추가
                     $('#summernote').summernote('code', content);
+                    console.log("Content set in SummerNote:", $('#summernote').summernote('code')); // 로그 추가
+                },
+                onChange: function(contents, $editable) {
+                    console.log("Content changed in SummerNote:", contents); // 로그 추가
+                    var blob = new Blob([contents], { type: 'text/html' });
+                    var fileInput = document.getElementById('contentFile');
+                    var file = new File([blob], "content.html", { type: 'text/html' });
+                    var dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    fileInput.files = dataTransfer.files;
+                    console.log("File input updated with new content"); // 로그 추가
                 }
             }
         });
 
         $('form').on('submit', function() {
+            console.log("Form submission triggered"); // 로그 추가
             var content = $('#summernote').summernote('code');
-            $('#content').val(content);
+            console.log("Content at form submission:", content); // 로그 추가
+            var blob = new Blob([content], { type: 'text/html' });
+            var fileInput = document.getElementById('contentFile');
+            var file = new File([blob], "content.html", { type: 'text/html' });
+            var dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+            console.log("File input set for form submission"); // 로그 추가
         });
     });
 </script>

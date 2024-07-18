@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{layouts/header/summernote-header :: head-with-summernote}"></head>
 
@@ -10,15 +10,15 @@
 <!-- Content -->
 <main class="container mt-5 flex-grow-1">
     <h2>글 작성</h2>
-    <form th:object="${ArticleRequest}" th:action th:method="POST">
+    <form th:action="@{/articles}" th:method="post" enctype="multipart/form-data" th:object="${articleDto}">
         <div class="mb-3">
             <label for="title" class="form-label">제목</label>
-            <input type="text" class="form-control" th:field="*{title}" placeholder="제목을 입력하세요">
+            <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="제목을 입력하세요">
         </div>
         <div class="mb-3">
             <label for="content" class="form-label">내용</label>
             <div id="summernote"></div>
-            <input type="hidden" th:field="*{content}">
+            <input type="file" id="contentFile" th:field="*{content}" style="display:none">
         </div>
         <div class="d-flex justify-content-end mb-5">
             <a th:href="@{'/articles/list'}" class="btn btn-danger me-2">되돌리기</a>
@@ -30,7 +30,7 @@
 <script>
     $(document).ready(function() {
         $('#summernote').summernote({
-            placeholder: 'Hello stand alone ui',
+            placeholder: '내용을 입력하세요',
             tabsize: 2,
             height: 300,
             toolbar: [
@@ -44,14 +44,24 @@
             ],
             callbacks: {
                 onChange: function(contents, $editable) {
-                    $('#content').val(contents);
+                    var blob = new Blob([contents], { type: 'text/html' });
+                    var fileInput = document.getElementById('contentFile');
+                    var file = new File([blob], "content.html", { type: 'text/html' });
+                    var dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    fileInput.files = dataTransfer.files;
                 }
             }
         });
 
         $('form').on('submit', function() {
             var content = $('#summernote').summernote('code');
-            $('#content').val(content);
+            var blob = new Blob([content], { type: 'text/html' });
+            var fileInput = document.getElementById('contentFile');
+            var file = new File([blob], "content.html", { type: 'text/html' });
+            var dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
         });
     });
 </script>

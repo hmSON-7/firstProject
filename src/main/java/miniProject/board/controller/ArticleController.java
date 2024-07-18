@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @Slf4j
 @Controller
 @RequestMapping("/articles")
@@ -26,21 +28,20 @@ public class ArticleController {
     // 1. 게시글 작성 페이지로 이동
     @GetMapping
     public String writeForm(Model model) {
-        model.addAttribute("ArticleRequest", new ArticleDto.Create());
-
+        model.addAttribute("articleDto", new ArticleDto.Create());
         return "/articles/writeForm";
     }
 
     // 2. 게시글 작성
     @PostMapping
-    public String write(@Validated @ModelAttribute ArticleDto.Create articleCreateDto,
+    public String write(@Validated @ModelAttribute("articleDto") ArticleDto.Create articleCreateDto,
                         @Login MemberDto.Session memberSessionDto,
                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "/articles/writeForm";
         }
 
-        if(memberSessionDto == null) {
+        if (memberSessionDto == null) {
             return "redirect:/login";
         }
 
@@ -49,6 +50,9 @@ public class ArticleController {
             log.info("게시글 작성 완료: {}", written);
             log.info("작성된 게시글 ID: {}", written.getArticleId());
             return "redirect:/articles/" + written.getArticleId();
+        } catch (IOException e) {
+            log.error("파일 처리 중 오류 발생", e);
+            return "redirect:/error"; // 또는 오류 페이지로 리디렉션
         } catch (Exception e) {
             log.error("게시글 작성 중 오류 발생", e);
             return "redirect:/error"; // 또는 오류 페이지로 리디렉션
@@ -57,11 +61,17 @@ public class ArticleController {
 
     // 3. 게시글 단일 조회
     @GetMapping("/{articleId}")
-    public String show(@PathVariable("articleId") Long articleId, Model model) {
+    public String show(@PathVariable("articleId") Long articleId,
+                       @Login MemberDto.Session memberSessionDto,
+                       Model model) {
         ArticleDto.Info article = articleService.read(articleId);
         log.debug("DB 조회 확인");
         model.addAttribute("ArticleInfo", article);
         log.debug("모델 확인");
+
+        // 해당 게시글의 작성자가 조회하려는 것인지 확인
+        boolean isAuthor = article.getAuthorId().equals(memberSessionDto.getId());
+        model.addAttribute("isAuthor", isAuthor);
 
         return "articles/articleView";
     }
@@ -85,18 +95,18 @@ public class ArticleController {
         ArticleDto.Info article = articleService.read(articleId);
         log.debug("article 읽기 성공");
 
-        model.addAttribute("ArticleRequest", new ArticleDto.Create(
+        model.addAttribute("ArticleRequest", new ArticleDto.Load(
                 article.getTitle(),
-                article.getContent()
+                article.getContent() // 수정 시 기존의 내용을 불러오기 위해 문자열로 설정합니다.
         ));
         model.addAttribute("articleId", article.getArticleId());
-        log.debug("데이터 전송중...");
+        log.debug("데이터 전송중");
 
         return "articles/editForm";
     }
 
     // 6. 게시글 수정
-    @PostMapping("/{articleId}/edit")
+    @PatchMapping("/{articleId}/edit")
     public String edit(@Validated @ModelAttribute ArticleDto.Create articleEditDto,
                        @PathVariable("articleId") Long articleId,
                        @Login MemberDto.Session memberSessionDto,
@@ -111,16 +121,20 @@ public class ArticleController {
             return "redirect:/login";
         }
 
-        log.debug("로그인 문제 없음");
-        Article article = articleService.update(articleEditDto, articleId, memberSessionDto.getId());
+        try {
+            Article article = articleService.update(articleEditDto, articleId, memberSessionDto.getId());
 
-        log.debug("로직 문제 없음");
-        // 수정된 글을 바로 볼 수 있도록 해당 게시글 페이지로 이동
-        return "redirect:/articles/" + article.getArticleId();
+            log.debug("로직 문제 없음");
+            // 수정된 글을 바로 볼 수 있도록 해당 게시글 페이지로 이동
+            return "redirect:/articles/" + article.getArticleId();
+        } catch (IOException e) {
+            log.error("파일 처리 중 오류 발생", e);
+            return "redirect:/error"; // 또는 오류 페이지로 리디렉션
+        }
     }
 
     // 7. 게시글 삭제
-    @PostMapping("/{articleId}/delete")
+    @DeleteMapping("/{articleId}/delete")
     public String delete(@PathVariable("articleId") Long articleId,
                          @Login MemberDto.Session memberSessionDto) {
         log.debug("접근");
