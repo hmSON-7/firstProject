@@ -4,6 +4,7 @@ import lombok.*;
 import miniProject.board.entity.Comment;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class CommentDto {
 
@@ -28,15 +29,16 @@ public class CommentDto {
         private Long id;
         private String content;
         private String username;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
+        private String createdAt;
+        private String updatedAt;
 
         public Response(Comment comment) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             this.id = comment.getId();
             this.content = comment.getContent();
             this.username = comment.getMember().getUsername();
-            this.createdAt = comment.getCreatedAt();
-            this.updatedAt = comment.getUpdatedAt();
+            this.createdAt = comment.getCreatedAt().format(formatter);
+            this.updatedAt = comment.getUpdatedAt().format(formatter);
         }
     }
 }

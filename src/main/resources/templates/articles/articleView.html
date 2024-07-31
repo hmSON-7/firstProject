@@ -29,6 +29,13 @@
             padding: 0.5em;
             text-align: left;
         }
+        .form-label {
+            margin-right: 10px; /* 라벨과 텍스트 에어리어 간격 조정 */
+        }
+        .pagination a.current-page {
+            background-color: #007bff; /* 현재 페이지 배경 색 */
+            color: white;
+        }
     </style>
 </head>
 
@@ -59,23 +66,23 @@
         <!-- 댓글 작성 폼 -->
         <div class="mt-8">
             <h3 class="text-xl font-bold mb-4">댓글 작성</h3>
-            <form th:action="@{'/articles/' + ${ArticleInfo.articleId} + '/comments'}" th:object="${newComment}" method="post">
-                <div class="mb-3">
+            <form th:action="@{'/articles/' + ${ArticleInfo.articleId} + '/comments'}" th:object="${newComment}" method="post" class="space-y-4">
+                <div class="mb-3 flex items-center">
                     <label for="commentContent" class="form-label">댓글</label>
-                    <textarea class="form-control" id="commentContent" th:field="*{content}" placeholder="댓글을 입력하세요"></textarea>
+                    <textarea class="form-control flex-grow" id="commentContent" th:field="*{content}" placeholder="댓글을 입력하세요"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">댓글 작성</button>
+                <button type="submit" class="btn btn-primary bg-blue-600 text-white rounded hover:bg-blue-700">댓글 작성</button>
             </form>
         </div>
 
         <!-- 댓글 리스트 -->
         <div class="mt-8">
             <h3 class="text-xl font-bold mb-4">댓글</h3>
-            <ul>
-                <li th:each="comment : ${comments}">
+            <ul class="space-y-4">
+                <li th:each="comment : ${comments}" class="border-b border-gray-300 pb-4">
                     <p><strong th:text="${comment.username}">작성자</strong> - <span th:text="${comment.createdAt}">작성일</span></p>
-                    <p th:text="${comment.content}">댓글 내용</p>
-                    <div class="flex space-x-4" th:if="${isAuthor}">
+                    <p th:text="${comment.content}" class="mt-2">댓글 내용</p>
+                    <div class="flex space-x-4 mt-2" th:if="${isAuthor}">
                         <a th:href="@{'/comments/' + ${comment.id} + '?updateFrom=articles'}" class="py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700">수정</a>
                         <form th:action="@{'/comments/' + ${comment.id} + '?deleteFrom=articles'}" method="post" th:onsubmit="return confirm('정말로 삭제하시겠습니까?')">
                             <input type="hidden" name="_method" value="delete">
@@ -86,9 +93,12 @@
             </ul>
             <!-- 댓글 페이징 -->
             <div class="mt-4 flex justify-center">
-                <ul class="pagination">
+                <ul class="pagination flex space-x-2">
                     <li th:each="i : ${#numbers.sequence(1, commentTotalPages)}">
-                        <a th:href="@{'/articles/' + ${ArticleInfo.articleId} + '?commentPage=' + ${i}}" th:text="${i}"></a>
+                        <a th:href="@{'/articles/' + ${ArticleInfo.articleId} + '?commentPage=' + ${i}}"
+                           th:text="${i}"
+                           th:classappend="${i == commentPage} ? 'current-page' : ''"
+                           class="py-1 px-3 bg-gray-200 hover:bg-gray-300 rounded"></a>
                     </li>
                 </ul>
             </div>
