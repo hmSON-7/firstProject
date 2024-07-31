@@ -50,6 +50,6 @@ public class SignUpController {
 
         log.info("[{}] 회원 가입 성공", MDC.get(LogConst.TRACE_ID));
 
-        return "redirect:/";
+        return "redirect:/login";
     }
 }
