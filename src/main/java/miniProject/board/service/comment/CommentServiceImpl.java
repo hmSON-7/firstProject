@@ -12,11 +12,10 @@ import miniProject.board.repository.ArticleRepository;
 import miniProject.board.repository.CommentRepository;
 import miniProject.board.repository.MemberRepository;
 import org.slf4j.MDC;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,6 +27,7 @@ public class CommentServiceImpl implements CommentService {
     private final ArticleRepository articleRepository;
 
 
+    @Override
     public Long createComment(Long memberId, Long articleId, CommentDto.CreateRequest createCommentRequest) {
         Member member = getMemberByIdOrThrow(memberId);
 
@@ -41,19 +41,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
+    @Override
     @Transactional(readOnly = true)
-    public List<CommentDto.Response> findCommentsByArticleId(Long articleId) {
-        Article article = getArticleByIdOrThrow(articleId);
-
-        List<Comment> comments = article.getComments();
-
-        return comments
-                .stream()
-                .map(CommentDto.Response::new)
-                .collect(Collectors.toList());
+    public Page<CommentDto.Response> findCommentsByArticleId(Long articleId, Pageable pageable) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 접근입니다"));
+        Page<Comment> comments = commentRepository.findByArticle(article, pageable);
+        return comments.map(CommentDto.Response::new);
     }
 
 
+    @Override
     public Long deleteComment(Long commentId, Long memberId, String deleteFrom) {
         Comment comment = getCommentByIdAndMemberIdOrThrow(commentId, memberId);
 
@@ -72,6 +70,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
+    @Override
     public Long updateComment(Long commentId,
                               Long memberId,
                               String updateFrom,
@@ -92,6 +91,7 @@ public class CommentServiceImpl implements CommentService {
 
         return source;
     }
+
 
     private Member getMemberByIdOrThrow(Long memberId) {
        Member member =  memberRepository.findById(memberId)

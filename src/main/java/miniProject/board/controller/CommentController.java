@@ -21,7 +21,7 @@ public class CommentController {
 
     // 댓글 저장
     @PostMapping("/articles/{articleId}/comments")
-    public String addComment(@PathVariable Long articleId,
+    public String addComment(@PathVariable("articleId") Long articleId,
                              CommentDto.CreateRequest createCommentRequest,
                              @Login MemberDto.Session memberSessionDto){
 
@@ -37,7 +37,7 @@ public class CommentController {
 
     // 댓글 삭제
     @DeleteMapping("/comments/{commentId}")
-    public String removeComment(@PathVariable Long commentId,
+    public String removeComment(@PathVariable("commentId") Long commentId,
                                 @RequestParam(value = "deleteFrom", required = false) String deleteFrom,
                                 @Login MemberDto.Session memberSessionDto) {
 
@@ -69,7 +69,7 @@ public class CommentController {
 
     // 댓글 수정
     @PatchMapping("/comments/{commentId}")
-    public String editComment(@PathVariable Long commentId,
+    public String editComment(@PathVariable("commentId") Long commentId,
                               @RequestParam(value = "updateFrom", required = false) String updateFrom,
                               @Login MemberDto.Session memberSessionDto,
                               CommentDto.UpdateRequest commentUpdateRequest) {
