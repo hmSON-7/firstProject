@@ -68,7 +68,7 @@
             <h3 class="text-xl font-bold mb-4">댓글 작성</h3>
             <form th:action="@{'/articles/' + ${ArticleInfo.articleId} + '/comments'}" th:object="${newComment}" method="post" class="space-y-4">
                 <div class="mb-3 flex items-center">
-                    <label for="commentContent" class="form-label">댓글</label>
+                    <label for="commentContent" class="form-label">내용</label>
                     <textarea class="form-control flex-grow" id="commentContent" th:field="*{content}" placeholder="댓글을 입력하세요"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary bg-blue-600 text-white rounded hover:bg-blue-700">댓글 작성</button>
@@ -80,13 +80,30 @@
             <h3 class="text-xl font-bold mb-4">댓글</h3>
             <ul class="space-y-4">
                 <li th:each="comment : ${comments}" class="border-b border-gray-300 pb-4">
-                    <p><strong th:text="${comment.username}">작성자</strong> - <span th:text="${comment.createdAt}">작성일</span></p>
-                    <p th:text="${comment.content}" class="mt-2">댓글 내용</p>
+                    <div th:id="'comment-content-' + ${comment.id}">
+                        <p><strong th:text="${comment.username}">작성자</strong> - <span th:text="${comment.createdAt}">작성일</span></p>
+                        <p th:text="${comment.content}" class="mt-2">내용</p>
+                    </div>
                     <div class="flex space-x-4 mt-2" th:if="${isAuthor}">
-                        <a th:href="@{'/comments/' + ${comment.id} + '?updateFrom=articles'}" class="py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700">수정</a>
+                        <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} + ')'" class="py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700">수정</button>
                         <form th:action="@{'/comments/' + ${comment.id} + '?deleteFrom=articles'}" method="post" th:onsubmit="return confirm('정말로 삭제하시겠습니까?')">
                             <input type="hidden" name="_method" value="delete">
                             <button type="submit" class="py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700">삭제</button>
+                        </form>
+                    </div>
+                    <!-- 댓글 수정 폼 -->
+                    <div th:id="'edit-form-' + ${comment.id}" style="display:none;" class="mt-4">
+                        <h4 class="text-lg font-bold mb-2">댓글 수정</h4>
+                        <form th:action="@{'/comments/' + ${comment.id} + '?updateFrom=articles'}" method="post" class="space-y-4">
+                            <input type="hidden" name="_method" value="patch">
+                            <div class="mb-3 flex items-center">
+                                <label th:for="'editCommentContent-' + ${comment.id}" class="form-label">내용</label>
+                                <textarea class="form-control flex-grow" th:id="'editCommentContent-' + ${comment.id}" name="content" th:text="${comment.content}"></textarea>
+                            </div>
+                            <div class="flex space-x-4">
+                                <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} + ')'" class="py-2 px-4 bg-gray-600 text-white rounded hover:bg-gray-700">댓글 수정 취소</button>
+                                <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">저장</button>
+                            </div>
                         </form>
                     </div>
                 </li>
@@ -107,5 +124,22 @@
 </div>
 
 <footer th:replace="~{layouts/footer :: footer}"></footer>
+<script>
+    function toggleEditForm(commentId) {
+        var editForm = document.getElementById('edit-form-' + commentId);
+        var commentContent = document.getElementById('comment-content-' + commentId);
+        if (editForm && commentContent) {
+            if (editForm.style.display === 'none' || editForm.style.display === '') {
+                editForm.style.display = 'block';
+                commentContent.style.display = 'none';
+            } else {
+                editForm.style.display = 'none';
+                commentContent.style.display = 'block';
+            }
+        } else {
+            console.error("Element not found for commentId: " + commentId);
+        }
+    }
+</script>
 </body>
 </html>
