@@ -3,6 +3,8 @@ package miniProject.board.service;
 import lombok.RequiredArgsConstructor;
 import miniProject.board.dto.ReportDto;
 import miniProject.board.entity.*;
+import miniProject.board.entity.report.ReportArticle;
+import miniProject.board.entity.report.ReportComment;
 import miniProject.board.repository.ArticleRepository;
 import miniProject.board.repository.CommentRepository;
 import miniProject.board.repository.MemberRepository;
@@ -29,7 +31,7 @@ public class ReportService {
                 .orElseThrow(() ->
                         new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-        Report report = Report.reportArticle(reportArticle.getDescription(), article, member,ReportStatus.PENDING);
+        Report report = ReportArticle.reportArticle(reportArticle.getDescription(), article, member,ReportStatus.PENDING);
 
         return reportRepository.save(report);
     }
@@ -43,7 +45,7 @@ public class ReportService {
                 .orElseThrow(() ->
                         new IllegalArgumentException("댓글이 존재하지 않습니다."));
 
-        Report report = Report.reportComment(reportComment.getDescription(), comment, member, ReportStatus.PENDING);
+        Report report = ReportComment.reportComment(reportComment.getDescription(), comment, member, ReportStatus.PENDING);
 
         return reportRepository.save(report);
     }
@@ -60,10 +62,12 @@ public class ReportService {
         reportRepository.save(report);
 
         if (newStatus == ReportStatus.APPROVED) {
-            if(report.getArticle() != null){
-                articleRepository.delete(report.getArticle());
-            }else if (report.getComment() != null){
-                commentRepository.delete(report.getComment());
+            if(report instanceof ReportArticle){
+                ReportArticle reportArticle = (ReportArticle) report;
+                articleRepository.delete(reportArticle.getArticle());
+            }else if (report instanceof ReportComment){
+                ReportComment reportComment = (ReportComment) report;
+                commentRepository.delete(reportComment.getComment());
             }
             //멤버 징계 추가 코드 추가 할 것
             //report.getMember().setActive(false);
