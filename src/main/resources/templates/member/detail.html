@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <p th:text="${member.username}"></p>
+    <p th:text="${member.nickname}"></p>
+    <p th:text="${member.description}"></p>
+    <p th:text="${member.email}"></p>
+
+    <a th:href="@{/members/me/articles}">게시글 조회</a>
+    <a th:href="@{/members/me/comments}">댓글 조회</a>
+</body>
+</html>
