@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: db, jwt
+    include: db, mail, jwt
 
   jpa:
     hibernate:
