@@ -64,18 +64,9 @@ public class ArticleServiceImpl implements ArticleService {
     // 2. 게시글 리스트 조회 서비스
     @Override
     public Page<ArticleDto.ArticlesList> index(Pageable pageable) {
-        Page<Article> articlesPage = articleRepository.findAllByOrderByUpdatedAtDesc(pageable);
-        List<ArticleDto.ArticlesList> articlesList = articlesPage.stream().map(article -> new ArticleDto.ArticlesList(
-                article.getArticleId(),
-                article.getTitle(),
-                article.getMember().getNickname(),
-                article.getUpdatedAt(),
-                article.getLikes(),
-                article.getHits(),
-                article.getCreatedAt() // 수정 여부 확인을 위한 매개변수
-        )).toList();
-
-        return new PageImpl<>(articlesList, pageable, articlesPage.getTotalElements());
+        return articleRepository
+                .findAllByOrderByUpdatedAtDesc(pageable)
+                .map(ArticleDto.ArticlesList::fromArticle);
     }
 
     @Override
