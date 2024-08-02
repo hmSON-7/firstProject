@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <table th:each="comment : ${comments}">
+        <thead>
+            <tr>
+                <th>작성자</th>
+                <th>내용</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td th:text="${comment.username}"></td>
+                <td th:text="${comment.content}"></td>
+                <td>
+                    <form th:action="@{|/comments/${comment.id}?updateFrom=member|}" th:method="patch">
+                        <button type="submit">수정</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{|/comments/${comment.id}?deleteFrom=member|}" th:method="delete">
+                        <button type="submit">삭제</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a th:if="${hasPreviousPage}" th:text="이전" th:href="@{|/members/me/comments?page=${currentPage - 1} |}"></a>
+    <a th:text="${currentPage}" th:href="@{|/members/me/comments?page=${currentPage}|}"></a>
+    <a th:if="${hasNextPage}" th:text="다음" th:href="@{|/members/me/comments?page=${currentPage + 1}|}"></a>
+</body>
+</html>

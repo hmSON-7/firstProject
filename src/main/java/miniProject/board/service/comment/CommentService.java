@@ -60,4 +60,6 @@ public interface CommentService {
      * @throws IllegalArgumentException 댓글 조회에 실패한 경우
      */
     Long updateComment(Long commentId, Long memberId, String updateFrom, CommentDto.UpdateRequest updateCommentRequest);
+
+    Page<CommentDto.Response> getCommentsByMember(Long MemberId, Pageable pageable);
 }
