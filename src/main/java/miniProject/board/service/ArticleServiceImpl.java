@@ -79,6 +79,13 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public Page<ArticleDto.ArticlesList> getArticlesByMember(Long memberId, Pageable pageable) {
+        return articleRepository
+                .findArticlesByMemberId(memberId, pageable)
+                .map(ArticleDto.ArticlesList::fromArticle);
+    }
+
+    @Override
     @Transactional
     public ArticleDto.Info read(Long articleId) {
         Article article = articleRepository.findById(articleId)
