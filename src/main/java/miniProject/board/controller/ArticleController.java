@@ -100,7 +100,7 @@ public class ArticleController {
     public String index(@Login MemberDto.Session memberSessionDto,
                         @RequestParam(defaultValue = "1", name="page") int page,
                         Model model) {
-        Pageable pageable = PageRequest.of(page - 1, 1);
+        Pageable pageable = PageRequest.of(page - 1, 10);
         Page<ArticleDto.ArticlesList> articles = articleService.index(pageable);
 
         model.addAttribute("memberSessionDto", memberSessionDto);
