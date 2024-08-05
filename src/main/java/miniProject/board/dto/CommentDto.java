@@ -31,6 +31,7 @@ public class CommentDto {
         private String username;
         private String createdAt;
         private String updatedAt;
+        private Long authorId;
 
         public Response(Comment comment) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -39,6 +40,7 @@ public class CommentDto {
             this.username = comment.getMember().getUsername();
             this.createdAt = comment.getCreatedAt().format(formatter);
             this.updatedAt = comment.getUpdatedAt().format(formatter);
+            this.authorId = comment.getMember().getId();
         }
     }
 }

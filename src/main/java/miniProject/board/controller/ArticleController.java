@@ -80,6 +80,12 @@ public class ArticleController {
         // 댓글 리스트 추가
         Pageable pageable = PageRequest.of(commentPage - 1, 10);
         Page<CommentDto.Response> comments = commentService.findCommentsByArticleId(articleId, pageable);
+
+        comments.forEach(comment -> {
+            comment.setAuthorId(comment.getAuthorId().equals(memberSessionDto.getId()) ?
+                    memberSessionDto.getId() : null);
+        });
+
         model.addAttribute("comments", comments.getContent());
         model.addAttribute("commentPage", commentPage);
         model.addAttribute("commentTotalPages", comments.getTotalPages());
