@@ -3,6 +3,7 @@ package miniProject.board.dto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import miniProject.board.entity.Article;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -78,6 +79,7 @@ public class ArticleDto {
 
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ArticlesList {
         private Long articleId;
         private String title;
@@ -97,6 +99,18 @@ public class ArticleDto {
             this.likes = likes;
             this.hits = hits;
             this.checkUpdate = !createdAt.equals(updatedAt);
+        }
+
+        public static ArticlesList fromArticle(Article article) {
+            return new ArticlesList(
+                    article.getArticleId(),
+                    article.getTitle(),
+                    article.getMember().getNickname(),
+                    article.getUpdatedAt(),
+                    article.getLikes(),
+                    article.getHits(),
+                    article.getCreatedAt()
+            );
         }
     }
 }

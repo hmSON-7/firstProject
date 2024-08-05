@@ -22,7 +22,10 @@
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item" th:if="${memberSessionDto != null}">
-                    <span class="navbar-text" th:text="${memberSessionDto.id}">사용자 ID</span>
+                    <a class="btn btn-primary" th:href="@{/members/me}" th:text="마이페이지"></a>
+                    <form th:action="@{/logout}" th:method="post" class="d-inline">
+                        <button class="btn btn-primary" type="submit">로그아웃</button>
+                    </form>
                 </li>
                 <li class="nav-item" th:unless="${memberSessionDto != null}">
                     <a class="btn btn-primary" type="button" th:href="@{/login}">로그인</a>

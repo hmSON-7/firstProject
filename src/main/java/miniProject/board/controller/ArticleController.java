@@ -97,12 +97,17 @@ public class ArticleController {
 
     // 4. 게시글 리스트 조회
     @GetMapping("/list")
-    public String index(@RequestParam(defaultValue = "1", name="page") int page, Model model) {
+    public String index(@Login MemberDto.Session memberSessionDto,
+                        @RequestParam(defaultValue = "1", name="page") int page,
+                        Model model) {
         Pageable pageable = PageRequest.of(page - 1, 10);
         Page<ArticleDto.ArticlesList> articles = articleService.index(pageable);
 
+        model.addAttribute("memberSessionDto", memberSessionDto);
         model.addAttribute("articles", articles.getContent());
         model.addAttribute("currentPage", page);
+        model.addAttribute("hasNextPage", articles.hasNext());
+        model.addAttribute("hasPreviousPage", articles.hasPrevious());
         model.addAttribute("totalPages", articles.getTotalPages());
 
         return "articles/article-list";

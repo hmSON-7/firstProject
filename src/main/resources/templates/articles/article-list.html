@@ -45,14 +45,14 @@
 
     <nav aria-label="Page navigation" class="page-navigation">
         <ul class="pagination justify-content-center">
-            <li class="page-item" th:if="${currentPage > 1}">
-                <a class="page-link" th:href="@{'/articles/list?page=' + (${currentPage} - 1)}">이전</a>
+            <li class="page-item" th:if="${hasPreviousPage}">
+                <a class="page-link" th:href="@{/articles/list(page=${currentPage - 1})}">이전</a>
             </li>
             <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
-                <a class="page-link" th:href="@{'/articles/list?page=' + ${pageNum}}" th:text="${pageNum}" th:classappend="${pageNum == currentPage} ? 'active'"></a>
+                <a class="page-link" th:href="@{/articles/list(page=${pageNum})}" th:text="${pageNum}" th:classappend="${pageNum == currentPage} ? 'active'"></a>
             </li>
-            <li class="page-item" th:if="${currentPage < totalPages}">
-                <a class="page-link" th:href="@{'/articles/list?page=' + (${currentPage + 1})}">다음</a>
+            <li class="page-item" th:if="${hasNextPage}">
+                <a class="page-link" th:href="@{/articles/list(page=${currentPage + 1})}">다음</a>
             </li>
         </ul>
     </nav>

@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     Page<Article> findAllByOrderByUpdatedAtDesc(Pageable pageable);
+    Page<Article> findArticlesByMemberId(Long memberId, Pageable pageable);
 }

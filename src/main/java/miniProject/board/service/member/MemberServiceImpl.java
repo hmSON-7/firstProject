@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import miniProject.board.dto.MemberDto;
 import miniProject.board.entity.Member;
+import miniProject.board.exception.MemberNotFoundException;
 import miniProject.board.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,7 +20,9 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public MemberDto.Info findMember(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElse(null);
+        Member member = memberRepository
+                .findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
 
         return MemberDto.Info.fromMember(member);
     }
