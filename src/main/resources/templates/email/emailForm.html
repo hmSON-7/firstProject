@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/header/common-header :: head(~{::title})}">
+    <title>Email Form</title>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<nav th:replace="~{layouts/navbar :: nav}"></nav>
+
+<h1>Send Email</h1>
+<form action="/sendEmail" method="post">
+    <label for="to">To:</label>
+    <input type="email" id="to" name="to" required>
+    <br>
+    <label for="subject">Subject:</label>
+    <input type="text" id="subject" name="subject" required>
+    <br>
+    <label for="text">Text:</label>
+    <textarea id="text" name="text" required></textarea>
+    <br>
+    <button type="submit">Send Email</button>
+</form>
+
+<footer th:replace="~{layouts/footer :: footer}"></footer>
+</body>
+</html>

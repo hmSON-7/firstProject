@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/header/common-header :: head(~{::title})}">
+    <title>Email Result</title>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<nav th:replace="~{layouts/navbar :: nav}"></nav>
+
+<h1>Email Result</h1>
+<p th:text="${message}"></p>
+<a href="/emailForm">Back to Email Form</a>
+
+<footer th:replace="~{layouts/footer :: footer}"></footer>
+</body>
+</html>
