@@ -61,5 +61,5 @@ public interface CommentService {
      */
     Long updateComment(Long commentId, Long memberId, String updateFrom, CommentDto.UpdateRequest updateCommentRequest);
 
-    Page<CommentDto.Response> getCommentsByMember(Long MemberId, Pageable pageable);
+    Page<CommentDto.MyPageResponse> getCommentsByMember(Long MemberId, Pageable pageable);
 }

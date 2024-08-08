@@ -43,4 +43,27 @@ public class CommentDto {
             this.authorId = comment.getMember().getId();
         }
     }
+
+    @Getter @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyPageResponse {
+        private Long id;
+        private String content;
+        private String username;
+        private String updatedAt;
+        private Long articleId;
+        private String articleTitle;
+
+        public MyPageResponse(Comment comment) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            this.id = comment.getId();
+            this.content = comment.getContent();
+            this.username = comment.getMember().getUsername();
+            this.updatedAt = comment.getUpdatedAt().format(formatter);
+            this.articleId = comment.getArticle().getArticleId();
+            this.articleTitle = comment.getArticle().getTitle();
+        }
+
+    }
 }

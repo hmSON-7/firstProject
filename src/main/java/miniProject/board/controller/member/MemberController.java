@@ -1,12 +1,17 @@
 package miniProject.board.controller.member;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import miniProject.board.auth.utils.CookieUtil;
 import miniProject.board.controller.argumentResolver.Login;
 import miniProject.board.dto.ArticleDto;
 import miniProject.board.dto.CommentDto;
 import miniProject.board.dto.MemberDto;
+import miniProject.board.repository.RefreshRepository;
 import miniProject.board.service.ArticleService;
+import miniProject.board.service.auth.RefreshService;
 import miniProject.board.service.comment.CommentService;
 import miniProject.board.service.member.MemberService;
 import org.springframework.data.domain.Page;
@@ -25,6 +30,7 @@ public class MemberController {
     private final MemberService memberService;
     private final ArticleService articleService;
     private final CommentService commentService;
+    private final RefreshService refreshService;
 
     @GetMapping("/me")
     public String showMemberDetails(@Login MemberDto.Session memberSessionDto, Model model) {
@@ -60,7 +66,7 @@ public class MemberController {
         PageRequest pageRequest = PageRequest.of(page - 1, 10,
                 Sort.by(Sort.Direction.DESC, "updatedAt"));
 
-        Page<CommentDto.Response> comments = commentService
+        Page<CommentDto.MyPageResponse> comments = commentService
                 .getCommentsByMember(memberSessionDto.getId(), pageRequest);
 
         model.addAttribute("comments", comments.getContent());
@@ -70,5 +76,17 @@ public class MemberController {
 
 
         return "member/comments";
+    }
+
+    @DeleteMapping
+    public String withdrawMember(@Login MemberDto.Session memberSessionDto,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) {
+
+        refreshService.removeRefreshToken(request, response);
+
+        memberService.deleteMember(memberSessionDto.getId());
+
+        return "redirect:/";
     }
 }

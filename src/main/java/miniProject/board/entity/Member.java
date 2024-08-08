@@ -8,6 +8,8 @@ import miniProject.board.auth.constants.Role;
 import miniProject.board.auth.constants.Status;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -39,6 +41,12 @@ public class Member {
     private Status status;
 
     private LocalDateTime lockExpirationTime;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Article> articles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     private Member(String username, String password, String email, Role role) {
         this.username = username;

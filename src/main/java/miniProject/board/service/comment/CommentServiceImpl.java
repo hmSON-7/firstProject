@@ -50,10 +50,10 @@ public class CommentServiceImpl implements CommentService {
         return comments.map(CommentDto.Response::new);
     }
 
-    public Page<CommentDto.Response> getCommentsByMember(Long memberId, Pageable pageable) {
+    public Page<CommentDto.MyPageResponse> getCommentsByMember(Long memberId, Pageable pageable) {
         return commentRepository
                 .findCommentsByMemberId(memberId, pageable)
-                .map(CommentDto.Response::new);
+                .map(CommentDto.MyPageResponse::new);
     }
 
     @Override
