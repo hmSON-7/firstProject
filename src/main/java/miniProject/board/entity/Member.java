@@ -102,4 +102,16 @@ public class Member {
         this.status = Status.TEMPORARY_SUSPENDED;
         this.lockExpirationTime = LocalDateTime.now().plusDays(days);
     }
+
+    /**
+     * 비밀번호를 변경합니다.
+     *
+     * <p>
+     *     사용자로부터 새 비밀번호를 받아 암호화 한 후 Member의 password를 변경합니다.
+     * </p>
+     * @param password 새 비밀번호
+     */
+    public void changePW(String password) {
+        this.password = password;
+    }
 }

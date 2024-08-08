@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/header/common-header :: head(~{::title})}">
+    <title>Email Authentication</title>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<nav th:replace="~{layouts/navbar :: nav}"></nav>
+
+<main class="container">
+    <h1>Enter Verification Code</h1>
+    <form action="/changePW/emailAuth" method="post">
+        <input type="hidden" name="username" th:value="${username}">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" th:value="${emailCheckDto.email}" required>
+        </div>
+        <div class="form-group">
+            <label for="authCode">Verification Code</label>
+            <input type="text" class="form-control" id="authCode" name="authCode" th:value="${emailCheckDto.authCode}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Verify</button>
+    </form>
+</main>
+
+<footer th:replace="~{layouts/footer :: footer}"></footer>
+</body>
+</html>
