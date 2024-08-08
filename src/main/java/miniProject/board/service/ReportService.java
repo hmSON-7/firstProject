@@ -3,6 +3,8 @@ package miniProject.board.service;
 import lombok.RequiredArgsConstructor;
 import miniProject.board.dto.ReportDto;
 import miniProject.board.entity.*;
+import miniProject.board.entity.report.ReportArticle;
+import miniProject.board.entity.report.ReportComment;
 import miniProject.board.repository.ArticleRepository;
 import miniProject.board.repository.CommentRepository;
 import miniProject.board.repository.MemberRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -29,7 +32,9 @@ public class ReportService {
                 .orElseThrow(() ->
                         new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-        Report report = Report.reportArticle(reportArticle.getDescription(), article, member,ReportStatus.PENDING);
+        Report report = ReportArticle.reportArticle(reportArticle.getDescription(), article, member,ReportStatus.PENDING);
+
+
 
         return reportRepository.save(report);
     }
@@ -43,7 +48,7 @@ public class ReportService {
                 .orElseThrow(() ->
                         new IllegalArgumentException("댓글이 존재하지 않습니다."));
 
-        Report report = Report.reportComment(reportComment.getDescription(), comment, member, ReportStatus.PENDING);
+        Report report = ReportComment.reportComment(reportComment.getDescription(), comment, member, ReportStatus.PENDING);
 
         return reportRepository.save(report);
     }
@@ -60,13 +65,16 @@ public class ReportService {
         reportRepository.save(report);
 
         if (newStatus == ReportStatus.APPROVED) {
-            if(report.getArticle() != null){
-                articleRepository.delete(report.getArticle());
-            }else if (report.getComment() != null){
-                commentRepository.delete(report.getComment());
+            if(report instanceof ReportArticle){
+                ReportArticle reportArticle = (ReportArticle) report;
+                reportArticle.getArticle().getMember().suspendTemporarily(30);
+                articleRepository.delete(reportArticle.getArticle());
+
+            }else if (report instanceof ReportComment){
+                ReportComment reportComment = (ReportComment) report;
+                reportComment.getComment().getMember().suspendTemporarily(30);
+                commentRepository.delete(reportComment.getComment());
             }
-            //멤버 징계 추가 코드 추가 할 것
-            //report.getMember().setActive(false);
         }else if (newStatus == ReportStatus.REJECTED) {
             reportRepository.delete(report);
         }
@@ -99,6 +107,21 @@ public class ReportService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         return reportRepository.findByMember(member);
+    }
+
+    public String getReportType(Long reportId) {
+
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("신고가 존재하지 않습니다."));
+
+        if(report instanceof ReportArticle){
+            return "ARTICLE";
+        }
+        else if(report instanceof ReportComment){
+            return "COMMENT";
+        }
+        return "Unknown";
     }
 
 

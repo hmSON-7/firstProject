@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import miniProject.board.entity.Report;
 import miniProject.board.entity.ReportStatus;
+import miniProject.board.entity.report.ReportArticle;
+import miniProject.board.entity.report.ReportComment;
 
 import java.time.LocalDateTime;
 
@@ -31,8 +33,9 @@ public class ReportDto {
         private Long articleId;
         private Long memberId;
 
-        public static ReportArticle create(Report report) {
-            return new ReportArticle(report.getDescription(),
+        public static ReportArticle create(miniProject.board.entity.report.ReportArticle report) {
+            return new ReportArticle(
+                    report.getDescription(),
                     report.getArticle().getArticleId(),
                     report.getMember().getId());
         }
@@ -46,8 +49,9 @@ public class ReportDto {
         private Long commentId;
         private Long memberId;
 
-        public static ReportComment create(Report report) {
-            return new ReportComment(report.getDescription(),
+        public static ReportComment create(miniProject.board.entity.report.ReportComment report) {
+            return new ReportComment(
+                    report.getDescription(),
                     report.getComment().getId(),
                     report.getMember().getId());
         }
@@ -59,7 +63,4 @@ public class ReportDto {
         private Long reportId;
         private ReportStatus reportStatus;
     }
-
-
-
 }
