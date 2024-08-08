@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -32,6 +33,8 @@ public class ReportService {
                         new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
         Report report = ReportArticle.reportArticle(reportArticle.getDescription(), article, member,ReportStatus.PENDING);
+
+
 
         return reportRepository.save(report);
     }
@@ -64,13 +67,14 @@ public class ReportService {
         if (newStatus == ReportStatus.APPROVED) {
             if(report instanceof ReportArticle){
                 ReportArticle reportArticle = (ReportArticle) report;
+                reportArticle.getArticle().getMember().suspendTemporarily(30);
                 articleRepository.delete(reportArticle.getArticle());
+
             }else if (report instanceof ReportComment){
                 ReportComment reportComment = (ReportComment) report;
+                reportComment.getComment().getMember().suspendTemporarily(30);
                 commentRepository.delete(reportComment.getComment());
             }
-            //멤버 징계 추가 코드 추가 할 것
-            //report.getMember().setActive(false);
         }else if (newStatus == ReportStatus.REJECTED) {
             reportRepository.delete(report);
         }
@@ -103,6 +107,21 @@ public class ReportService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         return reportRepository.findByMember(member);
+    }
+
+    public String getReportType(Long reportId) {
+
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("신고가 존재하지 않습니다."));
+
+        if(report instanceof ReportArticle){
+            return "ARTICLE";
+        }
+        else if(report instanceof ReportComment){
+            return "COMMENT";
+        }
+        return "Unknown";
     }
 
 

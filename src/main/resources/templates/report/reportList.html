@@ -26,7 +26,13 @@
             <td th:text="${report.member.username}"></td>
             <td th:text="${report.status}"></td>
             <td th:text="${report.createdAt}"></td>
-            <td><a th:href="@{/report/{reportId}(reportId=${report.id})}" class="btn btn-primary">상세 보기</a></td>
+            <td>
+                <a th:href="@{/report/process}" class="btn btn-success">Process</a>
+                <form th:action="@{/report/all}" method="post" style="display:inline;">
+                    <input type="hidden" name="_method" value="delete">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>
