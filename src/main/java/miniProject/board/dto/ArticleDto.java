@@ -89,27 +89,17 @@ public class ArticleDto {
         private int hits;
         private boolean checkUpdate;
 
-        public ArticlesList(Long articleId, String title, String nickname, LocalDateTime updatedAt,
-                            int likes, int hits, LocalDateTime createdAt) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            this.articleId = articleId;
-            this.title = title;
-            this.nickname = nickname;
-            this.updatedAt = updatedAt.format(formatter);
-            this.likes = likes;
-            this.hits = hits;
-            this.checkUpdate = !createdAt.equals(updatedAt);
-        }
-
         public static ArticlesList fromArticle(Article article) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
             return new ArticlesList(
                     article.getArticleId(),
                     article.getTitle(),
                     article.getMember().getNickname(),
-                    article.getUpdatedAt(),
+                    article.getUpdatedAt().format(formatter),
                     article.getLikes(),
                     article.getHits(),
-                    article.getCreatedAt()
+                    !article.getCreatedAt().equals(article.getUpdatedAt())
             );
         }
     }

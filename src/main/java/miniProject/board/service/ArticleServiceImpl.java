@@ -6,6 +6,7 @@ import miniProject.board.dto.ArticleDto;
 import miniProject.board.entity.Article;
 import miniProject.board.entity.Member;
 import miniProject.board.repository.ArticleRepository;
+import miniProject.board.repository.MemberRepository;
 import miniProject.board.service.file.FileStorageService;
 import miniProject.board.service.member.MemberServiceImpl;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
-    private final MemberServiceImpl memberService;
+    private final MemberRepository memberRepository;
     private final FileStorageService fileStorageService;
 
     @Override
@@ -34,7 +35,8 @@ public class ArticleServiceImpl implements ArticleService {
          * Article 엔티티에 정보를 반환하기 위해 매개변수로 member 객체를 요구하므로
          * 세션으로 memberId를 받아온 후 해당 Member 객체를 찾아 매개변수로 넘김
          */
-        Member member = memberService.findMemberDao(memberId);
+        Member member = memberRepository.findById(memberId).orElse(null);
+
         if(member == null) {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
@@ -118,7 +120,9 @@ public class ArticleServiceImpl implements ArticleService {
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
         log.debug("article 조회");
-        Member member = memberService.findMemberDao(memberId);
+
+        Member member = memberRepository.findById(memberId).orElse(null);
+
         if(member == null || !member.getId().equals(article.getMember().getId())) {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
@@ -143,7 +147,8 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-        Member member = memberService.findMemberDao(memberId);
+        Member member = memberRepository.findById(memberId).orElse(null);
+
         if(member == null || !member.getId().equals(article.getMember().getId())) {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
