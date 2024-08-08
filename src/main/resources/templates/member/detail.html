@@ -12,5 +12,9 @@
 
     <a th:href="@{/members/me/articles}">게시글 조회</a>
     <a th:href="@{/members/me/comments}">댓글 조회</a>
+
+    <form th:action="@{/members}" th:method="delete">
+        <button type="submit">회원 탈퇴</button>
+    </form>
 </body>
 </html>

@@ -6,16 +6,20 @@ import miniProject.board.dto.MemberDto;
 import miniProject.board.entity.Member;
 import miniProject.board.exception.MemberNotFoundException;
 import miniProject.board.repository.MemberRepository;
+import miniProject.board.service.file.DirectoryStorageService;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
+    private final DirectoryStorageService directoryStorageService;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
@@ -38,5 +42,16 @@ public class MemberServiceImpl implements MemberService{
         return memberList.stream()
                 .map(MemberDto.Info::fromMember)
                 .toList();
+    }
+
+    @Override
+    public void deleteMember(Long memberId) {
+        Member member = memberRepository
+                .findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        directoryStorageService.deleteDir(member.getUsername());
+
+        memberRepository.delete(member);
     }
 }

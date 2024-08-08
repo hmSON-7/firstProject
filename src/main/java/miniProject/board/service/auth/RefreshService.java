@@ -74,4 +74,11 @@ public class RefreshService {
 
         response.sendRedirect(request.getRequestURI());
     }
+
+    public void removeRefreshToken(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = cookieUtil.getRefreshToken(request);
+        refreshRepository.deleteByRefreshToken(refreshToken);
+
+        cookieUtil.clearAllCookie(request, response);
+    }
 }
