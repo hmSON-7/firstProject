@@ -71,6 +71,60 @@ public class MemberDto {
         private String password;
     }
 
+    public static class EmailRequest {
+
+        @Getter @Setter
+        @NoArgsConstructor
+        @AllArgsConstructor(access = AccessLevel.PRIVATE)
+        public static class forUsername {
+            @NotEmpty
+            @Email
+            private String email;
+        }
+
+        @Getter @Setter
+        @NoArgsConstructor
+        @AllArgsConstructor(access = AccessLevel.PRIVATE)
+        public static class forPW {
+            @NotEmpty
+            private String username;
+
+            @NotEmpty
+            @Email
+            private String email;
+        }
+    }
+
+    public static class EmailCheck {
+
+        @Getter @Setter
+        @NoArgsConstructor
+        @AllArgsConstructor(access = AccessLevel.PRIVATE)
+        public static class forUsername {
+            @NotEmpty
+            @Email
+            private String email;
+
+            @NotEmpty
+            private String authCode;
+        }
+
+        @Getter @Setter
+        @NoArgsConstructor
+        @AllArgsConstructor(access = AccessLevel.PRIVATE)
+        public static class forPW {
+            @NotEmpty
+            private String username;
+
+            @NotEmpty
+            @Email
+            private String email;
+
+            @NotEmpty
+            private String authCode;
+        }
+    }
+
     @Getter @Setter
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
