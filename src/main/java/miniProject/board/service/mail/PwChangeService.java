@@ -16,14 +16,12 @@ import java.util.Random;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class EmailService {
+public class PwChangeService {
 
     private final JavaMailSender mailSender;
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final RedisUtil redisUtil;
-
-    private String authNum;
 
     // 1. 인증키 전송 서비스
     public void sendAuthKey(String username, String email, String code) {
@@ -60,7 +58,6 @@ public class EmailService {
 
         Random random = new Random();
         String code =  String.format("%06d", random.nextInt(999999)); // 6자리로 포맷
-        authNum = code;
 
         sendAuthKey(username, email, code);
         return code;

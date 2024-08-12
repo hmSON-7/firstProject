@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layouts/header/common-header :: head(~{::title})}">
-    <title>Email Form</title>
+    <title>Email Form : Find Accounts</title>
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
 
 <nav th:replace="~{layouts/navbar :: nav}"></nav>
 
 <main class="container">
-    <h1>Email Verification</h1>
-    <form action="/changePW/emailCheck" method="post">
-        <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" class="form-control" id="username" name="username" th:value="${emailRequestDto.username}" required>
-        </div>
+    <h1>Email Verification to Find Accounts</h1>
+    <form action="/findAccounts/emailCheck" method="post">
         <div class="form-group">
             <label for="email">Email</label>
             <input type="email" class="form-control" id="email" name="email" th:value="${emailRequestDto.email}" required>

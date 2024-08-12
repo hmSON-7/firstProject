@@ -126,6 +126,22 @@ public class MemberDto {
     }
 
     @Getter @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class ChangePW {
+        @NotEmpty
+        private String username;
+
+        @NotEmpty
+        @Size(min = 8, max = 15)
+        private String password;
+
+        @NotEmpty
+        @Size(min = 8, max = 15)
+        private String confirmPassword;
+    }
+
+    @Getter @Setter
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Session {

@@ -55,7 +55,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/", "/signUp", "/error",
-                                "/changePW/emailCheck", "/changePW/emailAuth", "changePW/newPassword").permitAll()
+                                "/changePW/emailCheck", "/changePW/emailAuth", "/changePW/newPassword",
+                                "/findAccounts/emailCheck", "/findAccounts/emailAuth",
+                                "/findAccounts/showAccounts").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
 
