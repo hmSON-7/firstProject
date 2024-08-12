@@ -1,8 +1,8 @@
-package miniProject.board.service.mail;
+package miniProject.board.service.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import miniProject.board.controller.mail.RedisUtil;
+import miniProject.board.auth.utils.RedisUtil;
 import miniProject.board.entity.Member;
 import miniProject.board.repository.MemberRepository;
 import org.springframework.mail.SimpleMailMessage;

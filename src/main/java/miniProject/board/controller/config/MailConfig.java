@@ -1,4 +1,4 @@
-package miniProject.board.controller.mail;
+package miniProject.board.controller.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

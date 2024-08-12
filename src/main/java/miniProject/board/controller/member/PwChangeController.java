@@ -1,9 +1,9 @@
-package miniProject.board.controller.mail;
+package miniProject.board.controller.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import miniProject.board.dto.MemberDto;
-import miniProject.board.service.mail.PwChangeService;
+import miniProject.board.service.member.PwChangeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
