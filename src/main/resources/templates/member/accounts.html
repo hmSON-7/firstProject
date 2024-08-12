@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/header/common-header :: head(~{::title})}">
+    <title>Email Form</title>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<nav th:replace="~{layouts/navbar :: nav}"></nav>
+
+<main class="container">
+    <h1 class="text-center">Your Accounts List</h1>
+    <div class="mt-4">
+        <p>Email associated with these accounts: <strong th:text="${email}"></strong></p>
+
+        <div th:if="${#lists.isEmpty(accounts)}">
+            <p>No accounts found associated with this email.</p>
+        </div>
+
+        <div th:if="${not #lists.isEmpty(accounts)}">
+            <ul class="list-group">
+                <li th:each="account : ${accounts}" class="list-group-item">
+                    <span th:text="${account}">Account Name</span>
+                </li>
+            </ul>
+        </div>
+
+        <a href="/login" class="btn btn-primary mt-4">Go to Login</a>
+    </div>
+</main>
+
+<footer th:replace="~{layouts/footer :: footer}"></footer>
+</body>
+</html>

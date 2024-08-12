@@ -1,4 +1,4 @@
-package miniProject.board.controller.mail;
+package miniProject.board.auth.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
