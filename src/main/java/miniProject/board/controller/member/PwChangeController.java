@@ -2,6 +2,7 @@ package miniProject.board.controller.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import miniProject.board.dto.EmailDto;
 import miniProject.board.dto.MemberDto;
 import miniProject.board.service.member.PwChangeService;
 import org.springframework.stereotype.Controller;
@@ -22,13 +23,13 @@ public class PwChangeController {
     // 1. 이메일 인증 폼으로 이동
     @GetMapping("/emailCheck")
     public String emailForm(Model model) {
-        model.addAttribute("emailRequestDto", new MemberDto.EmailRequest.forPW());
+        model.addAttribute("emailRequestDto", new EmailDto.RequestForPW());
         return "email/emailFormForPw";
     }
 
     // 2. 이메일 등록 여부 확인
     @PostMapping("/emailCheck")
-    public String sendEmail(@Validated @ModelAttribute("emailRequestDto") MemberDto.EmailRequest.forPW emailRequest,
+    public String sendEmail(@Validated @ModelAttribute("emailRequestDto") EmailDto.RequestForPW emailRequest,
                             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Entry: Send Email Controller");
 
@@ -53,7 +54,7 @@ public class PwChangeController {
                                 @ModelAttribute("email") String email, Model model) {
         log.debug("Entry: email Auth Form to Change Password Controller");
 
-        model.addAttribute("emailCheckDto", new MemberDto.EmailCheck.forPW());
+        model.addAttribute("emailCheckDto", new EmailDto.CheckForPW());
         model.addAttribute("username", username);
         model.addAttribute("email", email);
 
@@ -63,7 +64,7 @@ public class PwChangeController {
     // 4. 이메일 인증 번호 입력 확인
     @PostMapping("/emailAuth")
     public String checkKey(@ModelAttribute("email") String email, @ModelAttribute("username") String username,
-                           @Validated @ModelAttribute("emailCheckDto") MemberDto.EmailCheck.forPW emailCheck,
+                           @Validated @ModelAttribute("emailCheckDto") EmailDto.CheckForPW emailCheck,
                            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Entry: Check Auth Key Controller");
 
