@@ -20,6 +20,7 @@
             <label for="confirmPassword">Confirm New Password</label>
             <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" th:value="${changePWDto.confirmPassword}" required>
         </div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
         <button type="submit" class="btn btn-primary">Change Password</button>
     </form>
 </main>
