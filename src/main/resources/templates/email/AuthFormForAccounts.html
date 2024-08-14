@@ -11,10 +11,12 @@
     <h1>Enter Verification Code to Find Accounts</h1>
     <form action="/findAccounts/emailAuth" method="post">
         <input type="hidden" name="email" th:value="${email}">
+        <input type="hidden" name="sentCode" th:value="${sentCode}">
         <div class="form-group">
             <label for="authCode">Verification Code</label>
             <input type="text" class="form-control" id="authCode" name="authCode" th:value="${emailCheckDto.authCode}" required>
         </div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
         <button type="submit" class="btn btn-primary">Verify</button>
     </form>
 </main>

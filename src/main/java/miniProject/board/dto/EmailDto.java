@@ -36,6 +36,9 @@ public class EmailDto {
         private String email;
 
         @NotEmpty
+        private String sentCode;
+
+        @NotEmpty
         private String authCode;
     }
 
