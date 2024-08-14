@@ -71,7 +71,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.addCookie(cookieUtil.createCookie(CookieConstants.REFRESH_TOKEN_COOKIE_NAME, refresh));
 
         if (Role.ROLE_ADMIN == role) {
-            response.sendRedirect("/admin/main");
+            response.sendRedirect("/admin");
 
         } else {
             response.sendRedirect("/");
