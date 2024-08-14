@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 @Service
@@ -49,12 +50,16 @@ public class FindAccountsService {
     }
 
     // 2. 인증키 확인 서비스
-    public boolean checkAuthNum(String email, String code) {
-        if(redisUtil.getData(code) == null) {
-            return false;
-        } else {
-            return redisUtil.getData(code).equals(email);
-        }
+    public String checkAuthNum(String email, String sentCode, String authCode) {
+        String storedEmail = redisUtil.getData(authCode);
+
+        if(!Objects.equals(sentCode, authCode)) {
+            return "mismatch";
+        } if(storedEmail == null) {
+            return "expired";
+        } if(!Objects.equals(email, storedEmail)) {
+            return "mismatch";
+        } return "approve";
     }
 
     // 3. 계정 목록 확인 서비스

@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import miniProject.board.entity.Member;
 
+import static miniProject.board.dto.constants.MemberConst.PASSWORD_MAX_SIZE;
+import static miniProject.board.dto.constants.MemberConst.PASSWORD_MIN_SIZE;
+
 public class MemberDto {
 
     @Getter @Setter
@@ -22,7 +25,7 @@ public class MemberDto {
         private String nickname;
 
         @NotEmpty
-        @Size(min = 8, max = 15)
+        @Size(min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE)
         private String password;
 
         private String description;
@@ -48,11 +51,11 @@ public class MemberDto {
         private String username;
 
         @NotEmpty
-        @Size(min = 8, max = 15)
+        @Size(min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE)
         private String password;
 
         @NotEmpty
-        @Size(min = 8, max = 15)
+        @Size(min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE)
         private String confirmPassword;
 
         @Email
@@ -67,62 +70,8 @@ public class MemberDto {
         private String username;
 
         @NotEmpty
-        @Size(min = 8, max = 15)
+        @Size(min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE)
         private String password;
-    }
-
-    public static class EmailRequest {
-
-        @Getter @Setter
-        @NoArgsConstructor
-        @AllArgsConstructor(access = AccessLevel.PRIVATE)
-        public static class forUsername {
-            @NotEmpty
-            @Email
-            private String email;
-        }
-
-        @Getter @Setter
-        @NoArgsConstructor
-        @AllArgsConstructor(access = AccessLevel.PRIVATE)
-        public static class forPW {
-            @NotEmpty
-            private String username;
-
-            @NotEmpty
-            @Email
-            private String email;
-        }
-    }
-
-    public static class EmailCheck {
-
-        @Getter @Setter
-        @NoArgsConstructor
-        @AllArgsConstructor(access = AccessLevel.PRIVATE)
-        public static class forUsername {
-            @NotEmpty
-            @Email
-            private String email;
-
-            @NotEmpty
-            private String authCode;
-        }
-
-        @Getter @Setter
-        @NoArgsConstructor
-        @AllArgsConstructor(access = AccessLevel.PRIVATE)
-        public static class forPW {
-            @NotEmpty
-            private String username;
-
-            @NotEmpty
-            @Email
-            private String email;
-
-            @NotEmpty
-            private String authCode;
-        }
     }
 
     @Getter @Setter
@@ -133,11 +82,11 @@ public class MemberDto {
         private String username;
 
         @NotEmpty
-        @Size(min = 8, max = 15)
+        @Size(min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE)
         private String password;
 
         @NotEmpty
-        @Size(min = 8, max = 15)
+        @Size(min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE)
         private String confirmPassword;
     }
 

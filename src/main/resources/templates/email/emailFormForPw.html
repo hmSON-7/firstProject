@@ -18,6 +18,7 @@
             <label for="email">Email</label>
             <input type="email" class="form-control" id="email" name="email" th:value="${emailRequestDto.email}" required>
         </div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
         <button type="submit" class="btn btn-primary">Send Verification Code</button>
     </form>
 </main>

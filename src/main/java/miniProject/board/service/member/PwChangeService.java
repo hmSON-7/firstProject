@@ -64,26 +64,35 @@ public class PwChangeService {
     }
 
     // 3. 인증키 확인 서비스
-    public boolean checkAuthNum(String email, String code) {
-        if(redisUtil.getData(code) == null) {
-            return false;
-        } else {
-            return redisUtil.getData(code).equals(email);
-        }
+    public String checkAuthNum(String email, String sentCode, String authCode) {
+        String storedEmail = redisUtil.getData(authCode);
+
+        if(!Objects.equals(sentCode, authCode)) {
+            return "mismatch";
+        } if(storedEmail == null) {
+            return "expired";
+        } if(!Objects.equals(email, storedEmail)) {
+            return "mismatch";
+        } return "approve";
     }
 
     // 4. 비밀번호 변경 서비스
-    public boolean changePW(String username, String password) {
+    public String changePW(String username, String password, String confirmPassword) {
         Member member = memberRepository.findByUsername(username).orElse(null);
         if(member == null) {
             log.error("error: " + username + " ID를 찾을 수 없습니다.");
-            return false;
+            return "unidentified";
+        }
+
+        if(!password.equals(confirmPassword)) {
+            log.error("비밀번호와 비밀번호 확인 불일치");
+            return "mismatch";
         }
 
         String newPW = passwordEncoder.encode(password);
         member.changePW(newPW);
         memberRepository.save(member);
 
-        return true;
+        return "approve";
     }
 }
