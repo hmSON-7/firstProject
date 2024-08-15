@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/header/common-header :: head(~{::title})}">
+    <title>게시글 신고 조회 페이지</title>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<nav th:replace="~{layouts/navbar :: nav}"></nav>
+
+<!-- Content -->
+<main class="container mt-5 flex-grow-1">
+    <section class="d-flex justify-content-between align-items-center mb-3">
+        <h2>게시글 신고 목록</h2>
+    </section>
+
+    <section class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>신고자</th>
+                <th>신고 내용</th>
+                <th>작성일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="reportArticle : ${reportArticles}">
+                <td th:text="${reportArticle.id}"></td>
+                <td th:text="${reportArticle.reporter}"></td>
+                <td>
+                    <a th:href="@{|/reports/${reportArticle.id}|}" class="text-decoration-none"
+                       th:text="${reportArticle.description}"></a>
+                </td>
+                <td th:text="${reportArticle.updateAtReport}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+<footer th:replace="~{layouts/footer :: footer}"></footer>
+</body>
+</html>

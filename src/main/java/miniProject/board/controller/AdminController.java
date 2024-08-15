@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class AdminController {
 
-    @GetMapping("/admin/main")
+    @GetMapping("/admin")
     public String adminMain(@Login MemberDto.Session memberSessionDto, Model model){
         if (memberSessionDto == null) {
-            return "redirect:/admin/login";
+            return "redirect:/login";
         }
 
-        model.addAttribute("adminSessionDto", memberSessionDto);
+        model.addAttribute("memberSessionDto", memberSessionDto);
 
         return "admin/main";
     }

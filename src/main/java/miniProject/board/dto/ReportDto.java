@@ -1,13 +1,8 @@
 package miniProject.board.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import miniProject.board.entity.Report;
+import lombok.*;
 import miniProject.board.entity.ReportStatus;
-import miniProject.board.entity.report.ReportArticle;
-import miniProject.board.entity.report.ReportComment;
 
 import java.time.LocalDateTime;
 
@@ -15,52 +10,66 @@ import java.time.LocalDateTime;
 public class ReportDto {
 
     @Data
-    public static class Info {
-        private Long reportId;
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ArticleRequest{
         private String description;
         private Long articleId;
-        private Long commentId;
-        private String username;
-        private ReportStatus reportStatus;
-        private LocalDateTime createdAt;
+        private Long memberId;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class ReportArticle{
+    public static class Request {
         private String description;
-        private Long articleId;
-        private Long memberId;
-
-        public static ReportArticle create(miniProject.board.entity.report.ReportArticle report) {
-            return new ReportArticle(
-                    report.getDescription(),
-                    report.getArticle().getArticleId(),
-                    report.getMember().getId());
-        }
     }
 
-    @Data
-    @AllArgsConstructor
+    @Getter @Setter
     @NoArgsConstructor
-    public static class ReportComment{
+    @AllArgsConstructor
+    public static class CommentResponse {
+        private String reporter;
         private String description;
-        private Long commentId;
-        private Long memberId;
+        private LocalDateTime updateAtReport;
+        private String author;
+        private String content;
+        private LocalDateTime updatedAtComment;
+    }
 
-        public static ReportComment create(miniProject.board.entity.report.ReportComment report) {
-            return new ReportComment(
-                    report.getDescription(),
-                    report.getComment().getId(),
-                    report.getMember().getId());
-        }
+    @Getter @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CommentListResponse {
+        private Long id;
+        private String reporter;
+        private String description;
+        private LocalDateTime updateAtReport;
+    }
+
+    @Getter @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ArticleResponse {
+        private String reporter;
+        private String description;
+        private String author;
+        private String content;
+    }
+
+    @Getter @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ArticleListResponse {
+        private Long id;
+        private String reporter;
+        private String description;
+        private LocalDateTime updateAtReport;
     }
 
     @Data
     @AllArgsConstructor
-    public static class ProcessReport{
-        private Long reportId;
-        private ReportStatus reportStatus;
+    public static class ProcessRequest {
+        private Long date;
     }
 }

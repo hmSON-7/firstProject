@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:replace="~{layouts/header/common-header :: head(~{::title})}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글 조회</title>
@@ -61,6 +61,34 @@
                     <button type="submit" class="py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700">삭제</button>
                 </form>
             </div>
+
+            <!-- report -->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportArticleModal">
+                신고 하기
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="reportArticleModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="reportModalLabel">신고</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{|/articles/${ArticleInfo.articleId}/reports|}" th:method="post">
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">신고 내용</label>
+                                    <input type="text" class="form-control" id="description" name="description" placeholder="Describe the issue">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                    <button type="submit" class="btn btn-primary">신고 하기</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- 댓글 작성 폼 -->
@@ -105,6 +133,34 @@
                                 <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">저장</button>
                             </div>
                         </form>
+                    </div>
+
+                    <!-- report -->
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportCommentModal">
+                        신고 하기
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="reportCommentModal" tabindex="-1" aria-labelledby="reportCommentModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="reportCommentModalLabel">신고</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form th:action="@{|/comments/${comment.id}/reports|}" th:method="post">
+                                        <div class="mb-3">
+                                            <label for="description" class="form-label">신고 내용</label>
+                                            <input type="text" class="form-control" name="description" placeholder="Describe the issue">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                            <button type="submit" class="btn btn-primary">신고 하기</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </li>
             </ul>
