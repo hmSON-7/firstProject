@@ -131,7 +131,7 @@ public class ArticleServiceImpl implements ArticleService {
         String contentHtml;
 
         if (articleEditDto.getContent() == null || articleEditDto.getContent().isEmpty()) {
-            contentHtml = "<h1>신고처리된 게시글입니다.</h1>";
+            contentHtml = "<h1>신고 처리된 게시글입니다.</h1>";
 
         } else {
             contentHtml = new String(articleEditDto.getContent().getBytes(), StandardCharsets.UTF_8);
