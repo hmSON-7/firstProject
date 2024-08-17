@@ -43,6 +43,7 @@ public class ReportController {
         ReportDto.CommentResponse reportComment = reportService.getReportComment(reportId);
 
         model.addAttribute("reportComment", reportComment);
+        model.addAttribute("processRequest", new ReportDto.ProcessRequest());
 
         return "report/commentReportDetail";
     }
@@ -62,6 +63,7 @@ public class ReportController {
         ReportDto.ArticleResponse reportArticle = reportService.getReportArticle(reportId);
 
         model.addAttribute("reportArticle", reportArticle);
+        model.addAttribute("processRequest", new ReportDto.ProcessRequest());
 
         return "report/articleReportDetail";
     }

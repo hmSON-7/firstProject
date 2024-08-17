@@ -101,6 +101,7 @@ public class ReportDto {
 
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class ProcessRequest {
         private Long date;
     }
