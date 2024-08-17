@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/header/common-header :: head(~{::title})}">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<nav th:replace="~{layouts/navbar :: nav}"></nav>
+
+<main class="container mt-5">
+    <header class="mb-4">
+        <h1>신고 내용 확인</h1>
+    </header>
+
+    <section aria-labelledby="reporter-info">
+        <article class="card mb-4">
+            <header class="card-header bg-primary text-white">
+                <h2 id="reporter-info">신고자 정보</h2>
+            </header>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>신고자:</strong>
+                        <span th:text="${reportComment.reporter}"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>신고 시간:</strong>
+                        <span th:text="${reportComment.updateAtReport}"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <strong>신고 이유:</strong>
+                        <span th:text="${reportComment.description}"></span>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section aria-labelledby="reported-content-info">
+        <article class="card">
+            <header class="card-header bg-danger text-white">
+                <h2 id="reported-content-info">신고 대상 정보</h2>
+            </header>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>작성자:</strong>
+                        <span th:text="${reportComment.author}"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>작성 시간:</strong>
+                        <span th:text="${reportComment.updatedAtComment}"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <strong>글 내용:</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="p-3 bg-light rounded" th:text="${reportComment.content}"></div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <form th:action="@{|/admin/reports/${reportComment.id}/reject|}" th:method="post">
+                            <button type="submit" class="btn btn-secondary w-100">거절</button>
+                        </form>
+                    </div>
+                    <div class="col-md-4">
+                        <form th:action="@{|/admin/reports/${reportComment.id}/suspend|}" th:method="patch">
+                            <button type="submit" class="btn btn-warning w-100">임시 정지</button>
+                        </form>
+                    </div>
+                    <div class="col-md-4">
+                        <form th:action="@{|/admin/reports/${reportComment.id}/ban|}" th:method="patch">
+                            <button type="submit" class="btn btn-danger w-100">영구 정지</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+</main>
+
+<footer th:replace="~{layouts/footer :: footer}"></footer>
+
+</body>
+</html>
