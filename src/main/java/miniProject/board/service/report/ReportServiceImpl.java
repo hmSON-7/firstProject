@@ -1,6 +1,8 @@
 package miniProject.board.service.report;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import miniProject.board.dto.ArticleDto;
 import miniProject.board.dto.ReportDto;
 import miniProject.board.entity.*;
 import miniProject.board.entity.report.Report;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -79,21 +82,16 @@ public class ReportServiceImpl implements ReportService {
                 .toList();
     }
 
+    @Override
+    public ReportDto.CommentResponse getReportComment(Long reportId) {
+        ReportComment reportComment = reportRepository
+                .findReportCommentById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
 
-    public List<ReportDto.CommentResponse> getReportComment() {
-         return reportRepository
-                 .findAllReportComments()
-                 .stream()
-                 .map(reportComment ->
-                         new ReportDto.CommentResponse(reportComment.getMember().getUsername(),
-                                 reportComment.getDescription(),
-                                 reportComment.getUpdatedAt(),
-                                 reportComment.getComment().getMember().getUsername(),
-                                 reportComment.getComment().getContent(),
-                                 reportComment.getComment().getUpdatedAt()))
-                 .toList();
+        return ReportDto.CommentResponse.fromReportComment(reportComment);
     }
 
+    @Override
     public List<ReportDto.ArticleListResponse> getReportArticles() {
         return reportRepository.
                 findAllReportArticles()
@@ -106,16 +104,15 @@ public class ReportServiceImpl implements ReportService {
                 .toList();
     }
 
-    public List<ReportDto.ArticleResponse> getReportArticle() {
-        return reportRepository.
-                findAllReportArticles()
-                .stream()
-                .map(reportArticle ->
-                        new ReportDto.ArticleResponse(reportArticle.getMember().getUsername(),
-                                reportArticle.getDescription(),
-                                reportArticle.getArticle().getMember().getUsername(),
-                                articleService.read(reportArticle.getArticle().getArticleId()).getContent()))
-                .toList();
+    @Override
+    public ReportDto.ArticleResponse getReportArticle(Long reportId) {
+        ReportArticle reportArticle = reportRepository
+                .findReportArticleById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+
+
+        return ReportDto.ArticleResponse
+                .fromReportArticle(reportArticle, articleService.read(reportArticle.getId()).getContent());
     }
 
     public void processReport(Long reportId,

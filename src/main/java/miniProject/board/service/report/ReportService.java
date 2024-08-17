@@ -15,4 +15,8 @@ public interface ReportService {
     List<ReportDto.CommentListResponse> getReportComments();
 
     void processReport(Long reportId, ReportAction reportAction, ReportDto.ProcessRequest processReportRequest);
+
+    ReportDto.ArticleResponse getReportArticle(Long reportId);
+
+    ReportDto.CommentResponse getReportComment(Long reportId);
 }
