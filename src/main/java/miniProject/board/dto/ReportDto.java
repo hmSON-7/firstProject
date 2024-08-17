@@ -3,6 +3,8 @@ package miniProject.board.dto;
 
 import lombok.*;
 import miniProject.board.entity.ReportStatus;
+import miniProject.board.entity.report.ReportArticle;
+import miniProject.board.entity.report.ReportComment;
 
 import java.time.LocalDateTime;
 
@@ -29,12 +31,25 @@ public class ReportDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CommentResponse {
+        private Long id;
         private String reporter;
         private String description;
         private LocalDateTime updateAtReport;
         private String author;
         private String content;
         private LocalDateTime updatedAtComment;
+
+
+        public static CommentResponse fromReportComment(ReportComment reportComment) {
+            return new CommentResponse(
+                    reportComment.getId(),
+                    reportComment.getMember().getUsername(),
+                    reportComment.getDescription(),
+                    reportComment.getUpdatedAt(),
+                    reportComment.getComment().getMember().getUsername(),
+                    reportComment.getComment().getContent(),
+                    reportComment.getComment().getUpdatedAt());
+        }
     }
 
     @Getter @Setter
@@ -51,10 +66,27 @@ public class ReportDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ArticleResponse {
+        private Long id;
         private String reporter;
         private String description;
+        private LocalDateTime updateAtReport;
+
         private String author;
+        private String title;
         private String content;
+        private LocalDateTime updatedAtArticle;
+
+        public static ArticleResponse fromReportArticle(ReportArticle reportArticle, String content) {
+            return new ArticleResponse(reportArticle.getId(),
+                    reportArticle.getMember().getUsername(),
+                    reportArticle.getDescription(),
+                    reportArticle.getUpdatedAt(),
+                    reportArticle.getArticle().getMember().getUsername(),
+                    reportArticle.getArticle().getTitle(),
+                    content,
+                    reportArticle.getArticle().getUpdatedAt());
+        }
+
     }
 
     @Getter @Setter
