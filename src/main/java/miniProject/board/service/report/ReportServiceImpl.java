@@ -3,6 +3,7 @@ package miniProject.board.service.report;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import miniProject.board.dto.ArticleDto;
+import miniProject.board.dto.CommentDto;
 import miniProject.board.dto.ReportDto;
 import miniProject.board.entity.*;
 import miniProject.board.entity.report.Report;
@@ -18,6 +19,7 @@ import miniProject.board.repository.CommentRepository;
 import miniProject.board.repository.MemberRepository;
 import miniProject.board.repository.ReportRepository;
 import miniProject.board.service.ArticleService;
+import miniProject.board.service.comment.CommentService;
 import miniProject.board.service.constants.ReportAction;
 import miniProject.board.service.member.MemberSuspensionService;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ public class ReportServiceImpl implements ReportService {
     private final ReportRepository reportRepository;
 
     private final ArticleService articleService;
+    private final CommentService commentService;
     private final MemberSuspensionService memberSuspensionService;
 
     @Override
@@ -124,27 +127,19 @@ public class ReportServiceImpl implements ReportService {
                 .orElseThrow(() ->
                         new ReportNotFoundException("신고를 찾을 수 없습니다."));
 
-        Long memberId;
-
-        if (report instanceof ReportArticle) {
-            memberId = ((ReportArticle) report).getArticle().getMember().getId();
-
-        } else if (report instanceof ReportComment) {
-            memberId = ((ReportComment) report).getComment().getMember().getId();
-
-        } else {
-            throw new IllegalStateException();
-        }
+        Long memberId = extractMemberId(report);
 
         switch (reportAction) {
             case BAN:
                 memberSuspensionService.applyPermanentSuspension(memberId);
                 report.updateStatus(ReportStatus.APPROVED);
+                handleReportContentUpdate(report, memberId);
                 break;
 
             case SUSPEND:
                 memberSuspensionService.applyTemporarySuspension(memberId, processReportRequest.getDate());
                 report.updateStatus(ReportStatus.APPROVED);
+                handleReportContentUpdate(report, memberId);
                 break;
 
             case REJECT:
@@ -162,5 +157,40 @@ public class ReportServiceImpl implements ReportService {
                 .orElseThrow(MemberReportNotFoundException::new);
 
         reportRepository.delete(report);
+    }
+
+    private Long extractMemberId(Report report) {
+        if (report instanceof ReportArticle) {
+            return ((ReportArticle) report).getArticle().getMember().getId();
+
+        } else if (report instanceof ReportComment) {
+            return ((ReportComment) report).getComment().getMember().getId();
+
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    private void handleReportContentUpdate(Report report, Long memberId) {
+        if (report instanceof ReportComment) {
+            ReportComment reportComment = (ReportComment) report;
+
+            commentService.updateComment(reportComment.getComment().getId(),
+                    memberId,
+                    "reports",
+                    new CommentDto.UpdateRequest("신고 처리된 댓글입니다."));
+        }
+
+        if (report instanceof ReportArticle) {
+            ReportArticle reportArticle = (ReportArticle) report;
+
+            try {
+                articleService.update(new ArticleDto.Create("신고 처리된 게시글입니다.", null),
+                        reportArticle.getArticle().getArticleId(), memberId);
+
+            } catch (Exception e) {
+                log.error("게시글을 수정할 수 없습니다.", e);
+            }
+        }
     }
 }

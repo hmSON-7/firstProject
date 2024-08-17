@@ -128,7 +128,15 @@ public class ArticleServiceImpl implements ArticleService {
         }
         log.debug("member 조회");
 
-        String contentHtml = new String(articleEditDto.getContent().getBytes(), StandardCharsets.UTF_8);
+        String contentHtml;
+
+        if (articleEditDto.getContent() == null || articleEditDto.getContent().isEmpty()) {
+            contentHtml = "<h1>신고처리된 게시글입니다.</h1>";
+
+        } else {
+            contentHtml = new String(articleEditDto.getContent().getBytes(), StandardCharsets.UTF_8);
+        }
+
         fileStorageService.updateFile(article.getFilePath(), contentHtml);
         log.debug("파일 업데이트 완료");
 
