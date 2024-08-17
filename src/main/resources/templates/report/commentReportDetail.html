@@ -72,9 +72,29 @@
                         </form>
                     </div>
                     <div class="col-md-4">
-                        <form th:action="@{|/admin/reports/${reportComment.id}/suspend|}" th:method="patch">
-                            <button type="submit" class="btn btn-warning w-100">임시 정지</button>
-                        </form>
+
+                        <button type="button" class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#suspendModal">
+                            임시 정지
+                        </button>
+                        <div class="modal fade" id="suspendModal" tabindex="-1" aria-labelledby="suspendModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="suspendModalLabel">임시 정지 날짜 입력</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form th:object="${processRequest}" th:action="@{|/admin/reports/${reportComment.id}/suspend|}" th:method="patch">
+                                            <div class="mb-3">
+                                                <label for="suspendDate" class="form-label">정지 날짜</label>
+                                                <input type="text" class="form-control" id="suspendDate" th:field="*{date}" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-warning w-100">임시 정지</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <form th:action="@{|/admin/reports/${reportComment.id}/ban|}" th:method="patch">
