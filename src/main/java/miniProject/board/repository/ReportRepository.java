@@ -16,11 +16,11 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     List<Report> findByMember(Member member);
 
     @EntityGraph(attributePaths = {"member"})
-    @Query("select r from ReportArticle r")
+    @Query("select r from ReportArticle r where r.reportStatus = 'PENDING'")
     List<ReportArticle> findAllReportArticles();
 
     @EntityGraph(attributePaths = {"member"})
-    @Query("select r from ReportComment r")
+    @Query("select r from ReportComment r where r.reportStatus = 'PENDING'")
     List<ReportComment> findAllReportComments();
 
     Optional<Report> findByIdAndMemberId(Long id, Long memberId);
