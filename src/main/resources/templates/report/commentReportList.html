@@ -28,7 +28,7 @@
                 <td th:text="${reportComment.id}"></td>
                 <td th:text="${reportComment.reporter}"></td>
                 <td>
-                    <a th:href="@{|/reports/${reportComment.id}|}" class="text-decoration-none"
+                    <a th:href="@{|/admin/reports/comments/${reportComment.id}|}" class="text-decoration-none"
                        th:text="${reportComment.description}"></a>
                 </td>
                 <td th:text="${reportComment.updateAtReport}"></td>

@@ -17,18 +17,26 @@ public class ReportManagementController {
     private final ReportService reportService;
 
     @PatchMapping("/reports/{reportId}/ban")
-    public void banMember(@PathVariable Long reportId) {
+    public String banMember(@PathVariable Long reportId) {
         reportService.processReport(reportId, ReportAction.BAN, null);
+
+        return "redirect:/admin";
     }
 
     @PatchMapping("/reports/{reportId}/suspend")
-    public void suspendMember(@PathVariable Long reportId,
+    public String suspendMember(@PathVariable Long reportId,
                               @ModelAttribute ReportDto.ProcessRequest processReportRequest) {
         reportService.processReport(reportId, ReportAction.SUSPEND, processReportRequest);
+
+        return "redirect:/admin";
+
     }
 
     @PostMapping("/reports/{reportId}/reject")
-    public void rejectReport(@PathVariable Long reportId) {
+    public String rejectReport(@PathVariable Long reportId) {
         reportService.processReport(reportId, ReportAction.REJECT, null);
+
+        return "redirect:/admin";
+
     }
 }
