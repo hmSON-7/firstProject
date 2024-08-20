@@ -54,4 +54,13 @@ public class MemberServiceImpl implements MemberService{
 
         memberRepository.delete(member);
     }
+
+    @Override
+    public void updateMemberNickname(Long memberId, String nickname) {
+        Member member = memberRepository
+                .findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        member.changeNickname(nickname);
+    }
 }

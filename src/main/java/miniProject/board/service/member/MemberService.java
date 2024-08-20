@@ -13,4 +13,6 @@ public interface MemberService {
     List<MemberDto.Info> findMembers();
 
     void deleteMember(Long memberId);
+
+    void updateMemberNickname(Long memberId, String nickname);
 }

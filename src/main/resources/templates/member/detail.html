@@ -1,20 +1,104 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:replace="~{layouts/header/common-header :: head(~{::title})}">
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
-    <p th:text="${member.username}"></p>
-    <p th:text="${member.nickname}"></p>
-    <p th:text="${member.description}"></p>
-    <p th:text="${member.email}"></p>
+<body class="bg-light d-flex flex-column min-vh-100">
 
-    <a th:href="@{/members/me/articles}">게시글 조회</a>
-    <a th:href="@{/members/me/comments}">댓글 조회</a>
+<nav th:replace="~{layouts/navbar :: nav}"></nav>
 
-    <form th:action="@{/members}" th:method="delete">
-        <button type="submit">회원 탈퇴</button>
-    </form>
+<div class="container mt-5">
+    <div class="card mx-auto shadow-lg mb-4">
+        <div class="card-header border-bottom-0">
+            <h2 class="card-title mb-0 text-start text-dark fw-bold">
+                회원 정보
+            </h2>
+        </div>
+        <div class="card-body d-flex flex-column justify-content-center">
+            <div class="row text-center mb-4">
+                <div class="col-md-4 my-3">
+                    <p class="h5 mb-1">
+                        <strong>Username:</strong>
+                        <span th:text="${member.username}"></span>
+                    </p>
+                </div>
+                <div class="col-md-4 my-3">
+                    <p class="h5 mb-1">
+                        <strong>Email:</strong>
+                        <span th:text="${member.email}"></span>
+                    </p>
+                </div>
+                <div class="col-md-4 my-3">
+                    <p class="h5 mb-1">
+                        <strong>Nickname:</strong>
+                        <span th:text="${member.nickname}"></span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="row text-center">
+                <div class="col-md-4 mb-3">
+                    <a th:href="@{/members/me/articles}" class="btn btn-outline-secondary w-100">게시글 조회</a>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <a th:href="@{/members/me/comments}" class="btn btn-outline-secondary w-100">댓글 조회</a>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <a th:href="@{/}" class="btn btn-outline-secondary w-100">신고 조회</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card mx-auto shadow-lg">
+        <div class="card-header border-bottom-0">
+            <h3 class="card-title mb-0 text-start text-dark fw-bold">회원 정보 수정</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-4 mb-3 my-3">
+                    <button type="button" class="btn btn-outline-info w-100" data-bs-toggle="modal" data-bs-target="#nicknameModal">
+                        닉네임 변경
+                    </button>
+                </div>
+                <div class="col-md-4 mb-3 my-3">
+                    <a th:href="@{/changePW/emailCheck}" class="btn btn-outline-warning w-100">비밀번호 변경</a>
+                </div>
+                <div class="col-md-4 mb-3 my-3">
+                    <form th:action="@{/members}" th:method="delete">
+                        <button type="submit" class="btn btn-outline-danger w-100">회원 탈퇴</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{layouts/footer :: footer}"></footer>
+
+<div class="modal fade" id="nicknameModal" tabindex="-1" aria-labelledby="nicknameModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nicknameModalLabel">닉네임 변경</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/members/change-nickname}" th:object="${changeMemberNickname}" th:method="patch">
+
+                    <div class="mb-3">
+                        <label for="nickname" class="form-label">새 닉네임</label>
+                        <input type="text" class="form-control" th:field="*{nickname}" id="nickname" placeholder="새 닉네임을 입력하세요">
+                    </div>
+                    <button type="submit" class="btn btn-primary">변경하기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

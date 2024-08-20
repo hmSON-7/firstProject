@@ -122,4 +122,8 @@ public class Member {
     public void changePW(String password) {
         this.password = password;
     }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
