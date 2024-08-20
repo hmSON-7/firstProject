@@ -91,6 +91,14 @@ public class MemberDto {
     }
 
     @Getter @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChangeNickname {
+        @NotEmpty
+        private String nickname;
+    }
+
+    @Getter @Setter
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Session {
