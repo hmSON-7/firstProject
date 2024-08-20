@@ -36,6 +36,8 @@ public class MemberController {
     public String showMemberDetails(@Login MemberDto.Session memberSessionDto, Model model) {
         MemberDto.Info member = memberService.findMember(memberSessionDto.getId());
 
+        model.addAttribute("memberSessionDto", memberSessionDto);
+        model.addAttribute("changeMemberNickname", new MemberDto.ChangeNickname());
         model.addAttribute("member", member);
 
         return "member/detail";
@@ -88,5 +90,12 @@ public class MemberController {
         memberService.deleteMember(memberSessionDto.getId());
 
         return "redirect:/";
+    }
+
+    @PatchMapping("/change-nickname")
+    public String editNickname(@Login MemberDto.Session memberSessionDto, @ModelAttribute MemberDto.ChangeNickname changeNicknameRequest) {
+        memberService.updateMemberNickname(memberSessionDto.getId(), changeNicknameRequest.getNickname());
+
+        return "redirect:/members/me";
     }
 }
