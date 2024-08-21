@@ -1,42 +1,59 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:replace="~{layouts/header/common-header :: head(~{::title})}">
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
-    <table th:each="comment : ${comments}">
-        <thead>
-            <tr>
-                <th>작성자</th>
-                <th>게시글 제목</th>
-                <th>내용</th>
-                <th>작성 시간</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td th:text="${comment.username}"></td>
-                <td><a th:text="${comment.articleTitle}" th:href="@{|/articles/${comment.articleId}|}"></a></td>
-                <td th:text="${comment.content}"></td>
-                <td th:text="${comment.updatedAt}"></td>
-                <td>
-                    <form th:action="@{|/comments/${comment.id}?updateFrom=member|}" th:method="patch">
-                        <button type="submit">수정</button>
-                    </form>
-                </td>
-                <td>
-                    <form th:action="@{|/comments/${comment.id}?deleteFrom=member|}" th:method="delete">
-                        <button type="submit">삭제</button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 
-    <a th:if="${hasPreviousPage}" th:text="이전" th:href="@{|/members/me/comments?page=${currentPage - 1} |}"></a>
-    <a th:text="${currentPage}" th:href="@{|/members/me/comments?page=${currentPage}|}"></a>
-    <a th:if="${hasNextPage}" th:text="다음" th:href="@{|/members/me/comments?page=${currentPage + 1}|}"></a>
+<nav th:replace="~{layouts/navbar :: nav}"></nav>
+
+<body class="bg-light d-flex flex-column min-vh-100">
+    <div class="container table-wrap">
+        <table class="table caption-top">
+            <caption>List of your comments</caption>
+
+            <thead class="table-light">
+                <tr>
+                    <th>번호</th>
+                    <th>게시글 제목</th>
+                    <th>댓글 내용</th>
+                    <th>작성 시간</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="comment : ${comments}">
+                    <td th:text="${comment.id}"></td>
+                    <td><a th:text="${comment.articleTitle}" th:href="@{|/articles/${comment.articleId}|}"></a></td>
+                    <td th:text="${comment.content}"></td>
+                    <td th:text="${comment.updatedAt}"></td>
+                    <td>
+                        <form th:action="@{|/comments/${comment.id}?updateFrom=member|}" th:method="patch">
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">수정</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{|/comments/${comment.id}?deleteFrom=member|}" th:method="delete">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">삭제</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+         </table>
+    </div>
+
+    <nav aria-label="Page navigation" class="page-navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:if="${hasPreviousPage}">
+                <a class="page-link" th:href="@{|/members/me/comments?page=${currentPage - 1}|}">이전</a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+                <a class="page-link" th:href="@{|/members/me/comments?page=${pageNum}|}" th:text="${pageNum}" th:classappend="${pageNum == currentPage} ? 'active'"></a>
+            </li>
+            <li class="page-item" th:if="${hasNextPage}">
+                <a class="page-link" th:href="@{|/members/me/comments?page=${currentPage + 1}|}">다음</a>
+            </li>
+        </ul>
+    </nav>
 
 </body>
 </html>
