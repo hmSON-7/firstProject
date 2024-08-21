@@ -2,7 +2,11 @@ package miniProject.board.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import static miniProject.board.dto.constants.MemberConst.PASSWORD_MAX_SIZE;
+import static miniProject.board.dto.constants.MemberConst.PASSWORD_MIN_SIZE;
 
 public class EmailDto {
     @Getter
@@ -14,49 +18,34 @@ public class EmailDto {
         @Email
         private String email;
     }
-
     @Getter @Setter
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class RequestForPW {
         @NotEmpty
         private String username;
-
         @NotEmpty
         @Email
         private String email;
     }
-
     @Getter @Setter
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class CheckForUsername {
+    public static class Auth {
         @NotEmpty
-        @Email
-        private String email;
-
-        @NotEmpty
-        private String sentCode;
-
-        @NotEmpty
-        private String authCode;
+        private String Code;
     }
-
     @Getter @Setter
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class CheckForPW {
-        @NotEmpty
-        private String username;
+    public static class ChangePW {
 
         @NotEmpty
-        @Email
-        private String email;
+        @Size(min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE)
+        private String password;
 
         @NotEmpty
-        private String sentCode;
-
-        @NotEmpty
-        private String authCode;
+        @Size(min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE)
+        private String confirmPassword;
     }
 }

@@ -4,23 +4,18 @@
     <title>Enter Verification Code : Find Accounts</title>
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
-
 <nav th:replace="~{layouts/navbar :: nav}"></nav>
-
 <main class="container">
     <h1>Enter Verification Code to Find Accounts</h1>
     <form action="/findAccounts/emailAuth" method="post">
-        <input type="hidden" name="email" th:value="${email}">
-        <input type="hidden" name="sentCode" th:value="${sentCode}">
         <div class="form-group">
-            <label for="authCode">Verification Code</label>
-            <input type="text" class="form-control" id="authCode" name="authCode" th:value="${emailCheckDto.authCode}" required>
+            <label for="code">Verification Code</label>
+            <input type="text" class="form-control" id="code" name="code" th:value="${emailAuthDto.code}" required>
         </div>
         <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
         <button type="submit" class="btn btn-primary">Verify</button>
     </form>
 </main>
-
 <footer th:replace="~{layouts/footer :: footer}"></footer>
 </body>
 </html>

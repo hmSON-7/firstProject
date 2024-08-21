@@ -4,14 +4,11 @@
     <title>Change Password</title>
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
-
 <nav th:replace="~{layouts/navbar :: nav}"></nav>
-
 <main class="container">
     <h1>Change Password</h1>
     <form action="/changePW/newPassword" method="post">
         <input type="hidden" name="_method" value="patch">
-        <input type="hidden" name="username" th:value="${username}">
         <div class="form-group">
             <label for="password">New Password</label>
             <input type="password" class="form-control" id="password" name="password" th:value="${changePWDto.password}" required>
@@ -24,7 +21,6 @@
         <button type="submit" class="btn btn-primary">Change Password</button>
     </form>
 </main>
-
 <footer th:replace="~{layouts/footer :: footer}"></footer>
 </body>
 </html>
