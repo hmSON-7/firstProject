@@ -115,7 +115,7 @@ public class ReportServiceImpl implements ReportService {
 
 
         return ReportDto.ArticleResponse
-                .fromReportArticle(reportArticle, articleService.read(reportArticle.getId()).getContent());
+                .fromReportArticle(reportArticle, articleService.read(reportArticle.getId(), false).getContent());
     }
 
     public void processReport(Long reportId,

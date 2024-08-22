@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 
@@ -67,9 +68,10 @@ public class ArticleController {
     public String show(@PathVariable("articleId") Long articleId,
                        @Login MemberDto.Session memberSessionDto,
                        @RequestParam(defaultValue = "1", name = "commentPage") int commentPage,
+                       @RequestParam(name = "keepHits", required = false, defaultValue = "false") Boolean keepHits,
                        Model model) {
-        ArticleDto.Info article = articleService.read(articleId);
-        log.debug("DB 조회 확인");
+        ArticleDto.Info article = articleService.read(articleId, keepHits);
+        log.debug("DB 조회 확인, keepHits: " + keepHits);
         model.addAttribute("ArticleInfo", article);
         log.debug("모델 확인");
 
@@ -115,8 +117,9 @@ public class ArticleController {
 
     // 5. 게시글 수정 페이지로 이동
     @GetMapping("/{articleId}/edit")
-    public String editForm(@PathVariable("articleId") Long articleId, Model model) {
-        ArticleDto.Info article = articleService.read(articleId);
+    public String editForm(@PathVariable("articleId") Long articleId, Model model,
+                           @RequestParam(name = "keepHits", required = false) Boolean keepHits) {
+        ArticleDto.Info article = articleService.read(articleId, keepHits);
         log.debug("article 읽기 성공");
 
         model.addAttribute("ArticleRequest", new ArticleDto.Load(
@@ -172,5 +175,25 @@ public class ArticleController {
         log.debug("로직 문제 없음");
 
         return "redirect:/articles/list";
+    }
+
+    // 8. 게시글 추천 / 추천 취소
+    @PostMapping("/{articleId}/likes")
+    public String giveLike(@PathVariable("articleId") Long articleId,
+                           @Login MemberDto.Session memberSessionDto,
+                           RedirectAttributes redirectAttributes) {
+        log.debug("추천 요청 처리 중");
+
+        if (memberSessionDto == null) {
+            return "redirect:/login";
+        }
+
+        log.debug("로그인 확인됨");
+
+        articleService.changeLikes(articleId, memberSessionDto.getId());
+
+        // 조회수를 유지하기 위해 조회수 증가 없이 리다이렉트
+        redirectAttributes.addAttribute("keepHits", true);
+        return "redirect:/articles/" + articleId;
     }
 }
