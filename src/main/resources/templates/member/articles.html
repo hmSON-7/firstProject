@@ -1,36 +1,54 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:replace="~{layouts/header/common-header :: head(~{::title})}">
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
-    <table>
-        <thead>
-        <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>글쓴이</th>
-            <th>작성일</th>
-            <th>조회</th>
-            <th>추천</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="article : ${articles}">
-            <td th:text="${article.articleId}"></td>
-            <td>
-                <a th:href="@{|/articles/${article.articleId}|}" class="text-decoration-none" th:text="${article.title}"></a>
-            </td>
-            <td th:text="${article.nickname}"></td>
-            <td th:text="${article.updatedAt}"></td>
-            <td th:text="${article.hits}"></td>
-            <td th:text="${article.likes}"></td>
-        </tr>
-        </tbody>
-    </table>
-    <a th:if="${hasPreviousPage}" th:text="이전" th:href="@{|/members/me/articles?page=${currentPage - 1}|}"></a>
-    <a th:text="${currentPage}" th:href="@{|/members/me/articles?page=${currentPage}|}"></a>
-    <a th:if="${hasNextPage}" th:text="다음" th:href="@{|/members/me/articles?page=${currentPage + 1}|}"></a>
+
+<nav th:replace="~{layouts/navbar :: nav}"></nav>
+
+<body class="bg-light d-flex flex-column min-vh-100">
+    <div class="container table-wrap">
+        <table class="table caption-top">
+            <caption>List of your articles</caption>
+            <thead class="table-light">
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>글쓴이</th>
+                <th>작성일</th>
+                <th>조회</th>
+                <th>추천</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="article : ${articles}">
+                <td th:text="${article.articleId}"></td>
+                <td>
+                    <a th:href="@{|/articles/${article.articleId}|}" class="text-decoration-none" th:text="${article.title}"></a>
+                </td>
+                <td th:text="${article.nickname}"></td>
+                <td th:text="${article.updatedAt}"></td>
+                <td th:text="${article.hits}"></td>
+                <td th:text="${article.likes}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <nav aria-label="Page navigation" class="page-navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:if="${hasPreviousPage}">
+                <a class="page-link" th:href="@{|/members/me/articles?page=${currentPage - 1}|}">이전</a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+                <a class="page-link" th:href="@{|/members/me/articles?page=${pageNum}|}" th:text="${pageNum}" th:classappend="${pageNum == currentPage} ? 'active'"></a>
+            </li>
+            <li class="page-item" th:if="${hasNextPage}">
+                <a class="page-link" th:href="@{|/members/me/articles?page=${currentPage + 1}|}">다음</a>
+            </li>
+        </ul>
+    </nav>
+
 </body>
 </html>

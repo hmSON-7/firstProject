@@ -57,6 +57,7 @@ public class MemberController {
         model.addAttribute("hasNextPage", articles.hasNext());
         model.addAttribute("hasPreviousPage", articles.hasPrevious());
         model.addAttribute("currentPage", articles.getNumber() + 1);
+        model.addAttribute("totalPages", articles.getTotalPages());
 
         return "member/articles";
     }
@@ -75,6 +76,7 @@ public class MemberController {
         model.addAttribute("hasNextPage", comments.hasNext());
         model.addAttribute("hasPreviousPage", comments.hasPrevious());
         model.addAttribute("currentPage", comments.getNumber() + 1);
+        model.addAttribute("totalPages", comments.getTotalPages());
 
 
         return "member/comments";
