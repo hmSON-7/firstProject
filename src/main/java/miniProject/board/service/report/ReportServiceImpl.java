@@ -115,6 +115,7 @@ public class ReportServiceImpl implements ReportService {
 
 
         return ReportDto.ArticleResponse
+            .fromReportArticle(reportArticle, articleService.read(reportArticle.getArticle().getArticleId(), false).getContent());
     }
 
     @Override
@@ -126,9 +127,6 @@ public class ReportServiceImpl implements ReportService {
                         new ReportDto.MyPageResponse(report.getId(), report.getMember().getUsername(),
                                 report.getDescription(), report.getUpdatedAt(), report.getReportStatus()))
                 .toList();
-
-
-        .fromReportArticle(reportArticle, articleService.read(reportArticle.getArticle().getArticleId(), false).getContent());
     }
 
     public void processReport(Long reportId,
