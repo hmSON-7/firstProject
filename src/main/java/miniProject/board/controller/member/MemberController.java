@@ -9,17 +9,21 @@ import miniProject.board.controller.argumentResolver.Login;
 import miniProject.board.dto.ArticleDto;
 import miniProject.board.dto.CommentDto;
 import miniProject.board.dto.MemberDto;
+import miniProject.board.dto.ReportDto;
 import miniProject.board.repository.RefreshRepository;
 import miniProject.board.service.ArticleService;
 import miniProject.board.service.auth.RefreshService;
 import miniProject.board.service.comment.CommentService;
 import miniProject.board.service.member.MemberService;
+import miniProject.board.service.report.ReportService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -31,6 +35,7 @@ public class MemberController {
     private final ArticleService articleService;
     private final CommentService commentService;
     private final RefreshService refreshService;
+    private final ReportService reportService;
 
     @GetMapping("/me")
     public String showMemberDetails(@Login MemberDto.Session memberSessionDto, Model model) {
@@ -99,5 +104,15 @@ public class MemberController {
         memberService.updateMemberNickname(memberSessionDto.getId(), changeNicknameRequest.getNickname());
 
         return "redirect:/members/me";
+    }
+
+    @GetMapping("/me/reports")
+    public String showReports(@Login MemberDto.Session memberSessionDto, Model model) {
+
+        List<ReportDto.MyPageResponse> reports = reportService.getReportByMemberId(memberSessionDto.getId());
+
+        model.addAttribute("reports", reports);
+
+        return "member/reports";
     }
 }

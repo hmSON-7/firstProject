@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/header/common-header :: head(~{::title})}">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+<main class="container mt-5 flex-grow-1">
+    <section class="d-flex justify-content-between align-items-center mb-3">
+        <h2>신고 목록</h2>
+    </section>
+
+    <section class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>신고자</th>
+                <th>신고 내용</th>
+                <th>신고 시간</th>
+                <th>신고 상태</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="report : ${reports}">
+                <td th:text="${report.id}"></td>
+                <td th:text="${report.reporter}"></td>
+                <td th:text="${report.description}"></td>
+                <td th:text="${report.updateAtReport}"></td>
+                <td th:text="${report.reportStatus}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+
+<footer th:replace="~{layouts/footer :: footer}"></footer>
+</body>
+</html>

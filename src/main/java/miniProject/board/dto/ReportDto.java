@@ -30,6 +30,17 @@ public class ReportDto {
     @Getter @Setter
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class MyPageResponse {
+        private Long id;
+        private String reporter;
+        private String description;
+        private LocalDateTime updateAtReport;
+        private ReportStatus reportStatus;
+    }
+
+    @Getter @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class CommentResponse {
         private Long id;
         private String reporter;

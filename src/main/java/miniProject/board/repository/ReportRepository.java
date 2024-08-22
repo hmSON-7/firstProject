@@ -30,4 +30,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
     @Query("select r from ReportComment r where r.id = :id")
     Optional<ReportComment> findReportCommentById(@Param("id") Long id);
+
+    List<Report> findByMemberId(Long memberId);
 }
