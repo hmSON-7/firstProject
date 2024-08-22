@@ -19,4 +19,6 @@ public interface ReportService {
     ReportDto.ArticleResponse getReportArticle(Long reportId);
 
     ReportDto.CommentResponse getReportComment(Long reportId);
+
+    List<ReportDto.MyPageResponse> getReportByMemberId(Long memberId);
 }

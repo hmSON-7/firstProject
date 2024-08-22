@@ -115,7 +115,20 @@ public class ReportServiceImpl implements ReportService {
 
 
         return ReportDto.ArticleResponse
-                .fromReportArticle(reportArticle, articleService.read(reportArticle.getId(), false).getContent());
+    }
+
+    @Override
+    public List<ReportDto.MyPageResponse> getReportByMemberId(Long memberId) {
+        return reportRepository
+                .findByMemberId(memberId)
+                .stream()
+                .map(report ->
+                        new ReportDto.MyPageResponse(report.getId(), report.getMember().getUsername(),
+                                report.getDescription(), report.getUpdatedAt(), report.getReportStatus()))
+                .toList();
+
+
+        .fromReportArticle(reportArticle, articleService.read(reportArticle.getArticle().getArticleId(), false).getContent());
     }
 
     public void processReport(Long reportId,
