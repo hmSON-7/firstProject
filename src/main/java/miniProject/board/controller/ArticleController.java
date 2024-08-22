@@ -100,10 +100,11 @@ public class ArticleController {
     // 4. 게시글 리스트 조회
     @GetMapping("/list")
     public String index(@Login MemberDto.Session memberSessionDto,
-                        @RequestParam(defaultValue = "1", name="page") int page,
+                        @RequestParam(defaultValue = "1", name = "page") int page,
+                        @RequestParam(defaultValue = "recent", name = "sortType") String sortType,
                         Model model) {
         Pageable pageable = PageRequest.of(page - 1, 10);
-        Page<ArticleDto.ArticlesList> articles = articleService.index(pageable);
+        Page<ArticleDto.ArticlesList> articles = articleService.index(pageable, sortType);
 
         model.addAttribute("memberSessionDto", memberSessionDto);
         model.addAttribute("articles", articles.getContent());
@@ -111,6 +112,7 @@ public class ArticleController {
         model.addAttribute("hasNextPage", articles.hasNext());
         model.addAttribute("hasPreviousPage", articles.hasPrevious());
         model.addAttribute("totalPages", articles.getTotalPages());
+        model.addAttribute("currentSort", sortType);
 
         return "articles/article-list";
     }

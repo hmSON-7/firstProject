@@ -64,10 +64,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     // 2. 게시글 리스트 조회 서비스
     @Override
-    public Page<ArticleDto.ArticlesList> index(Pageable pageable) {
-        return articleRepository
-                .findAllByOrderByUpdatedAtDesc(pageable)
-                .map(ArticleDto.ArticlesList::fromArticle);
+    public Page<ArticleDto.ArticlesList> index(Pageable pageable, String sortType) {
+        Page<Article> articles = switch (sortType) {
+            case "hits" -> articleRepository.findAllByOrderByHitsDesc(pageable);
+            case "likes" -> articleRepository.findAllByOrderByLikesDesc(pageable);
+            default -> articleRepository.findAllByOrderByUpdatedAtDesc(pageable);
+        };
+
+        return articles.map(ArticleDto.ArticlesList::fromArticle);
     }
 
     @Override

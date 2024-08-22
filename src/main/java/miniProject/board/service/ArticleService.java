@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import java.io.IOException;
 
 public interface ArticleService {
-    Page<ArticleDto.ArticlesList> index(Pageable pageable);
+    Page<ArticleDto.ArticlesList> index(Pageable pageable, String sortType);
 
     Page<ArticleDto.ArticlesList> getArticlesByMember(Long memberId, Pageable pageable);
 

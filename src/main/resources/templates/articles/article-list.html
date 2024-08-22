@@ -12,7 +12,20 @@
 <!-- Content -->
 <main class="container mt-5 flex-grow-1">
     <section class="d-flex justify-content-between align-items-center mb-3">
-        <h2>게시글 목록</h2>
+        <div>
+            <a class="btn btn-outline-secondary"
+               th:classappend="${currentSort == 'recent'} ? 'active'"
+               th:href="@{/articles/list(sortType='recent')}">최신순
+            </a>
+            <a class="btn btn-outline-secondary"
+               th:classappend="${currentSort == 'hits'} ? 'active'"
+               th:href="@{/articles/list(sortType='hits')}">조회수순
+            </a>
+            <a class="btn btn-outline-secondary"
+               th:classappend="${currentSort == 'likes'} ? 'active'"
+               th:href="@{/articles/list(sortType='likes')}">추천수순
+            </a>
+        </div>
         <button class="btn btn-primary" onclick="location.href='/articles'">글쓰기</button>
     </section>
 
@@ -46,13 +59,13 @@
     <nav aria-label="Page navigation" class="page-navigation">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:if="${hasPreviousPage}">
-                <a class="page-link" th:href="@{/articles/list(page=${currentPage - 1})}">이전</a>
+                <a class="page-link" th:href="@{/articles/list(page=${currentPage - 1}, sort=${currentSort})}">이전</a>
             </li>
             <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
-                <a class="page-link" th:href="@{/articles/list(page=${pageNum})}" th:text="${pageNum}" th:classappend="${pageNum == currentPage} ? 'active'"></a>
+                <a class="page-link" th:href="@{/articles/list(page=${pageNum}, sort=${currentSort})}" th:text="${pageNum}" th:classappend="${pageNum == currentPage} ? 'active'"></a>
             </li>
             <li class="page-item" th:if="${hasNextPage}">
-                <a class="page-link" th:href="@{/articles/list(page=${currentPage + 1})}">다음</a>
+                <a class="page-link" th:href="@{/articles/list(page=${currentPage + 1}, sort=${currentSort})}">다음</a>
             </li>
         </ul>
     </nav>
