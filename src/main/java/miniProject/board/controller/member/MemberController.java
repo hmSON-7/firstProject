@@ -63,6 +63,7 @@ public class MemberController {
         model.addAttribute("hasPreviousPage", articles.hasPrevious());
         model.addAttribute("currentPage", articles.getNumber() + 1);
         model.addAttribute("totalPages", articles.getTotalPages());
+        model.addAttribute("memberSessionDto", memberSessionDto);
 
         return "member/articles";
     }
@@ -82,7 +83,7 @@ public class MemberController {
         model.addAttribute("hasPreviousPage", comments.hasPrevious());
         model.addAttribute("currentPage", comments.getNumber() + 1);
         model.addAttribute("totalPages", comments.getTotalPages());
-
+        model.addAttribute("memberSessionDto", memberSessionDto);
 
         return "member/comments";
     }
@@ -112,6 +113,7 @@ public class MemberController {
         List<ReportDto.MyPageResponse> reports = reportService.getReportByMemberId(memberSessionDto.getId());
 
         model.addAttribute("reports", reports);
+        model.addAttribute("memberSessionDto", memberSessionDto);
 
         return "member/reports";
     }
