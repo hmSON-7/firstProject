@@ -73,12 +73,12 @@ public class Article {
         this.updatedAt = LocalDateTime.now();
     }
 
+    // 조회수 증가 메서드. 누르면 조회수 1씩 증가
     public void checkHits() {
         this.hits++;
     }
 
-    // 조회수 증가 메서드. 누르면 조회수 1씩 증가
-    public void checkLikes() {
-        this.likes++;
+    public void checkLikes(int likes) {
+        this.likes = likes;
     }
 }

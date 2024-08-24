@@ -4,21 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import miniProject.board.dto.ArticleDto;
 import miniProject.board.entity.Article;
+import miniProject.board.entity.Likes;
 import miniProject.board.entity.Member;
 import miniProject.board.repository.ArticleRepository;
+import miniProject.board.repository.LikesRepository;
 import miniProject.board.repository.MemberRepository;
 import miniProject.board.service.file.FileStorageService;
-import miniProject.board.service.member.MemberServiceImpl;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -28,6 +26,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;
     private final FileStorageService fileStorageService;
+    private final LikesRepository likesRepository;
 
     @Override
     public Article create(ArticleDto.Create articleAddDto, Long memberId) throws IOException {
@@ -65,10 +64,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     // 2. 게시글 리스트 조회 서비스
     @Override
-    public Page<ArticleDto.ArticlesList> index(Pageable pageable) {
-        return articleRepository
-                .findAllByOrderByUpdatedAtDesc(pageable)
-                .map(ArticleDto.ArticlesList::fromArticle);
+    public Page<ArticleDto.ArticlesList> index(Pageable pageable, String sortType) {
+        Page<Article> articles = switch (sortType) {
+            case "hits" -> articleRepository.findAllByOrderByHitsDesc(pageable);
+            case "likes" -> articleRepository.findAllByOrderByLikesDesc(pageable);
+            default -> articleRepository.findAllByOrderByUpdatedAtDesc(pageable);
+        };
+
+        return articles.map(ArticleDto.ArticlesList::fromArticle);
     }
 
     @Override
@@ -80,7 +83,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public ArticleDto.Info read(Long articleId) {
+    public ArticleDto.Info read(Long articleId, Boolean keepHits) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
@@ -89,7 +92,9 @@ public class ArticleServiceImpl implements ArticleService {
             throw new RuntimeException("파일을 찾을 수 없습니다.");
         }
 
-        article.checkHits();
+        if(!keepHits) {
+            article.checkHits();
+        }
         articleRepository.save(article);
         log.debug("접근 확인");
         log.debug("article.getCreatedAt(): " + article.getCreatedAt()); // 디버깅 로그 추가
@@ -164,5 +169,27 @@ public class ArticleServiceImpl implements ArticleService {
         fileStorageService.deleteFile(article.getFilePath());
 
         articleRepository.delete(article);
+    }
+
+    @Override
+    @Transactional
+    public void changeLikes(Long articleId, Long memberId) {
+        Likes like = likesRepository.findByArticleArticleIdAndMemberId(articleId, memberId).orElse(null);
+
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        if (like == null) {
+            Member member = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+            Likes newLike = Likes.giveLike(article, member);
+            likesRepository.save(newLike);
+        } else {
+            likesRepository.delete(like);
+        }
+
+        int changedLikes = likesRepository.countByArticle(article);
+        article.checkLikes(changedLikes);
+        articleRepository.save(article);
     }
 }

@@ -73,7 +73,7 @@ class ArticleServiceImplTest {
         Article createdArticle = articleService.create(new ArticleDto.Create("Test Title", "Test Content"), member.getId());
 
         // when
-        ArticleDto.Info articleInfo = articleService.read(createdArticle.getArticleId());
+        ArticleDto.Info articleInfo = articleService.read(createdArticle.getArticleId(), false);
 
         // then
         Assertions.assertNotNull(articleInfo);
@@ -97,7 +97,7 @@ class ArticleServiceImplTest {
         // then
         Assertions.assertNotNull(updatedArticle);
         Assertions.assertEquals("Updated Title", updatedArticle.getTitle());
-        String updatedContent = articleService.read(updatedArticle.getArticleId()).getContent();
+        String updatedContent = articleService.read(updatedArticle.getArticleId(), false).getContent();
         Assertions.assertEquals("Updated Content", updatedContent);
     }
 

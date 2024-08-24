@@ -52,7 +52,14 @@
         <div th:utext="${ArticleInfo.content}" class="prose">
             <!-- Content will be rendered here -->
         </div>
+
+        <!-- 추천 버튼 -->
         <div class="mt-4 flex space-x-4">
+            <form th:action="@{'/articles/' + ${ArticleInfo.articleId} + '/likes'}" method="post">
+                <button type="submit" class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                    추천 <span th:text="${ArticleInfo.likes}">0</span>
+                </button>
+            </form>
             <a href="/articles/list" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">목록으로</a>
             <div class="flex space-x-4" th:if="${isAuthor}">
                 <a th:href="@{'/articles/' + ${ArticleInfo.articleId} + '/edit'}" class="py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700">수정</a>
@@ -62,7 +69,7 @@
                 </form>
             </div>
 
-            <!-- report -->
+            <!-- 신고 버튼 -->
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportArticleModal">
                 신고 하기
             </button>
@@ -135,7 +142,7 @@
                         </form>
                     </div>
 
-                    <!-- report -->
+                    <!-- 신고 버튼 -->
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportCommentModal">
                         신고 하기
                     </button>
@@ -180,6 +187,7 @@
 </div>
 
 <footer th:replace="~{layouts/footer :: footer}"></footer>
+
 <script>
     function toggleEditForm(commentId) {
         var editForm = document.getElementById('edit-form-' + commentId);
