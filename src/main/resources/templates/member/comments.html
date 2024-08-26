@@ -27,13 +27,36 @@
                     <td th:text="${comment.content}"></td>
                     <td th:text="${comment.updatedAt}"></td>
                     <td>
-                        <form th:action="@{|/comments/${comment.id}?updateFrom=member|}" th:method="patch">
-                            <button type="submit" class="btn btn-outline-secondary btn-sm">수정</button>
-                        </form>
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editCommentModal">
+                            댓글 수정
+                        </button>
+
+                        <div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editCommentModalLabel">댓글 수정</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form th:action="@{|/comments/${comment.id}?updateFrom=member|}" th:method="patch">
+                                            <div class="mb-3">
+                                                <label for="commentContent" class="form-label">댓글 내용</label>
+                                                <input type="text" class="form-control" id="commentContent" name="content" placeholder="Edit your comment">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                                <button type="submit" class="btn btn-primary">저장</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                     <td>
                         <form th:action="@{|/comments/${comment.id}?deleteFrom=member|}" th:method="delete">
-                            <button type="submit" class="btn btn-outline-danger btn-sm">삭제</button>
+                            <button type="submit" class="btn btn-danger">댓글 삭제</button>
                         </form>
                     </td>
                 </tr>
