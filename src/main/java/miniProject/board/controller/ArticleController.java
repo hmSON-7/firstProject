@@ -91,6 +91,7 @@ public class ArticleController {
         model.addAttribute("comments", comments.getContent());
         model.addAttribute("commentPage", commentPage);
         model.addAttribute("commentTotalPages", comments.getTotalPages());
+        model.addAttribute("memberSessionDto", memberSessionDto);
 
         model.addAttribute("newComment", new CommentDto.CreateRequest());
 
