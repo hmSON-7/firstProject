@@ -36,6 +36,9 @@
             background-color: #007bff; /* 현재 페이지 배경 색 */
             color: white;
         }
+        .btn-custom {
+            margin: 5px;
+        }
     </style>
 </head>
 
@@ -53,46 +56,60 @@
             <!-- Content will be rendered here -->
         </div>
 
-        <!-- 추천 버튼 -->
-        <div class="mt-4 flex space-x-4">
+        <!-- 추천 버튼 중앙 정렬 -->
+        <div class="mt-4 d-flex justify-content-center">
             <form th:action="@{'/articles/' + ${ArticleInfo.articleId} + '/likes'}" method="post">
-                <button type="submit" class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                <button type="submit" class="btn btn-warning btn-custom">
                     추천 <span th:text="${ArticleInfo.likes}">0</span>
                 </button>
             </form>
-            <a href="/articles/list" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">목록으로</a>
-            <div class="flex space-x-4" th:if="${isAuthor}">
-                <a th:href="@{'/articles/' + ${ArticleInfo.articleId} + '/edit'}" class="py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700">수정</a>
-                <form th:action="@{'/articles/' + ${ArticleInfo.articleId} + '/delete'}" method="post" th:onsubmit="return confirm('정말로 삭제하시겠습니까?')">
-                    <input type="hidden" name="_method" value="delete">
-                    <button type="submit" class="py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700">삭제</button>
-                </form>
-            </div>
+        </div>
 
-            <!-- 신고 버튼 -->
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportArticleModal">
+        <!-- 우측 정렬 버튼들: 목록으로, 수정, 삭제 -->
+        <div class="mt-4 d-flex justify-content-end">
+            <!-- 목록으로 버튼 -->
+            <form th:action="@{'/articles/list'}" method="get">
+                <button type="submit" class="btn btn-primary btn-custom">목록으로</button>
+            </form>
+
+            <!-- 수정 버튼 -->
+            <form th:if="${isAuthor}" th:action="@{'/articles/' + ${ArticleInfo.articleId} + '/edit'}" method="get">
+                <button type="submit" class="btn btn-success btn-custom">수정</button>
+            </form>
+
+            <!-- 삭제 버튼 -->
+            <form th:if="${isAuthor}" th:action="@{'/articles/' + ${ArticleInfo.articleId} + '/delete'}" method="post" th:onsubmit="return confirm('정말로 삭제하시겠습니까?')">
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit" class="btn btn-danger btn-custom">삭제</button>
+            </form>
+        </div>
+
+        <!-- 신고하기 버튼 우측 정렬 -->
+        <div class="mt-4 d-flex justify-content-end">
+            <button type="button" class="btn btn-secondary btn-custom" data-bs-toggle="modal" data-bs-target="#reportArticleModal">
                 신고 하기
             </button>
-            <!-- Modal -->
-            <div class="modal fade" id="reportArticleModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="reportModalLabel">신고</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form th:action="@{|/articles/${ArticleInfo.articleId}/reports|}" th:method="post">
-                                <div class="mb-3">
-                                    <label for="description" class="form-label">신고 내용</label>
-                                    <input type="text" class="form-control" id="description" name="description" placeholder="Describe the issue">
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                                    <button type="submit" class="btn btn-primary">신고 하기</button>
-                                </div>
-                            </form>
-                        </div>
+        </div>
+
+        <!-- 신고 모달 -->
+        <div class="modal fade" id="reportArticleModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reportModalLabel">신고</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{|/articles/${ArticleInfo.articleId}/reports|}" th:method="post">
+                            <div class="mb-3">
+                                <label for="description" class="form-label">신고 내용</label>
+                                <input type="text" class="form-control" id="description" name="description" placeholder="Describe the issue">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                <button type="submit" class="btn btn-primary">신고 하기</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -119,11 +136,13 @@
                         <p><strong th:text="${comment.username}">작성자</strong> - <span th:text="${comment.createdAt}">작성일</span></p>
                         <p th:text="${comment.content}" class="mt-2">내용</p>
                     </div>
-                    <div class="flex space-x-4 mt-2" th:if="${comment.authorId != null}">
-                        <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} + ')'" class="py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700">수정</button>
+                    <div class="mt-2 d-flex justify-content-end" th:if="${comment.authorId != null}">
+                        <form th:action="@{'/comments/' + ${comment.id} + '?updateFrom=articles'}" method="get">
+                            <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} + ')'" class="btn btn-success btn-custom">수정</button>
+                        </form>
                         <form th:action="@{'/comments/' + ${comment.id} + '?deleteFrom=articles'}" method="post" th:onsubmit="return confirm('정말로 삭제하시겠습니까?')">
                             <input type="hidden" name="_method" value="delete">
-                            <button type="submit" class="py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700">삭제</button>
+                            <button type="submit" class="btn btn-danger btn-custom">삭제</button>
                         </form>
                     </div>
                     <!-- 댓글 수정 폼 -->
@@ -135,18 +154,21 @@
                                 <label th:for="'editCommentContent-' + ${comment.id}" class="form-label">내용</label>
                                 <textarea class="form-control flex-grow" th:id="'editCommentContent-' + ${comment.id}" name="content" th:text="${comment.content}"></textarea>
                             </div>
-                            <div class="flex space-x-4">
-                                <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} + ')'" class="py-2 px-4 bg-gray-600 text-white rounded hover:bg-gray-700">댓글 수정 취소</button>
-                                <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">저장</button>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" th:onclick="'toggleEditForm(' + ${comment.id} + ')'" class="btn btn-secondary btn-custom">취소</button>
+                                <button type="submit" class="btn btn-primary btn-custom">저장</button>
                             </div>
                         </form>
                     </div>
 
-                    <!-- 신고 버튼 -->
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportCommentModal">
-                        신고 하기
-                    </button>
-                    <!-- Modal -->
+                    <!-- 신고하기 버튼 -->
+                    <div class="mt-2 d-flex justify-content-start">
+                        <button type="button" class="btn btn-warning btn-custom" data-bs-toggle="modal" data-bs-target="#reportCommentModal">
+                            신고 하기
+                        </button>
+                    </div>
+
+                    <!-- 신고 모달 -->
                     <div class="modal fade" id="reportCommentModal" tabindex="-1" aria-labelledby="reportCommentModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
